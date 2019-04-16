@@ -2,55 +2,90 @@
   <a class="navbar-brand" href="/">
     <img src="{{ asset('images/logo-brand.png') }}" alt="Logo"/>
   </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#">Guides</a>
+        <a class="nav-link" href="#">
+          Guides
+        </a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-           aria-haspopup="true" aria-expanded="false">
-          Dropdown
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarCategoriesDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Categories
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+        <div class="dropdown-menu" aria-labelledby="navbarCategoriesDropdown">
+          <a class="dropdown-item" href="#">
+            Action
+          </a>
+          <a class="dropdown-item" href="#">
+            Another action
+          </a>
+          <a class="dropdown-item" href="#">
+            Something else here
+          </a>
         </div>
       </li>
-        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-          <li class="nav-item">
-            <a href="{{ path('fos_user_profile_show') }}" class="nav-link">
+    </ul>
+    <ul class="navbar-nav">
+      {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarAccountDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img src="{{ app.user|avatar }}" alt="Avatar" class="nav-avatar" />
+            <span>{{ app.user|username }}</span>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarAccountDropdown">
+            <a href="{{ path('fos_user_profile_show') }}" class="dropdown-item">
               Account
             </a>
-          </li>
-          <li class="nav-item">
-              <a href="{{ path('fos_user_security_logout') }}" class="nav-link">
-                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
-              </a>
-          </li>
-        {% else %}
-          <li class="nav-item">
-              <a href="{{ path('fos_user_security_login') }}" class="nav-link">
-                {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
-              </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ path('fos_user_registration_register') }}" class="nav-link">
-              {{ 'layout.register'|trans({}, 'FOSUserBundle') }}
+            <div class="dropdown-divider"></div>
+            <a href="{{ path('fos_user_security_logout') }}" class="dropdown-item">
+              {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
             </a>
-          </li>
-        {% endif %}
+          </div>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a href="{{ path('fos_user_security_login') }}" class="nav-link">
+            {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ path('fos_user_registration_register') }}" class="nav-link">
+            {{ 'layout.register'|trans({}, 'FOSUserBundle') }}
+          </a>
+        </li>
+      {% endif %}
     </ul>
-    <form class="form-inline my-2 my-lg-0">
+{#    <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    </form>#}
   </div>
 </nav>

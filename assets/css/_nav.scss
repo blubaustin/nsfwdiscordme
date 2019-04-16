@@ -1,5 +1,7 @@
 @import "vars";
 
+$height-images: 30px;
+
 .navbar {
   margin-bottom: $gutter-size;
   background-color: $color-primary;
@@ -10,6 +12,11 @@
   padding-bottom: 0;
 
   img {
-    height: 30px;
+    height: $height-images;
   }
+}
+
+.nav-avatar {
+  height: $height-images;
+  margin-right: 5px;
 }
