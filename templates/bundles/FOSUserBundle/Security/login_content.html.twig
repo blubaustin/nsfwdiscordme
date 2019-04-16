@@ -1,0 +1,47 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="row">
+  <div class="col col-md-4 col-6 offset-md-4">
+    <form action="{{ path("fos_user_security_check") }}" method="post">
+      <div class="card text-white bg-primary">
+        <div class="card-header">
+          Login
+        </div>
+        <div class="card-body">
+          {% if error %}
+            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+          {% endif %}
+          {% if csrf_token %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+          {% endif %}
+
+          <div class="form-group">
+            <label for="username">
+              {{ 'security.login.username'|trans }}
+            </label>
+            <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}"
+                   required="required" autocomplete="username"/>
+          </div>
+          <div class="form-group">
+            <label for="password">
+              {{ 'security.login.password'|trans }}
+            </label>
+            <input class="form-control" type="password" id="password" name="_password" required="required"
+                   autocomplete="current-password"/>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="remember_me" name="_remember_me" value="on"/>
+            <label for="remember_me" class="custom-control-label">
+              {{ 'security.login.remember_me'|trans }}
+            </label>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-info btn-lg btn-block" type="submit">
+            {{ 'security.login.submit'|trans }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
