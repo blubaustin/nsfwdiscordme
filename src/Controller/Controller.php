@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -22,5 +23,13 @@ class Controller extends AbstractController
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return parent::getUser();
     }
 }

@@ -3,10 +3,11 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="access_token")
+ * @ORM\Entity(repositoryClass="App\Repository\AccessTokenRepository")
  */
 class AccessToken
 {
@@ -194,6 +195,18 @@ class AccessToken
         $this->dateExpires = $dateExpires;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        try {
+            return $this->dateExpires < new DateTime();
+        } catch(Exception $e) {
+            return true;
+        }
     }
 
     /**
