@@ -19,9 +19,5 @@ framework:
     templating:
         engines: ['twig', 'php']
 
-    cache:
-        app: cache.adapter.redis
-        default_redis_provider: "redis://%env(resolve:REDIS_HOST)%:%env(resolve:REDIS_PORT)%"
-
     translator:
         fallbacks: [ "en" ]

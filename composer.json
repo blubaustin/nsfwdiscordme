@@ -7,7 +7,9 @@
         "ext-iconv": "*",
         "ext-redis": "*",
         "friendsofsymfony/user-bundle": "~2.0",
+        "restcord/restcord": "^0.3.1",
         "symfony/asset": "4.2.*",
+        "symfony/cache": "4.2.*",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
@@ -16,7 +18,9 @@
         "symfony/swiftmailer-bundle": "^3.2",
         "symfony/translation": "4.2.*",
         "symfony/twig-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*"
+        "symfony/var-dumper": "4.2.*",
+        "symfony/yaml": "4.2.*",
+        "wohali/oauth2-discord-new": "^1.0"
     },
     "config": {
         "preferred-install": {

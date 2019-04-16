@@ -38,3 +38,13 @@ services:
         arguments:
             - '@Redis'
             - { prefix: 'session_', database: 0 }
+
+    RestCord\DiscordClient:
+        class: RestCord\DiscordClient
+        arguments:
+            - { token: '%env(DISCORD_BOT_TOKEN)%' }
+
+    Wohali\OAuth2\Client\Provider\Discord:
+        class: Wohali\OAuth2\Client\Provider\Discord
+        arguments:
+            - { clientId: '%env(DISCORD_CLIENT_ID)%', clientSecret: '%env(DISCORD_CLIENT_SECRET)%' }
