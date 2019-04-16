@@ -1,6 +1,8 @@
 <?php
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -54,12 +56,18 @@ class User extends BaseUser
     protected $discordDiscriminator;
 
     /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="Guild", mappedBy="user")
+     */
+    protected $guilds;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         parent::__construct();
-        // your own logic
+        $this->guilds = new ArrayCollection();
     }
 
     /**
@@ -178,6 +186,26 @@ class User extends BaseUser
     public function setDiscordDiscriminator(string $discordDiscriminator): User
     {
         $this->discordDiscriminator = $discordDiscriminator;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getGuilds(): Collection
+    {
+        return $this->guilds;
+    }
+
+    /**
+     * @param Collection $guilds
+     *
+     * @return User
+     */
+    public function setGuilds(Collection $guilds): User
+    {
+        $this->guilds = $guilds;
 
         return $this;
     }

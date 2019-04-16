@@ -1,8 +1,8 @@
 <?php
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 use Exception;
 
 /**
@@ -20,7 +20,7 @@ class AccessToken
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="discordAccessToken")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="discordAccessToken")
      * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", referencedColumnName="id")
      */
     protected $user;
