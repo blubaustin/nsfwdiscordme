@@ -1,12 +1,43 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+  <head>
+    {% block meta %}
+      <meta charset="utf-8"/>
+      <meta name="fragment" content="!"/>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+      <meta name="theme-color" content="#30517F"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>{% block title %}nsfwdiscordme{% endblock %}</title>
+    {% endblock meta %}
+    {% block favicon %}
+      <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+      <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    {% endblock favicon %}
+    {% block stylesheets %}
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+            integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous"/>
+      <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"/>
+    {% endblock stylesheets %}
+  </head>
+  <body>
+    {% block nav %}
+      {% include "layout/nav.html.twig" %}
+    {% endblock %}
+    <div class="container-fluid">
+      {% block body %}{% endblock %}
+    </div>
+    {% block javascripts %}
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+              integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+              integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+              crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+              integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+              crossorigin="anonymous"></script>
+      <script src="{{ asset('build/js/app.js') }}"></script>
+    {% endblock %}
+  </body>
 </html>

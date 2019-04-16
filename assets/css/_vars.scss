@@ -1,0 +1,63 @@
+$break-xs: 320px;
+$break-sm: 600px;
+$break-md: 960px;
+$break-lg: 1280px;
+$break-xl: 1920px;
+
+$color-primary: #2e365a;
+$color-success: #57bb10;
+$color-warning: #e0a800;
+$color-danger: #a92d2d;
+$color-secondary: #545b62;
+$color-info: #17a2b8;
+$color-link: #0099cc;
+$color-table-border: #e2e2e2;
+
+:export {
+  colorPrimary: $color-primary;
+  colorSuccess: $color-success;
+  colorWarning: $color-warning;
+  colorDanger:  $color-danger;
+  breakXs: $break-xs;
+  breakSm: $break-sm;
+  breakMd: $break-md;
+  breakLg: $break-lg;
+  breakXl: $break-xl;
+}
+
+$color-names-list: primary success info danger warning;
+$colors-list: $color-primary $color-success $color-info $color-danger $color-warning;
+
+$gutter-size: 15px;
+$header-height: 65px;
+$input-height: 48px;
+
+@mixin media-xs {
+  @media (min-width: #{$break-xs}) and (max-width: #{$break-sm - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-sm {
+  @media (min-width: #{$break-sm}) and (max-width: #{$break-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-md {
+  @media (min-width: #{$break-md}) and (max-width: #{$break-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-lg {
+  @media (min-width: #{$break-lg}) and (max-width: #{$break-xl - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-xl {
+  @media (min-width: #{$break-xl}) {
+    @content;
+  }
+}

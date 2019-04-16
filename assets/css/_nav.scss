@@ -1,0 +1,14 @@
+@import "vars";
+
+.navbar {
+  background-color: $color-primary;
+}
+
+.navbar-brand {
+  padding-top: 0;
+  padding-bottom: 0;
+
+  img {
+    height: 30px;
+  }
+}
