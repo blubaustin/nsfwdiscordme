@@ -1,0 +1,34 @@
+<div class="card card-primary card-server-admin">
+  <div class="card-header card-server-admin-header">
+    <div>
+      <img class="card-server-admin-icon" src="{{ server.icon }}" alt="server Icon" />
+      <h2>{{ server.title }}</h2>
+    </div>
+    {{ icon('ellipsis-v') }}
+  </div>
+  <div class="card-body">
+    <div class="gutter-bottom">
+      {{ server.vanityURL }}
+    </div>
+    <div>
+      Bump Points: {{ server.bumpPoints }}
+    </div>
+    <div>
+      Next Bump: {{ server.bumpNext }}
+    </div>
+  </div>
+  <div class="card-footer card-server-admin-footer">
+    <a href="#">
+      {{ icon('arrow-circle-up') }}
+    </a>
+    <a href="#">
+      {{ icon('gem', 'far') }}
+    </a>
+    <a href="#">
+      {{ icon('chart-bar') }}
+    </a>
+    <a href="#">
+      {{ icon('pencil-alt') }}
+    </a>
+  </div>
+</div>

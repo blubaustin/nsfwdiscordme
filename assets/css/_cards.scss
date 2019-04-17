@@ -4,34 +4,39 @@
   margin-bottom: $gutter-size;
 }
 
+.card-primary {
+  @extend .text-white;
+  @extend .bg-primary;
+}
+
 /**
- * Guild
+ * Server
  */
-.card-guild {
+.card-server {
   height: 240px;
   overflow: hidden;
   position: relative;
 
   &:hover {
-    .card-guild-bg {
+    .card-server-bg {
       transform: scale(1.1);
     }
 
-    .card-guild-info {
+    .card-server-info {
       height: 180px;
     }
 
-    .card-guild-description {
+    .card-server-description {
       opacity: 1;
     }
 
-    .card-guild-info {
+    .card-server-info {
       background-color: rgba(0, 0, 0, 0.85);
     }
   }
 }
 
-.card-guild-bg {
+.card-server-bg {
   display: block;
   position: absolute;
   top: 0;
@@ -42,12 +47,12 @@
   transition: all 0.25s;
 }
 
-.card-guild-link {
+.card-server-link {
   display: block;
   height: 100%;
 }
 
-.card-guild-info {
+.card-server-info {
   position: absolute;
   left: 0;
   right: 0;
@@ -58,7 +63,7 @@
   background-color: rgba(0, 0, 0, 0.65);
 }
 
-.card-guild-icon {
+.card-server-icon {
   position: absolute;
   border-radius: 50%;
   top: -40px;
@@ -70,7 +75,7 @@
   margin-right: auto;
 }
 
-.card-guild-title {
+.card-server-title {
   position: absolute;
   top: 45px;
   left: 0;
@@ -81,7 +86,7 @@
   font-weight: 500;
 }
 
-.card-guild-categories {
+.card-server-categories {
   position: absolute;
   top: 70px;
   left: 0;
@@ -92,7 +97,7 @@
   font-weight: normal;
 }
 
-.card-guild-description {
+.card-server-description {
   position: absolute;
   color: #FFF;
   left: $gutter-size;
@@ -100,4 +105,74 @@
   bottom: $gutter-size;
   opacity: 0;
   transition: opacity 0.5s;
+}
+
+/**
+ * Server admin
+ */
+
+
+.card-server-admin-bg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  opacity: 0.2;
+  transition: all 0.25s;
+}
+
+.card-server-admin-icon {
+  height: 40px;
+  margin-right: $gutter-size;
+  border-radius: 50%;
+  border: 2px solid #FFF;
+}
+
+.card-server-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+
+  h2 {
+    color: #FFF;
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  & > div {
+    display: flex;
+    flex-grow: 2;
+    align-items: center;
+  }
+
+  .icon {
+    cursor: pointer;
+    color: #ffffffc7;
+    font-size: 1.5rem;
+
+    &:hover {
+      color: #FFF;
+    }
+  }
+}
+
+.card-server-admin-footer {
+  display: flex;
+  border-top: 0;
+  background-color: inherit;
+  justify-content: space-between;
+
+  a {
+    color: #ffffffc7;
+    font-size: 2rem;
+    padding: 0 $gutter-size;
+
+    &:hover {
+      color: #FFF;
+    }
+  }
 }

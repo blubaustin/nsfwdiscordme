@@ -1,0 +1,29 @@
+@import "vars";
+
+.gutter {
+  padding: $gutter-size;
+}
+
+.gutter-bottom {
+  padding-bottom: $gutter-size;
+}
+
+.gutter-bottom-lg {
+  padding-bottom: $gutter-size * 2;
+}
+
+.gutter-bottom-sm {
+  padding-bottom: $gutter-size / 2;
+}
+
+.gutter-top {
+  padding-top: $gutter-size;
+}
+
+.gutter-top-lg {
+  padding-top: $gutter-size * 2;
+}
+
+.gutter-top-sm {
+  padding-top: $gutter-size / 2;
+}

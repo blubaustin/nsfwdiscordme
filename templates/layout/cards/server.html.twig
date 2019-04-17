@@ -1,0 +1,17 @@
+<div class="card card-server">
+  <a href="{{ path('server_index', { name: server.name }) }}" class="card-server-link">
+    <div class="card-server-info">
+      <img class="card-server-icon" src="{{ server.icon }}" alt="server Icon" />
+      <h2 class="card-server-title">
+        {{ server.title }}
+      </h2>
+      <h3 class="card-server-categories">
+        {{ server.categories }}
+      </h3>
+      <div class="card-server-description">
+        {{ server.description }}
+      </div>
+    </div>
+    <img class="card-server-bg" src="{{ server.banner }}" alt="Background" />
+  </a>
+</div>

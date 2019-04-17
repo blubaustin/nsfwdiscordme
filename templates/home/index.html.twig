@@ -2,9 +2,9 @@
 {% block body %}
   {% include "layout/search.html.twig" %}
   <div class="row">
-    {% for guild in guilds %}
+    {% for server in servers %}
       <div class="col col-md-4 col-sm-12 col-12">
-        {% include "layout/cards/guild.html.twig" %}
+        {% include "layout/cards/server.html.twig" %}
       </div>
     {% endfor %}
   </div>

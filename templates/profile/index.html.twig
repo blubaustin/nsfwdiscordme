@@ -1,4 +1,82 @@
 {% extends "base.html.twig" %}
 {% block body %}
-  Profile
+  <div class="row">
+    <div class="col col-md-10 offset-md-1 col-sm-12">
+      <div class="row">
+        <div class="col">
+          <h1 class="layout-page-title">
+            Manage Discord Servers
+          </h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="menu-buttons">
+            <a href="{{ path('server_add') }}" class="btn btn-info btn-bg">
+              {{ icon('plus') }}
+              Add Discord Server
+            </a>
+            <a href="{{ path('profile_icons') }}" class="btn btn-info btn-bg">
+              {{ icon('cloud-upload-alt') }}
+              Update Icons
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row gutter-bottom-lg">
+        {% for server in servers %}
+          <div class="col col-md-6 col-sm-12 col-12">
+            {% include "layout/cards/server-admin.html.twig" %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card card-primary">
+            <div class="card-body">
+              <h2 class="text-center">
+                FAQs
+              </h2>
+              <div class="card-text">
+                <ul class="list-faq">
+                  <li>
+                    <h4 class="list-faq-question">
+                      What are Bump Points?
+                    </h4>
+                    <div class="list-faq-answer">
+                      Bump points are...
+                    </div>
+                  </li>
+                  <li>
+                    <h4 class="list-faq-question">
+                      Where are my Bump points?
+                    </h4>
+                    <div class="list-faq-answer">
+                      Bump points are...
+                    </div>
+                  </li>
+                  <li>
+                    <h4 class="list-faq-question">
+                      How often can I get Bump points?
+                    </h4>
+                    <div class="list-faq-answer">
+                      Bump points are...
+                    </div>
+                  </li>
+                  <li>
+                    <h4 class="list-faq-question">
+                      How can I boost my server?
+                    </h4>
+                    <div class="list-faq-answer">
+                      Bump points are...
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

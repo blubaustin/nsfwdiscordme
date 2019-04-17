@@ -16,7 +16,7 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
-        $guilds = [
+        $servers = [
             [
                 'name'        => 'helldc',
                 'title'       => 'Hell',
@@ -44,7 +44,7 @@ class HomeController extends Controller
         ];
 
         return $this->render('home/index.html.twig', [
-            'guilds' => $guilds
+            'servers' => $servers
         ]);
     }
 }
