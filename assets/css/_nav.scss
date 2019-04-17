@@ -1,22 +1,24 @@
 @import "vars";
 
-$height-images: 30px;
-
 .navbar {
   margin-bottom: $gutter-size;
   background-color: $color-primary;
 }
 
+.navbar-dark .navbar-nav .nav-link {
+  color: #FFF;
+  font-size: 1.2rem;
+}
+
 .navbar-brand {
   padding-top: 0;
   padding-bottom: 0;
+}
 
-  img {
-    height: $height-images;
-  }
+.nav-image {
+  height: 30px;
 }
 
 .nav-avatar {
-  height: $height-images;
   margin-right: 5px;
 }

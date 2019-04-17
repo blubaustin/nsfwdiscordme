@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="/">
-    <img src="{{ asset('images/logo-brand.png') }}" alt="Logo"/>
+    <img src="{{ asset('images/logo-brand.png') }}" alt="Logo" class="nav-image" />
   </a>
   <button
     class="navbar-toggler"
@@ -15,11 +15,6 @@
   </button>
   <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-          Guides
-        </a>
-      </li>
       <li class="nav-item dropdown">
         <a
           class="nav-link dropdown-toggle"
@@ -44,6 +39,11 @@
           </a>
         </div>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          Guides
+        </a>
+      </li>
     </ul>
     <ul class="navbar-nav">
       {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
@@ -57,7 +57,7 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <img src="{{ app.user|avatar }}" alt="Avatar" class="nav-avatar" />
+            <img src="{{ app.user|avatar }}" alt="Avatar" class="nav-avatar nav-image" />
             <span>{{ app.user|username }}</span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarAccountDropdown">
@@ -72,13 +72,9 @@
         </li>
       {% else %}
         <li class="nav-item">
-          <a href="{{ path('fos_user_security_login') }}" class="nav-link">
-            {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ path('fos_user_registration_register') }}" class="nav-link">
-            {{ 'layout.register'|trans({}, 'FOSUserBundle') }}
+          <a href="{{ path('discord_oauth2') }}" class="nav-link">
+            <img src="{{ asset('images/discord-logo-white.png') }}" alt="Discord Logo" class="nav-image" />
+            Login with Discord
           </a>
         </li>
       {% endif %}
