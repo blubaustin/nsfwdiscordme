@@ -47,4 +47,4 @@ services:
     Wohali\OAuth2\Client\Provider\Discord:
         class: Wohali\OAuth2\Client\Provider\Discord
         arguments:
-            - { clientId: '%env(DISCORD_CLIENT_ID)%', clientSecret: '%env(DISCORD_CLIENT_SECRET)%' }
+            - { clientId: '%env(DISCORD_CLIENT_ID)%', clientSecret: '%env(DISCORD_CLIENT_SECRET)%', redirectUri: '%env(DISCORD_OAUTH_REDIRECT_URL)%' }
