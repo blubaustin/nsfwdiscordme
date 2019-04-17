@@ -58,15 +58,15 @@
             aria-expanded="false"
           >
             <img src="{{ app.user|avatar }}" alt="Avatar" class="nav-avatar nav-image" />
-            <span>{{ app.user|username }}</span>
+            <span>{{ app.user.username }}</span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarAccountDropdown">
-            <a href="{{ path('fos_user_profile_show') }}" class="dropdown-item">
-              Account
+            <a href="{{ path('profile_index') }}" class="dropdown-item">
+              Profile
             </a>
             <div class="dropdown-divider"></div>
-            <a href="{{ path('fos_user_security_logout') }}" class="dropdown-item">
-              {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+            <a href="{{ path('discord_oauth2_logout') }}" class="dropdown-item">
+              Logout
             </a>
           </div>
         </li>
@@ -74,7 +74,7 @@
         <li class="nav-item">
           <a href="{{ path('discord_oauth2') }}" class="nav-link">
             <img src="{{ asset('images/discord-logo-white.png') }}" alt="Discord Logo" class="nav-image" />
-            Login with Discord
+            Login With Discord
           </a>
         </li>
       {% endif %}

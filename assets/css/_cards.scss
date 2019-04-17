@@ -1,0 +1,103 @@
+@import "vars";
+
+.card {
+  margin-bottom: $gutter-size;
+}
+
+/**
+ * Guild
+ */
+.card-guild {
+  height: 240px;
+  overflow: hidden;
+  position: relative;
+
+  &:hover {
+    .card-guild-bg {
+      transform: scale(1.1);
+    }
+
+    .card-guild-info {
+      height: 180px;
+    }
+
+    .card-guild-description {
+      opacity: 1;
+    }
+
+    .card-guild-info {
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+.card-guild-bg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  transition: all 0.25s;
+}
+
+.card-guild-link {
+  display: block;
+  height: 100%;
+}
+
+.card-guild-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100px;
+  z-index: 2;
+  transition: height 0.25s;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.card-guild-icon {
+  position: absolute;
+  border-radius: 50%;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 80px;
+  border: 2px solid #FFF;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card-guild-title {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  right: 0;
+  color: #FFF;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.card-guild-categories {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  color: #FFF;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: normal;
+}
+
+.card-guild-description {
+  position: absolute;
+  color: #FFF;
+  left: $gutter-size;
+  right: $gutter-size;
+  bottom: $gutter-size;
+  opacity: 0;
+  transition: opacity 0.5s;
+}

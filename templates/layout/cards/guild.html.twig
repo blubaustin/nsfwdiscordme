@@ -1,0 +1,17 @@
+<div class="card card-guild">
+  <a href="{{ path('guild_index', { name: guild.name }) }}" class="card-guild-link">
+    <div class="card-guild-info">
+      <img class="card-guild-icon" src="{{ guild.icon }}" alt="Guild Icon" />
+      <h2 class="card-guild-title">
+        {{ guild.title }}
+      </h2>
+      <h3 class="card-guild-categories">
+        {{ guild.categories }}
+      </h3>
+      <div class="card-guild-description">
+        {{ guild.description }}
+      </div>
+    </div>
+    <img class="card-guild-bg" src="{{ guild.banner }}" alt="Background" />
+  </a>
+</div>

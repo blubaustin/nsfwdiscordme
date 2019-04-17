@@ -37,6 +37,21 @@ class DiscordOAuthController extends Controller
     }
 
     /**
+     * @Route("/oauth2/logout", name="oauth2_logout")
+     * @param Request               $request
+     * @param TokenStorageInterface $tokenStorage
+     *
+     * @return RedirectResponse
+     */
+    public function logoutAction(Request $request, TokenStorageInterface $tokenStorage)
+    {
+        $tokenStorage->setToken(null);
+        $request->getSession()->invalidate();
+
+        return new RedirectResponse('/');
+    }
+
+    /**
      * @Route("/oauth2/redirect", name="oauth2_redirect")
      *
      * @param Request               $request
@@ -76,8 +91,8 @@ class DiscordOAuthController extends Controller
             $user
                 ->setEnabled(true)
                 ->setPassword('')
-                ->setEmail('')
-                ->setUsername('')
+                ->setEmail($resourceOwner['email'])
+                ->setUsername($resourceOwner['username'])
                 ->setDiscordID($resourceOwner['id'])
                 ->setDiscordUsername($resourceOwner['username'])
                 ->setDiscordEmail($resourceOwner['email'])

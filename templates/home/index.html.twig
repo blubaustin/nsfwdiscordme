@@ -1,4 +1,11 @@
 {% extends "base.html.twig" %}
 {% block body %}
-  Hello, World!
+  {% include "layout/search.html.twig" %}
+  <div class="row">
+    {% for guild in guilds %}
+      <div class="col col-md-4 col-sm-12 col-12">
+        {% include "layout/cards/guild.html.twig" %}
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

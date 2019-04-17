@@ -39,6 +39,12 @@ class Guild
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $title;
+
+    /**
+     * @var string
      * @ORM\Column(type="string", length=64, nullable=true)
      */
     protected $icon;
@@ -148,6 +154,26 @@ class Guild
     public function setName(string $name): Guild
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return Guild
+     */
+    public function setTitle(string $title): Guild
+    {
+        $this->title = $title;
 
         return $this;
     }

@@ -18,24 +18,8 @@ class UserExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('username', [$this, 'username']),
             new TwigFilter('avatar', [$this, 'avatar'])
         ];
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return string
-     */
-    public function username(User $user)
-    {
-        $username = $user->getDiscordUsername();
-        if ($username) {
-            return $username;
-        }
-
-        return $user->getUsername();
     }
 
     /**
