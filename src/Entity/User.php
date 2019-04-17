@@ -57,9 +57,9 @@ class User extends BaseUser
 
     /**
      * @var Collection
-     * @ORM\OneToMany(targetEntity="Guild", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Server", mappedBy="user")
      */
-    protected $guilds;
+    protected $servers;
 
     /**
      * Constructor
@@ -67,7 +67,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->guilds = new ArrayCollection();
+        $this->servers = new ArrayCollection();
     }
 
     /**
@@ -193,19 +193,19 @@ class User extends BaseUser
     /**
      * @return Collection
      */
-    public function getGuilds(): Collection
+    public function getServers(): Collection
     {
-        return $this->guilds;
+        return $this->servers;
     }
 
     /**
-     * @param Collection $guilds
+     * @param Collection $servers
      *
      * @return User
      */
-    public function setGuilds(Collection $guilds): User
+    public function setServers(Collection $servers): User
     {
-        $this->guilds = $guilds;
+        $this->servers = $servers;
 
         return $this;
     }

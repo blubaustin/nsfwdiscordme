@@ -1,33 +1,50 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Server;
+use App\Form\Type\ServerType;
+use Exception;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/server", name="server_")
+ * @Route(name="server_")
  */
 class ServerController extends Controller
 {
     /**
-     * @Route("/add", name="add")
+     * @Route("/server/add", name="add")
+     *
+     * @param Request $request
      *
      * @return Response
+     * @throws Exception
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
-        return $this->render('profile/index.html.twig');
+        $server = new Server();
+        $form = $this->createForm(ServerType::class, $server);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($server);die();
+        }
+
+        return $this->render('server/add.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
-     * @Route("/{name}", name="index")
+     * @Route("/s/{slug}", name="index")
      *
-     * @param string $name
+     * @param string $slug
      *
      * @return Response
      */
-    public function indexAction($name)
+    public function indexAction($slug)
     {
-        echo $name;die();
+        echo $slug;die();
     }
 }

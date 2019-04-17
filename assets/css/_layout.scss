@@ -16,6 +16,10 @@ body {
 
 a {
   color: $color-link;
+
+  &:hover {
+    color: lighten($color-link, 10%);
+  }
 }
 
 .layout-page-title {

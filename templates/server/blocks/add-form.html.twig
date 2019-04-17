@@ -1,0 +1,41 @@
+<div class="card card-primary">
+  <div class="card-header">
+    Add Discord Server
+  </div>
+  <div class="card-body">
+    {{ form_start(form) }}
+    <section class="form-section">
+      {{ form_row(form.name) }}
+      {{ form_row(form.slug) }}
+      {{ form_row(form.discordID) }}
+      {{ form_row(form.summary) }}
+      {{ form_row(form.description) }}
+      {{ form_row(form.categories) }}
+      {{ form_row(form.botInviteChannelID) }}
+    </section>
+
+    <section class="form-section">
+      <h4>
+        Human Verification Options
+      </h4>
+      {{ form_row(form.botHumanCheck) }}
+      {{ form_row(form.serverPassword) }}
+      {{ form_row(form.updatePassword) }}
+    </section>
+
+    <section class="form-section">
+      <h4>
+        Visibility
+      </h4>
+      {{ form_row(form.isPublic) }}
+      {{ form_row(form.isActive) }}
+    </section>
+
+    <button class="btn btn-info btn-lg btn-block" type="submit">
+      Add Discord Server
+    </button>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+  </div>
+</div>

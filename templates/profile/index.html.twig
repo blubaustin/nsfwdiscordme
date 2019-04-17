@@ -1,7 +1,9 @@
 {% extends "base.html.twig" %}
 {% block body %}
   <div class="row">
-    <div class="col col-md-10 offset-md-1 col-sm-12">
+    <div class="col col-std-narrow">
+
+      {# Page Title #}
       <div class="row">
         <div class="col">
           <h1 class="layout-page-title">
@@ -9,6 +11,8 @@
           </h1>
         </div>
       </div>
+
+      {# Page Menu #}
       <div class="row">
         <div class="col">
           <div class="menu-buttons">
@@ -23,6 +27,8 @@
           </div>
         </div>
       </div>
+
+      {# Servers #}
       <div class="row gutter-bottom-lg">
         {% for server in servers %}
           <div class="col col-md-6 col-sm-12 col-12">
@@ -30,51 +36,11 @@
           </div>
         {% endfor %}
       </div>
+
+      {# FAQs #}
       <div class="row">
         <div class="col">
-          <div class="card card-primary">
-            <div class="card-body">
-              <h2 class="text-center">
-                FAQs
-              </h2>
-              <div class="card-text">
-                <ul class="list-faq">
-                  <li>
-                    <h4 class="list-faq-question">
-                      What are Bump Points?
-                    </h4>
-                    <div class="list-faq-answer">
-                      Bump points are...
-                    </div>
-                  </li>
-                  <li>
-                    <h4 class="list-faq-question">
-                      Where are my Bump points?
-                    </h4>
-                    <div class="list-faq-answer">
-                      Bump points are...
-                    </div>
-                  </li>
-                  <li>
-                    <h4 class="list-faq-question">
-                      How often can I get Bump points?
-                    </h4>
-                    <div class="list-faq-answer">
-                      Bump points are...
-                    </div>
-                  </li>
-                  <li>
-                    <h4 class="list-faq-question">
-                      How can I boost my server?
-                    </h4>
-                    <div class="list-faq-answer">
-                      Bump points are...
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          {% include "profile/blocks/faqs.html.twig" %}
         </div>
       </div>
     </div>

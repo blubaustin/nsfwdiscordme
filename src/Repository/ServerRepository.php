@@ -1,14 +1,14 @@
 <?php
 namespace App\Repository;
 
-use App\Entity\Guild;
+use App\Entity\Server;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * Class GuildRepository
  */
-class GuildRepository extends ServiceEntityRepository
+class ServerRepository extends ServiceEntityRepository
 {
     /**
      * Constructor
@@ -17,13 +17,13 @@ class GuildRepository extends ServiceEntityRepository
      */
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Guild::class);
+        parent::__construct($registry, Server::class);
     }
 
     /**
      * @param $id
      *
-     * @return object|Guild
+     * @return object|Server
      */
     public function findByID($id)
     {

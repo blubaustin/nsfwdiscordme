@@ -4,6 +4,30 @@
   margin-bottom: $gutter-size;
 }
 
+.form-control-description {
+  min-height: 100px;
+}
+
+.form-help {
+  color: #FFF;
+  font-size: 0.9rem;
+}
+
+.form-section {
+  margin-bottom: $gutter-size-lg;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+  background-color: $color-info;
+}
+
+.custom-control-label {
+  &::before,
+  &::after {
+    top: 0.15rem;
+  }
+}
+
 .btn {
   .icon {
     margin-right: 0.25rem;

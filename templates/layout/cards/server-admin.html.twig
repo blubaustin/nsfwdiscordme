@@ -1,14 +1,16 @@
 <div class="card card-primary card-server-admin">
   <div class="card-header card-server-admin-header">
-    <div>
+    <div class="card-server-admin-header-meta">
       <img class="card-server-admin-icon" src="{{ server.icon }}" alt="server Icon" />
-      <h2>{{ server.title }}</h2>
+      <h2>{{ server.name }}</h2>
     </div>
-    {{ icon('ellipsis-v') }}
+    {{ icon('ellipsis-v', 'fa card-server-admin-menu') }}
   </div>
   <div class="card-body">
     <div class="gutter-bottom">
-      {{ server.vanityURL }}
+      <a href="{{ server.url }}">
+        {{ server.url }}
+      </a>
     </div>
     <div>
       Bump Points: {{ server.bumpPoints }}

@@ -9,6 +9,16 @@
   @extend .bg-primary;
 }
 
+.card-header {
+  font-weight: bold;
+}
+
+.card-body {
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
 /**
  * Server
  */
@@ -75,7 +85,7 @@
   margin-right: auto;
 }
 
-.card-server-title {
+.card-server-name {
   position: absolute;
   top: 45px;
   left: 0;
@@ -110,7 +120,11 @@
 /**
  * Server admin
  */
-
+.card-server-admin {
+  a {
+    color: #FFF;
+  }
+}
 
 .card-server-admin-bg {
   display: block;
@@ -143,7 +157,7 @@
     margin-bottom: 0;
   }
 
-  & > div {
+  .card-server-admin-header-meta {
     display: flex;
     flex-grow: 2;
     align-items: center;
