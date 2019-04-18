@@ -6,3 +6,7 @@ for(const selector in pages) {
     break;
   }
 }
+
+$(() => {
+  $('[data-toggle="tooltip"]').tooltip();
+});

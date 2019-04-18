@@ -3,12 +3,11 @@ namespace App\Media;
 
 use App\Entity\Media;
 use App\Media\Adapter\AdapterInterface;
-use App\Repository\MediaRepository;
 
 /**
- * Class MediaHandler
+ * Class WebHandler
  */
-class MediaHandler implements MediaHandlerInterface
+class WebHandler implements WebHandlerInterface
 {
     /**
      * @var AdapterInterface
@@ -16,27 +15,20 @@ class MediaHandler implements MediaHandlerInterface
     protected $adapter;
 
     /**
-     * @var MediaRepository
-     */
-    protected $repo;
-
-    /**
      * @var array
      */
-    protected $cndRootURLs = [];
+    protected $cdnRootURLs = [];
 
     /**
      * Constructor
      *
-     * @param MediaRepository  $repo
      * @param AdapterInterface $adapter
      * @param array            $cdnRootURLs
      */
-    public function __construct(MediaRepository $repo, AdapterInterface $adapter, array $cdnRootURLs)
+    public function __construct(AdapterInterface $adapter, array $cdnRootURLs)
     {
-        $this->repo        = $repo;
         $this->adapter     = $adapter;
-        $this->cndRootURLs = $cdnRootURLs;
+        $this->cdnRootURLs = $cdnRootURLs;
     }
 
     /**
@@ -45,6 +37,34 @@ class MediaHandler implements MediaHandlerInterface
     public function getAdapter()
     {
         return $this->adapter;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAdapter(AdapterInterface $adapter)
+    {
+        $this->adapter = $adapter;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCDNRootURLs()
+    {
+        return $this->cdnRootURLs;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCDNRootURLs(array $cdnRootURLs)
+    {
+        $this->cdnRootURLs = $cdnRootURLs;
+
+        return $this;
     }
 
     /**
@@ -68,12 +88,12 @@ class MediaHandler implements MediaHandlerInterface
     public function getWebURL(Media $media)
     {
         $adapter = $media->getAdapter();
-        if (!isset($this->cndRootURLs[$adapter])) {
+        if (!isset($this->cdnRootURLs[$adapter])) {
             throw new Exception\AdapterNotFoundException(
                 "CDN not found for adapter ${adapter}."
             );
         }
 
-        return sprintf('%s/%s', $this->cndRootURLs[$adapter], $media->getPath());
+        return sprintf('%s/%s', $this->cdnRootURLs[$adapter], $media->getPath());
     }
 }

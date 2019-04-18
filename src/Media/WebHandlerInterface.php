@@ -5,9 +5,9 @@ use App\Entity\Media;
 use App\Media\Adapter\AdapterInterface;
 
 /**
- * Interface for media handlers
+ * Web handlers assist in saving media to a CDN and creating CDN URLs.
  */
-interface MediaHandlerInterface
+interface WebHandlerInterface
 {
     /**
      * Returns the media adapter being used
@@ -15,6 +15,25 @@ interface MediaHandlerInterface
      * @return AdapterInterface
      */
     public function getAdapter();
+
+    /**
+     * @param AdapterInterface $adapter
+     *
+     * @return $this
+     */
+    public function setAdapter(AdapterInterface $adapter);
+
+    /**
+     * @return array
+     */
+    public function getCDNRootURLs();
+
+    /**
+     * @param array $cdnRootURLs
+     *
+     * @return $this
+     */
+    public function setCDNRootURLs(array $cdnRootURLs);
 
     /**
      * Writes the local file and returns a Media entity for it

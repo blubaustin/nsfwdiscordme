@@ -49,9 +49,8 @@ services:
         arguments:
             - '%kernel.project_dir%/public/cdn'
 
-    App\Media\MediaHandlerInterface:
-        class: App\Media\MediaHandler
+    App\Media\WebHandlerInterface:
+        class: App\Media\WebHandler
         arguments:
-            - '@App\Repository\MediaRepository'
             - '@App\Media\Adapter\AdapterInterface'
             - '%cdns%'

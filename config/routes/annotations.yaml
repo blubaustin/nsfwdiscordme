@@ -1,3 +1,14 @@
-controllers:
-    resource: ../../src/Controller/
+# Routes must be imported explicitly to ensure ServerController, which
+# includes a "catch all" route, gets loaded last.
+home:
+    resource: ../../src/Controller/HomeController.php
+    type: annotation
+profile:
+    resource: ../../src/Controller/ProfileController.php
+    type: annotation
+discord:
+    resource: ../../src/Controller/DiscordOAuthController.php
+    type: annotation
+server:
+    resource: ../../src/Controller/ServerController.php
     type: annotation

@@ -4,32 +4,33 @@
       <img class="card-server-admin-icon" src="{{ server.icon }}" alt="server Icon" />
       <h2>{{ server.name }}</h2>
     </div>
-    {{ icon('ellipsis-v', 'fa card-server-admin-menu') }}
+    {#{{ icon('ellipsis-v', 'fa card-server-admin-menu') }}#}
   </div>
-  <div class="card-body">
-    <div class="gutter-bottom">
+  <div class="card-img">
+    <img src="{{ server.banner }}" alt="Banner" class="card-server-admin-banner" />
+    <div class="card-server-admin-info">
+      <div>
+        Bump Points: {{ server.bumpPoints }}
+      </div>
+      <div>
+        Next Bump: {{ server.bumpNext }}
+      </div>
       <a href="{{ server.url }}">
         {{ server.url }}
       </a>
     </div>
-    <div>
-      Bump Points: {{ server.bumpPoints }}
-    </div>
-    <div>
-      Next Bump: {{ server.bumpNext }}
-    </div>
   </div>
   <div class="card-footer card-server-admin-footer">
-    <a href="#">
+    <a href="{{ path('server_upgrade', { slug: server.slug }) }}" title="Upgrade" data-toggle="tooltip">
       {{ icon('arrow-circle-up') }}
     </a>
-    <a href="#">
+    <a href="{{ path('server_upgrade', { slug: server.slug }) }}" title="Diamond" data-toggle="tooltip">
       {{ icon('gem', 'far') }}
     </a>
-    <a href="#">
+    <a href="{{ path('server_stats', { slug: server.slug }) }}" title="Statistics" data-toggle="tooltip">
       {{ icon('chart-bar') }}
     </a>
-    <a href="#">
+    <a href="{{ path('server_settings', { slug: server.slug }) }}" title="Edit Server" data-toggle="tooltip">
       {{ icon('pencil-alt') }}
     </a>
   </div>

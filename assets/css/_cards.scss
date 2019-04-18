@@ -125,6 +125,12 @@
   a {
     color: #FFF;
   }
+
+  .card-img {
+    height: 290px;
+    overflow: hidden;
+    position: relative;
+  }
 }
 
 .card-server-admin-bg {
@@ -150,7 +156,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.25rem;
 
   h2 {
     color: #FFF;
@@ -175,6 +180,19 @@
   }
 }
 
+.card-server-admin-banner {
+  width: 100%;
+}
+
+.card-server-admin-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: $gutter-size;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
 .card-server-admin-footer {
   display: flex;
   border-top: 0;
@@ -184,10 +202,12 @@
   a {
     color: #ffffffc7;
     font-size: 2rem;
-    padding: 0 $gutter-size;
+    padding: 2px $gutter-size 0 $gutter-size;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
 
     &:hover {
       color: #FFF;
+      padding: 0 $gutter-size 2px $gutter-size;
     }
   }
 }

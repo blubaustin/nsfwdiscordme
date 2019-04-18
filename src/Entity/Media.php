@@ -13,8 +13,8 @@ use InvalidArgumentException;
 class Media
 {
     const ADAPTERS = [
-        'local',
-        'aws'
+        'aws',
+        'local'
     ];
 
     /**

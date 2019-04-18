@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Exception;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @Route(name="server_")
@@ -16,14 +17,63 @@ use Exception;
 class ServerController extends Controller
 {
     /**
+     * @Route("/{slug}", name="index")
+     *
+     * @param string $slug
+     *
+     * @return Response
+     */
+    public function indexAction($slug)
+    {
+        die($slug);
+    }
+
+    /**
+     * @Route("/server/upgrade/{slug}", name="upgrade")
+     *
+     * @param string $slug
+     *
+     * @return Response
+     */
+    public function upgradeAction($slug)
+    {
+        die($slug);
+    }
+
+    /**
+     * @Route("/server/settings/{slug}", name="settings")
+     *
+     * @param string $slug
+     *
+     * @return Response
+     */
+    public function settingsAction($slug)
+    {
+        die($slug);
+    }
+
+    /**
+     * @Route("/server/stats/{slug}", name="stats")
+     *
+     * @param string $slug
+     *
+     * @return Response
+     */
+    public function statsAction($slug)
+    {
+        die($slug);
+    }
+
+    /**
      * @Route("/server/add", name="add")
      *
-     * @param Request $request
+     * @param Request         $request
+     * @param RouterInterface $router
      *
      * @return Response
      * @throws Exception
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, RouterInterface $router)
     {
         $server = new Server();
         $server->setUser($this->getUser());
@@ -44,6 +94,13 @@ class ServerController extends Controller
 
             $found = $repo->findBySlug($server->getSlug());
             if ($found) {
+                $hasError = true;
+                $form
+                    ->get('slug')
+                    ->addError(new FormError('Slug already in use.'));
+            }
+
+            if (in_array($server->getSlug(), $this->getForbiddenSlugs($router))) {
                 $hasError = true;
                 $form
                     ->get('slug')
@@ -71,14 +128,27 @@ class ServerController extends Controller
     }
 
     /**
-     * @Route("/s/{slug}", name="index")
+     * Returns all the site paths which might conflict with server slugs
      *
-     * @param string $slug
+     * @param RouterInterface $router
      *
-     * @return Response
+     * @return array
      */
-    public function indexAction($slug)
+    private function getForbiddenSlugs(RouterInterface $router)
     {
-        echo $slug;die();
+        $paths = [
+            'admin'
+        ];
+
+        foreach($router->getRouteCollection()->all() as $route) {
+            $path = $route->getPath();
+            $path = array_filter(explode('/', $path));
+            $path = array_shift($path);
+            if ($path && !in_array($path, $paths) && $path[0] !== '{') {
+                $paths[] = $path;
+            }
+        }
+
+        return $paths;
     }
 }
