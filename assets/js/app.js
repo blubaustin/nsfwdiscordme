@@ -1,3 +1,8 @@
-import { pageServerAddInit } from './pages/server/add';
+import pages from './pages';
 
-window.pageServerAddInit = pageServerAddInit;
+for(const selector in pages) {
+  if ($(selector).length) {
+    (new pages[selector]).run();
+    break;
+  }
+}

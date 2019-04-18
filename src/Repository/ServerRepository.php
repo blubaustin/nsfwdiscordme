@@ -21,12 +21,32 @@ class ServerRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return object|Server
      */
     public function findByID($id)
     {
         return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * @param string $discordID
+     *
+     * @return object|Server
+     */
+    public function findByDiscordID($discordID)
+    {
+        return $this->findOneBy(['discordID' => $discordID]);
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return object|Server
+     */
+    public function findBySlug($slug)
+    {
+        return $this->findOneBy(['slug' => $slug]);
     }
 }

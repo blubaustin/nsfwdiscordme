@@ -9,7 +9,7 @@
 }
 
 .form-help {
-  color: #FFF;
+  color: #bfbfbf;
   font-size: 0.9rem;
 }
 
@@ -26,6 +26,11 @@
   &::after {
     top: 0.15rem;
   }
+}
+
+.invalid-feedback {
+  color: #f14d4d;
+  font-size: 1rem;
 }
 
 .btn {

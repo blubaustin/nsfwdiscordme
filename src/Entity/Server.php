@@ -88,7 +88,7 @@ class Server
 
     /**
      * @var int
-     * @ORM\Column(type="bigint", options={"unsigned"=true})
+     * @ORM\Column(type="bigint", options={"unsigned"=true}, nullable=true)
      */
     protected $botInviteChannelID;
 
