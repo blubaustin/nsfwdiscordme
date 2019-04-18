@@ -1,42 +1,42 @@
 {% extends "base.html.twig" %}
 {% block body %}
+  {# Page Title #}
   <div class="row">
-    <div class="col col-std-narrow">
+    <div class="col">
+      <h1 class="layout-page-title">
+        Manage Discord Servers
+      </h1>
+    </div>
+  </div>
 
-      {# Page Title #}
-      <div class="row">
-        <div class="col">
-          <h1 class="layout-page-title">
-            Manage Discord Servers
-          </h1>
-        </div>
+  {# Page Menu #}
+  <div class="row">
+    <div class="col">
+      <div class="menu-buttons">
+        <a href="{{ path('server_add') }}" class="btn btn-info">
+          {{ icon('plus') }}
+          Add Server
+        </a>
+        <a href="{{ path('profile_icons') }}" class="btn btn-info">
+          {{ icon('cog') }}
+          Settings
+        </a>
       </div>
+    </div>
+  </div>
 
-      {# Page Menu #}
-      <div class="row">
-        <div class="col">
-          <div class="menu-buttons">
-            <a href="{{ path('server_add') }}" class="btn btn-info btn-bg">
-              {{ icon('plus') }}
-              Add Discord Server
-            </a>
-            <a href="{{ path('profile_icons') }}" class="btn btn-info btn-bg">
-              {{ icon('cloud-upload-alt') }}
-              Update Icons
-            </a>
-          </div>
-        </div>
-      </div>
-
+  <div class="row">
+    <div class="col col-md-8 col-sm-12 col-12">
       {# Servers #}
-      <div class="row gutter-bottom-lg">
+      <div class="row">
         {% for server in servers %}
           <div class="col col-md-6 col-sm-12 col-12">
             {% include "layout/cards/server-admin.html.twig" %}
           </div>
         {% endfor %}
       </div>
-
+    </div>
+    <div class="col col-md-4 col-sm-12 col-12">
       {# FAQs #}
       <div class="row">
         <div class="col">

@@ -11,7 +11,7 @@ use GuzzleHttp\Client as Guzzle;
 /**
  * @Route("/bot", name="bot_")
  */
-class BotController
+class BotController extends Controller
 {
     /**
      * @Route("/widget/{serverID}", name="widget")
