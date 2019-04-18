@@ -18,7 +18,27 @@ class LocalAdapter implements AdapterInterface
      */
     public function __construct($savePath)
     {
+        $this->setSavePath($savePath);
+    }
+
+    /**
+     * @param string $savePath
+     *
+     * @return $this
+     */
+    public function setSavePath($savePath)
+    {
         $this->savePath = $savePath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSavePath()
+    {
+        return $this->savePath;
     }
 
     /**
