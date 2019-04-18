@@ -87,6 +87,17 @@ class Server
     protected $categories;
 
     /**
+     * @var Collection
+     * @ORM\ManyToMany(targetEntity="Media")
+     * @ORM\JoinTable(
+     *     name="server_medias",
+     *     joinColumns={@ORM\JoinColumn(name="server_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="media_id", referencedColumnName="id")}
+     * )
+     */
+    protected $medias;
+
+    /**
      * @var int
      * @ORM\Column(type="bigint", options={"unsigned"=true}, nullable=true)
      */
@@ -138,6 +149,7 @@ class Server
         $this->dateCreated = new DateTime();
         $this->dateUpdated = new DateTime();
         $this->categories  = new ArrayCollection();
+        $this->medias      = new ArrayCollection();
     }
 
     /**
@@ -329,7 +341,7 @@ class Server
     }
 
     /**
-     * @return Collection
+     * @return Collection|Category[]
      */
     public function getCategories(): Collection
     {
@@ -344,6 +356,26 @@ class Server
     public function setCategories(Collection $categories): Server
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Media[]
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    /**
+     * @param Collection $medias
+     *
+     * @return Server
+     */
+    public function setMedias(Collection $medias): Server
+    {
+        $this->medias = $medias;
 
         return $this;
     }

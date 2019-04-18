@@ -4,25 +4,43 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 
 /**
- * @ORM\Table(name="category")
- * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ * @ORM\Table(name="media")
+ * @ORM\Entity(repositoryClass="App\Repository\MediaRepository")
  */
-class Category
+class Media
 {
+    const ADAPTERS = [
+        'local',
+        'aws'
+    ];
+
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @ORM\Column(type="bigint", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=20)
      */
     protected $name;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $path;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=20)
+     */
+    protected $adapter;
 
     /**
      * @var DateTime
@@ -66,11 +84,54 @@ class Category
     /**
      * @param string $name
      *
-     * @return Category
+     * @return Media
      */
-    public function setName(string $name): Category
+    public function setName(string $name): Media
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return Media
+     */
+    public function setPath(string $path): Media
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdapter(): string
+    {
+        return $this->adapter;
+    }
+
+    /**
+     * @param string $adapter
+     *
+     * @return Media
+     */
+    public function setAdapter(string $adapter): Media
+    {
+        if (!in_array($adapter, self::ADAPTERS)) {
+            throw new InvalidArgumentException("Invalid adapter.");
+        }
+        $this->adapter = $adapter;
 
         return $this;
     }
@@ -86,9 +147,9 @@ class Category
     /**
      * @param DateTime $dateCreated
      *
-     * @return Category
+     * @return Media
      */
-    public function setDateCreated(DateTime $dateCreated): Category
+    public function setDateCreated(DateTime $dateCreated): Media
     {
         $this->dateCreated = $dateCreated;
 
@@ -106,9 +167,9 @@ class Category
     /**
      * @param DateTime $dateUpdated
      *
-     * @return Category
+     * @return Media
      */
-    public function setDateUpdated(DateTime $dateUpdated): Category
+    public function setDateUpdated(DateTime $dateUpdated): Media
     {
         $this->dateUpdated = $dateUpdated;
 
