@@ -1,3 +1,6 @@
+imports:
+    - { resource: version.yaml }
+
 framework:
     secret: '%env(APP_SECRET)%'
     #default_locale: en
@@ -22,4 +25,8 @@ framework:
         engines: ['twig', 'php']
 
     translator:
-        fallbacks: [ "en" ]
+        fallbacks: ['en']
+
+    assets:
+        version: '%git_commit%'
+        version_format: '%%s?version=%%s'
