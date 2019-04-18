@@ -11,6 +11,7 @@
 .idea
 node_modules
 public/build
+/.env.test
 
 ###> symfony/phpunit-bridge ###
 .phpunit

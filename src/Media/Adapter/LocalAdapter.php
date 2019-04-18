@@ -44,17 +44,65 @@ class LocalAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function write($path, $localFile)
+    public function getName()
+    {
+        return 'local';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function write($path, $localFile, $overwrite = false)
     {
         if (!is_readable($localFile)) {
-            throw new Exception\FileNotFoundException("File ${localFile} does not exist or is not readable.");
+            throw new Exception\FileNotFoundException(
+                "File ${localFile} does not exist or is not readable."
+            );
         }
 
-        $writePath = sprintf('%s/%s', $this->savePath, trim($path, '/\\'));
-        if (file_exists($writePath)) {
-            throw new Exception\FileExistsException("File ${writePath} already exists.");
+        if ($this->exists($path)) {
+            if ($overwrite) {
+                $this->remove($path);
+            } else {
+                throw new Exception\FileExistsException(
+                    "File ${path} already exists."
+                );
+            }
         }
 
-        return copy($localFile, $writePath);
+        return copy($localFile, $this->getWritePath($path));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function exists($path)
+    {
+        return is_readable($this->getWritePath($path));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function remove($path)
+    {
+        $writePath = $this->getWritePath($path);
+        if (!is_readable($writePath)) {
+            throw new Exception\FileNotFoundException(
+                "File ${writePath} does not exist or is not readable."
+            );
+        }
+
+        return unlink($writePath);
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
+    private function getWritePath($path)
+    {
+        return sprintf('%s/%s', $this->savePath, trim($path, '/\\'));
     }
 }

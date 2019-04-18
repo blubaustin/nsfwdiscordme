@@ -40,8 +40,39 @@ class LocalAdapterTest extends TestCase
             $actual = $this->adapter->write('background.png', __DIR__ . '/assets/background.png');
             $this->assertTrue($actual);
             $this->assertTrue(file_exists($this->savePath . '/background.png'));
+
+            $actual = $this->adapter->write('background.png', __DIR__ . '/assets/background.png', true);
+            $this->assertTrue($actual);
+            $this->assertTrue(file_exists($this->savePath . '/background.png'));
         } finally {
-            unlink($this->savePath . '/background.png');
+            @unlink($this->savePath . '/background.png');
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testExists()
+    {
+        try {
+            file_put_contents($this->savePath . '/test.txt', 'Hello, World');
+            $this->assertTrue($this->adapter->exists('test.txt'));
+            $this->assertFalse($this->adapter->exists('test2.txt'));
+        } finally {
+            @unlink($this->savePath . '/test.txt');
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testRemove()
+    {
+        try {
+            file_put_contents($this->savePath . '/test.txt', 'Hello, World');
+            $this->assertTrue($this->adapter->remove('test.txt'));
+        } finally {
+            @unlink($this->savePath . '/test.txt');
         }
     }
 
@@ -66,7 +97,7 @@ class LocalAdapterTest extends TestCase
             file_put_contents($this->savePath . '/test.txt', 'Hello, World');
             $this->adapter->write('test.txt', __DIR__ . '/assets/background.png');
         } finally {
-            unlink($this->savePath . '/test.txt');
+            @unlink($this->savePath . '/test.txt');
         }
     }
 }
