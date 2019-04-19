@@ -29,7 +29,7 @@ services:
                   - '%env(REDIS_HOST)%'
                   - '%env(int:REDIS_PORT)%'
 
-    App\Storage\RedisSessionHandler:
+    App\Storage\Sessions\RedisSessionHandler:
         arguments:
             - '@Redis'
             - { prefix: 'session_', database: 0 }

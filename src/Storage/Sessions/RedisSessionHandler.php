@@ -1,5 +1,5 @@
 <?php
-namespace App\Storage;
+namespace App\Storage\Sessions;
 
 use Redis;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;

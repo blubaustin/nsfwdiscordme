@@ -7,17 +7,14 @@ use App\Form\Type\ServerType;
 use App\Media\Adapter\Exception\FileExistsException;
 use App\Media\Adapter\Exception\FileNotFoundException;
 use App\Media\Adapter\Exception\WriteException;
-use App\Media\WebHandler;
+use App\Media\Paths;
 use App\Media\WebHandlerInterface;
-use App\Storage\Snowflake\SnowflakeGeneratorInterface;
-use RuntimeException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Exception;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -94,7 +91,7 @@ class ServerController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $hasError = false;
-            $repo = $this->getDoctrine()->getRepository(Server::class);
+            $repo     = $this->getDoctrine()->getRepository(Server::class);
 
             $found = $repo->findByDiscordID($server->getDiscordID());
             if ($found) {
@@ -169,9 +166,37 @@ class ServerController extends Controller
             }
         }
 
-        return $this->render('server/add.html.twig', [
-            'form' => $form->createView()
-        ]);
+        return $this->render(
+            'server/add.html.twig',
+            [
+                'form' => $form->createView()
+            ]
+        );
+    }
+
+    /**
+     * Returns all the site paths which might conflict with server slugs
+     *
+     * @param RouterInterface $router
+     *
+     * @return array
+     */
+    private function getForbiddenSlugs(RouterInterface $router)
+    {
+        $paths = [
+            'admin'
+        ];
+
+        foreach ($router->getRouteCollection()->all() as $route) {
+            $path = $route->getPath();
+            $path = array_filter(explode('/', $path));
+            $path = array_shift($path);
+            if ($path && !in_array($path, $paths) && $path[0] !== '{') {
+                $paths[] = $path;
+            }
+        }
+
+        return $paths;
     }
 
     /**
@@ -191,25 +216,19 @@ class ServerController extends Controller
             return null;
         }
 
-        if (!in_array($name, ['banner', 'icon'])) {
-            throw new RuntimeException(
-                "Invalid file name ${name}."
-            );
-        }
-
         $mimeTypes = [
             'image/jpeg' => 'jpg',
             'image/jpg'  => 'jpg',
             'image/png'  => 'png',
             'image/gif'  => 'gif'
         ];
-        $mimeType = $file->getMimeType();
+        $mimeType  = $file->getMimeType();
         if (!in_array($mimeType, array_keys($mimeTypes))) {
             return null;
         }
 
-        $path = sprintf(
-            '%ss/%s/%s.%s',
+        $paths = new Paths();
+        $path  = $paths->getPathByType(
             $name,
             $serverID,
             $this->snowflakeGenerator->generate(),
@@ -229,30 +248,5 @@ class ServerController extends Controller
     private function deleteUploadedFile(Media $media, WebHandlerInterface $webHandler)
     {
         return $webHandler->getAdapter()->remove($media->getPath());
-    }
-
-    /**
-     * Returns all the site paths which might conflict with server slugs
-     *
-     * @param RouterInterface $router
-     *
-     * @return array
-     */
-    private function getForbiddenSlugs(RouterInterface $router)
-    {
-        $paths = [
-            'admin'
-        ];
-
-        foreach($router->getRouteCollection()->all() as $route) {
-            $path = $route->getPath();
-            $path = array_filter(explode('/', $path));
-            $path = array_shift($path);
-            if ($path && !in_array($path, $paths) && $path[0] !== '{') {
-                $paths[] = $path;
-            }
-        }
-
-        return $paths;
     }
 }
