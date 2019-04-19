@@ -71,7 +71,7 @@ class ServerController extends Controller
     }
 
     /**
-     * @Route("/server/add", name="add")
+     * @Route("/server/add", name="add", options={"expose"=true})
      *
      * @param Request             $request
      * @param RouterInterface     $router
@@ -86,7 +86,9 @@ class ServerController extends Controller
     {
         $server = new Server();
         $server->setUser($this->getUser());
-        $form = $this->createForm(ServerType::class, $server);
+        $form = $this->createForm(ServerType::class, $server, [
+            'action' => $this->generateUrl('server_add')
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

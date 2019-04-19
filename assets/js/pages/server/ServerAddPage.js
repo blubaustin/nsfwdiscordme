@@ -7,6 +7,15 @@ import { generateSlug } from '../../lib/utils';
 class ServerAddPage
 {
   /**
+   * Constructor
+   *
+   * @param {Routing} router
+   */
+  constructor(router) {
+    this.router = router;
+  }
+
+  /**
    * Initializes the page
    */
   run() {

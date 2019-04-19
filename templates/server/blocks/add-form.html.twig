@@ -3,7 +3,7 @@
     Add Discord Server
   </div>
   <div class="card-body">
-    {{ form_start(form) }}
+    {{ form_start(form, { attr: { 'id': 'server-add-form' }}) }}
     <section class="form-section">
       {{ form_row(form.discordID) }}
       {{ form_row(form.name) }}
