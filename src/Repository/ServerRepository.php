@@ -2,6 +2,7 @@
 namespace App\Repository;
 
 use App\Entity\Server;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -48,5 +49,15 @@ class ServerRepository extends ServiceEntityRepository
     public function findBySlug($slug)
     {
         return $this->findOneBy(['slug' => $slug]);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Server[]
+     */
+    public function findByUser(User $user)
+    {
+        return $this->findBy(['user' => $user]);
     }
 }

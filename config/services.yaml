@@ -34,6 +34,14 @@ services:
             - '@Redis'
             - { prefix: 'session_', database: 0 }
 
+    App\Discord\Discord:
+        class: App\Discord\Discord
+        arguments:
+            - '@Symfony\Component\Cache\Adapter\AdapterInterface'
+            - '%env(DISCORD_CLIENT_ID)%'
+            - '%env(DISCORD_CLIENT_SECRET)%'
+            - '%env(DISCORD_BOT_TOKEN)%'
+
     RestCord\DiscordClient:
         class: RestCord\DiscordClient
         arguments:

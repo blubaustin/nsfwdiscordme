@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 {% block body %}
   {% include "layout/search.html.twig" %}
-  <div class="row">
+  <div id="page-home" class="row">
     {% for server in servers %}
       <div class="col col-md-4 col-sm-12 col-12">
         {% include "layout/cards/server.html.twig" %}

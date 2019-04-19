@@ -38,3 +38,12 @@
     margin-right: 0.25rem;
   }
 }
+
+.file-caption-icon,
+.file-caption .file-caption-name {
+  padding-top: 5px;
+}
+
+.file-drop-zone.clickable:hover {
+  border: 1px dashed #999;
+}

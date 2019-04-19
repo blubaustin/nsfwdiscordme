@@ -1,22 +1,25 @@
 <div class="card card-primary card-server-admin">
   <div class="card-header card-server-admin-header">
     <div class="card-server-admin-header-meta">
-      <img class="card-server-admin-icon" src="{{ server.icon }}" alt="server Icon" />
+      <img class="card-server-admin-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
       <h2>{{ server.name }}</h2>
     </div>
     {#{{ icon('ellipsis-v', 'fa card-server-admin-menu') }}#}
   </div>
   <div class="card-img">
-    <img src="{{ server.banner }}" alt="Banner" class="card-server-admin-banner" />
+    <img src="{{ server.bannerMedia|webPath }}" alt="Banner" class="card-server-admin-banner" />
     <div class="card-server-admin-info">
       <div>
         Bump Points: {{ server.bumpPoints }}
       </div>
       <div>
-        Next Bump: {{ server.bumpNext }}
+        Next Bump:
+        <span class="server-next-bump" data-next-bump-date="{{ server.dateNextBump|date('Y-m-d H:i:s') }}">
+          {{ server|serverNextBump }}
+        </span>
       </div>
-      <a href="{{ server.url }}">
-        {{ server.url }}
+      <a href="{{ server|serverURL }}">
+        {{ server|serverURL }}
       </a>
     </div>
   </div>

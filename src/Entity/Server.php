@@ -88,6 +88,12 @@ class Server
     protected $description;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer", options={"unsigned"=true})
+     */
+    protected $bumpPoints = 0;
+
+    /**
      * @var Collection
      * @ORM\ManyToMany(targetEntity="Category")
      * @ORM\JoinTable(
@@ -127,6 +133,12 @@ class Server
      * @ORM\Column(type="boolean")
      */
     protected $isActive = true;
+
+    /**
+     * @var DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $dateNextBump;
 
     /**
      * @var DateTime
@@ -403,6 +415,26 @@ class Server
     /**
      * @return int
      */
+    public function getBumpPoints(): int
+    {
+        return $this->bumpPoints;
+    }
+
+    /**
+     * @param int $bumpPoints
+     *
+     * @return Server
+     */
+    public function setBumpPoints(int $bumpPoints): Server
+    {
+        $this->bumpPoints = $bumpPoints;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
     public function getBotInviteChannelID(): ?int
     {
         return $this->botInviteChannelID;
@@ -496,6 +528,26 @@ class Server
     public function setIsActive(bool $isActive): Server
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateNextBump(): ?DateTime
+    {
+        return $this->dateNextBump;
+    }
+
+    /**
+     * @param DateTime $dateNextBump
+     *
+     * @return Server
+     */
+    public function setDateNextBump(DateTime $dateNextBump): Server
+    {
+        $this->dateNextBump = $dateNextBump;
 
         return $this;
     }

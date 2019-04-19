@@ -21,6 +21,7 @@ class ServerAddPage
   run() {
     this.runFormServerID();
     this.runFormSlug();
+    this.runFormUploads();
   }
 
   /**
@@ -81,6 +82,23 @@ class ServerAddPage
     });
 
     updateSlugHelp();
+  }
+
+  /**
+   *
+   */
+  runFormUploads() {
+    const options = {
+      theme:             'fas',
+      showBrowse:        false,
+      showCancel:        false,
+      showUpload:        false,
+      autoOrientImage:   false,
+      browseOnZoneClick: true,
+      previewFileType:   'any'
+    };
+    $("#server_iconFile").fileinput(options);
+    $("#server_bannerFile").fileinput(options);
   }
 }
 

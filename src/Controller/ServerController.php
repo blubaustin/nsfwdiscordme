@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Discord\Discord;
 use App\Entity\Media;
 use App\Entity\Server;
 use App\Form\Type\ServerType;
@@ -9,6 +10,8 @@ use App\Media\Adapter\Exception\FileNotFoundException;
 use App\Media\Adapter\Exception\WriteException;
 use App\Media\Paths;
 use App\Media\WebHandlerInterface;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -74,6 +77,7 @@ class ServerController extends Controller
      * @Route("/server/add", name="add", options={"expose"=true})
      *
      * @param Request             $request
+     * @param Discord             $discord
      * @param RouterInterface     $router
      * @param WebHandlerInterface $webHandler
      *
@@ -81,8 +85,9 @@ class ServerController extends Controller
      * @throws FileExistsException
      * @throws FileNotFoundException
      * @throws WriteException
+     * @throws GuzzleException
      */
-    public function addAction(Request $request, RouterInterface $router, WebHandlerInterface $webHandler)
+    public function addAction(Request $request, Discord $discord, RouterInterface $router, WebHandlerInterface $webHandler)
     {
         $server = new Server();
         $server->setUser($this->getUser());
@@ -116,6 +121,13 @@ class ServerController extends Controller
                 $form
                     ->get('slug')
                     ->addError(new FormError('Slug already in use.'));
+            }
+
+            try {
+                $discord->fetchWidget($server->getDiscordID());
+            } catch(Exception $e) {
+                $hasError = true;
+                $this->addFlash('danger', 'Widget not enabled.');
             }
 
             if ($form['updatePassword']->getData()) {

@@ -1,12 +1,13 @@
 <?php
 namespace App\Controller;
 
+use App\Discord\Discord;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use RestCord\DiscordClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use GuzzleHttp\Client as Guzzle;
 
 /**
  * @Route("/bot", name="bot_")
@@ -17,20 +18,20 @@ class BotController extends Controller
      * @Route("/widget/{serverID}", name="widget")
      *
      * @param string $serverID
+     * @param Discord $discord
      *
      * @return Response
      * @throws GuzzleException
      */
-    public function widgetAction($serverID)
+    public function widgetAction($serverID, Discord $discord)
     {
-        $client = new Guzzle([
-            'timeout' => 2.0
-        ]);
-        $response = $client->request('GET', "https://discordapp.com/api/guilds/${serverID}/widget.json", [
-            'http_errors' => false
-        ]);
+        try {
+            $resp = $discord->fetchWidget($serverID);
+        } catch (Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
 
-        return new JsonResponse((string)$response->getBody(), $response->getStatusCode(), [], true);
+        return new JsonResponse($resp);
     }
 
     /**
