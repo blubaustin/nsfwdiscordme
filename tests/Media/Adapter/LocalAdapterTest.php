@@ -3,6 +3,7 @@ namespace App\Tests\Media\Adapter;
 
 use App\Media\Adapter\Exception\FileExistsException;
 use App\Media\Adapter\Exception\FileNotFoundException;
+use App\Media\Adapter\Exception\WriteException;
 use App\Media\Adapter\LocalAdapter;
 use PHPUnit\Framework\TestCase;
 use Exception;
@@ -41,11 +42,21 @@ class LocalAdapterTest extends TestCase
             $this->assertTrue($actual);
             $this->assertTrue(file_exists($this->savePath . '/background.png'));
 
-            $actual = $this->adapter->write('background.png', __DIR__ . '/assets/background.png', true);
+            $actual = $this->adapter->write('background.png', __DIR__ . '/assets/background.png', [
+                'overwrite' => true
+            ]);
             $this->assertTrue($actual);
             $this->assertTrue(file_exists($this->savePath . '/background.png'));
+
+            $actual = $this->adapter->write('tmp/background.png', __DIR__ . '/assets/background.png', [
+                'mkdir' => true
+            ]);
+            $this->assertTrue($actual);
+            $this->assertTrue(file_exists($this->savePath . '/tmp/background.png'));
         } finally {
             @unlink($this->savePath . '/background.png');
+            @unlink($this->savePath . '/tmp/background.png');
+            @rmdir($this->savePath . '/tmp');
         }
     }
 
@@ -80,6 +91,7 @@ class LocalAdapterTest extends TestCase
      * @expectedException \App\Media\Adapter\Exception\FileNotFoundException
      * @throws FileExistsException
      * @throws FileNotFoundException
+     * @throws WriteException
      */
     public function testThrowsFileNotFoundException()
     {
@@ -90,6 +102,7 @@ class LocalAdapterTest extends TestCase
      * @expectedException \App\Media\Adapter\Exception\FileExistsException
      * @throws FileExistsException
      * @throws FileNotFoundException
+     * @throws WriteException
      */
     public function testThrowsFileExistsException()
     {
@@ -98,6 +111,22 @@ class LocalAdapterTest extends TestCase
             $this->adapter->write('test.txt', __DIR__ . '/assets/background.png');
         } finally {
             @unlink($this->savePath . '/test.txt');
+        }
+    }
+
+    /**
+     * @expectedException \App\Media\Adapter\Exception\FileNotFoundException
+     * @throws FileExistsException
+     * @throws FileNotFoundException
+     * @throws WriteException
+     */
+    public function testThrowsWriteException()
+    {
+        try {
+            $this->adapter->write('tmp/test.txt', __DIR__ . '/assets/background.png');
+        } finally {
+            @unlink($this->savePath . '/tmp/test.txt');
+            @rmdir($this->savePath . '/tmp');
         }
     }
 }

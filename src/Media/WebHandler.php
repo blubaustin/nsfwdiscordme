@@ -72,7 +72,9 @@ class WebHandler implements WebHandlerInterface
      */
     public function write($name, $path, $localFile)
     {
-        $this->adapter->write($path, $localFile);
+        $this->adapter->write($path, $localFile, [
+            'mkdir' => true
+        ]);
         $media = new Media();
         $media
             ->setAdapter($this->adapter->getName())

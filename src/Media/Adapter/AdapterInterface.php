@@ -18,14 +18,15 @@ interface AdapterInterface
      *
      * @param string $path      The path where the file will be written
      * @param string $localFile Path to the local file
-     * @param bool   $overwrite Overwrite the file if it already exists
+     * @param array  $options   Possible values with defaults: "overwrite" = false, "mkdir" = false
      *
      * @return bool
      *
+     * @throws Exception\WriteException
      * @throws Exception\FileExistsException
      * @throws Exception\FileNotFoundException
      */
-    public function write($path, $localFile, $overwrite = false);
+    public function write($path, $localFile, array $options = []);
 
     /**
      * Returns a boolean indicating whether the given file exists

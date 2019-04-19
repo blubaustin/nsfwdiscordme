@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Storage\Snowflake\SnowflakeGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -16,13 +17,20 @@ class Controller extends AbstractController
     protected $eventDispatcher;
 
     /**
+     * @var SnowflakeGeneratorInterface
+     */
+    protected $snowflakeGenerator;
+
+    /**
      * Constructor
      *
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param EventDispatcherInterface    $eventDispatcher
+     * @param SnowflakeGeneratorInterface $snowflakeGenerator
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher, SnowflakeGeneratorInterface $snowflakeGenerator)
     {
-        $this->eventDispatcher = $eventDispatcher;
+        $this->eventDispatcher    = $eventDispatcher;
+        $this->snowflakeGenerator = $snowflakeGenerator;
     }
 
     /**

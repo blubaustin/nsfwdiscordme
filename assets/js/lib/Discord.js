@@ -14,7 +14,7 @@ class Discord
    * @returns {boolean}
    */
   static isSnowflake(snowflake) {
-    return /^[\d]{17,18}$/.test(snowflake);
+    return /^[\d]{17,}$/.test(snowflake);
   }
 
   /**

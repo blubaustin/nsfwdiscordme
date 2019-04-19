@@ -1,9 +1,18 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Media;
 use App\Entity\Server;
 use App\Form\Type\ServerType;
+use App\Media\Adapter\Exception\FileExistsException;
+use App\Media\Adapter\Exception\FileNotFoundException;
+use App\Media\Adapter\Exception\WriteException;
+use App\Media\WebHandler;
+use App\Media\WebHandlerInterface;
+use App\Storage\Snowflake\SnowflakeGeneratorInterface;
+use RuntimeException;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,13 +76,16 @@ class ServerController extends Controller
     /**
      * @Route("/server/add", name="add")
      *
-     * @param Request         $request
-     * @param RouterInterface $router
+     * @param Request             $request
+     * @param RouterInterface     $router
+     * @param WebHandlerInterface $webHandler
      *
      * @return Response
-     * @throws Exception
+     * @throws FileExistsException
+     * @throws FileNotFoundException
+     * @throws WriteException
      */
-    public function addAction(Request $request, RouterInterface $router)
+    public function addAction(Request $request, RouterInterface $router, WebHandlerInterface $webHandler)
     {
         $server = new Server();
         $server->setUser($this->getUser());
@@ -112,6 +124,34 @@ class ServerController extends Controller
                 $server->setServerPassword($encryptedPassword);
             }
 
+            $iconMedia = null;
+            $iconFile  = $form['iconFile']->getData();
+            if ($iconFile) {
+                $iconMedia = $this->moveUploadedFile($iconFile, $webHandler, $server->getDiscordID(), 'icon');
+                if (!$iconMedia) {
+                    $hasError = true;
+                    $form
+                        ->get('iconFile')
+                        ->addError(new FormError('There was an error uploading the file.'));
+                } else {
+                    $server->setIconMedia($iconMedia);
+                }
+            }
+
+            $bannerMedia = null;
+            $bannerFile  = $form['bannerFile']->getData();
+            if ($bannerFile) {
+                $bannerMedia = $this->moveUploadedFile($bannerFile, $webHandler, $server->getDiscordID(), 'banner');
+                if (!$bannerMedia) {
+                    $hasError = true;
+                    $form
+                        ->get('bannerFile')
+                        ->addError(new FormError('There was an error uploading the file.'));
+                } else {
+                    $server->setBannerMedia($bannerMedia);
+                }
+            }
+
             if (!$hasError) {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($server);
@@ -119,12 +159,76 @@ class ServerController extends Controller
                 $this->addFlash('success', 'The server has been added.');
 
                 return new RedirectResponse($this->generateUrl('profile_index'));
+            } else {
+                if ($iconMedia) {
+                    $this->deleteUploadedFile($iconMedia, $webHandler);
+                }
+                if ($bannerMedia) {
+                    $this->deleteUploadedFile($bannerMedia, $webHandler);
+                }
             }
         }
 
         return $this->render('server/add.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @param UploadedFile        $file
+     * @param WebHandlerInterface $webHandler
+     * @param string              $serverID
+     * @param string              $name
+     *
+     * @return Media
+     * @throws FileExistsException
+     * @throws FileNotFoundException
+     * @throws WriteException
+     */
+    private function moveUploadedFile(UploadedFile $file, WebHandlerInterface $webHandler, $serverID, $name)
+    {
+        if ($file->getError() !== 0) {
+            return null;
+        }
+
+        if (!in_array($name, ['banner', 'icon'])) {
+            throw new RuntimeException(
+                "Invalid file name ${name}."
+            );
+        }
+
+        $mimeTypes = [
+            'image/jpeg' => 'jpg',
+            'image/jpg'  => 'jpg',
+            'image/png'  => 'png',
+            'image/gif'  => 'gif'
+        ];
+        $mimeType = $file->getMimeType();
+        if (!in_array($mimeType, array_keys($mimeTypes))) {
+            return null;
+        }
+
+        $path = sprintf(
+            '%ss/%s/%s.%s',
+            $name,
+            $serverID,
+            $this->snowflakeGenerator->generate(),
+            $mimeTypes[$mimeType]
+        );
+
+        return $webHandler->write($name, $path, $file->getPathname());
+    }
+
+    /**
+     * @param Media               $media
+     * @param WebHandlerInterface $webHandler
+     *
+     * @return bool
+     * @throws FileNotFoundException
+     */
+    private function deleteUploadedFile(Media $media, WebHandlerInterface $webHandler)
+    {
+        return $webHandler->getAdapter()->remove($media->getPath());
     }
 
     /**

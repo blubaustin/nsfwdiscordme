@@ -6,6 +6,7 @@ use App\Entity\Server;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -99,6 +100,24 @@ class ServerType extends AbstractType
                     'required' => false,
                     'label'    => 'Bot Invite Channel ID',
                     'help'     => 'You will need to go into your Discord App Personal Settings -> Appearance -> Developer Mode to get the ID, and then you can disable Developer Mode after this step is complete. Now on Discord App <b>right click</b> the channel you want the invites to be created in and click "Copy ID". Paste the ID here. This must be set for bot invites to work. This would be your welcome/general channel.'
+                ]
+            )
+            ->add(
+                'iconFile',
+                FileType::class,
+                [
+                    'mapped' => false,
+                    'required' => false,
+                    'label'    => 'Icon Image'
+                ]
+            )
+            ->add(
+                'bannerFile',
+                FileType::class,
+                [
+                    'mapped' => false,
+                    'required' => false,
+                    'label'    => 'Banner Image'
                 ]
             )
             ->add(

@@ -49,13 +49,25 @@ class Server
      * @var string
      * @ORM\Column(type="string", length=64, nullable=true)
      */
-    protected $icon;
+    protected $iconHash;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=64, nullable=true)
      */
-    protected $banner;
+    protected $bannerHash;
+
+    /**
+     * @var Media
+     * @ORM\OneToOne(targetEntity="Media", cascade={"persist"})
+     */
+    protected $iconMedia;
+
+    /**
+     * @var Media
+     * @ORM\OneToOne(targetEntity="Media", cascade={"persist"})
+     */
+    protected $bannerMedia;
 
     /**
      * @var string
@@ -85,17 +97,6 @@ class Server
      * )
      */
     protected $categories;
-
-    /**
-     * @var Collection
-     * @ORM\ManyToMany(targetEntity="Media")
-     * @ORM\JoinTable(
-     *     name="server_medias",
-     *     joinColumns={@ORM\JoinColumn(name="server_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="media_id", referencedColumnName="id")}
-     * )
-     */
-    protected $medias;
 
     /**
      * @var int
@@ -149,7 +150,6 @@ class Server
         $this->dateCreated = new DateTime();
         $this->dateUpdated = new DateTime();
         $this->categories  = new ArrayCollection();
-        $this->medias      = new ArrayCollection();
     }
 
     /**
@@ -243,19 +243,19 @@ class Server
     /**
      * @return string
      */
-    public function getIcon(): string
+    public function getIconHash(): string
     {
-        return $this->icon;
+        return $this->iconHash;
     }
 
     /**
-     * @param string $icon
+     * @param string $iconHash
      *
      * @return Server
      */
-    public function setIcon(string $icon): Server
+    public function setIconHash(string $iconHash): Server
     {
-        $this->icon = $icon;
+        $this->iconHash = $iconHash;
 
         return $this;
     }
@@ -263,19 +263,59 @@ class Server
     /**
      * @return string
      */
-    public function getBanner(): string
+    public function getBannerHash(): string
     {
-        return $this->banner;
+        return $this->bannerHash;
     }
 
     /**
-     * @param string $banner
+     * @param string $bannerHash
      *
      * @return Server
      */
-    public function setBanner(string $banner): Server
+    public function setBannerHash(string $bannerHash): Server
     {
-        $this->banner = $banner;
+        $this->bannerHash = $bannerHash;
+
+        return $this;
+    }
+
+    /**
+     * @return Media
+     */
+    public function getIconMedia(): Media
+    {
+        return $this->iconMedia;
+    }
+
+    /**
+     * @param Media $iconMedia
+     *
+     * @return Server
+     */
+    public function setIconMedia(Media $iconMedia): Server
+    {
+        $this->iconMedia = $iconMedia;
+
+        return $this;
+    }
+
+    /**
+     * @return Media
+     */
+    public function getBannerMedia(): Media
+    {
+        return $this->bannerMedia;
+    }
+
+    /**
+     * @param Media $bannerMedia
+     *
+     * @return Server
+     */
+    public function setBannerMedia(Media $bannerMedia): Server
+    {
+        $this->bannerMedia = $bannerMedia;
 
         return $this;
     }
@@ -356,26 +396,6 @@ class Server
     public function setCategories(Collection $categories): Server
     {
         $this->categories = $categories;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Media[]
-     */
-    public function getMedias(): Collection
-    {
-        return $this->medias;
-    }
-
-    /**
-     * @param Collection $medias
-     *
-     * @return Server
-     */
-    public function setMedias(Collection $medias): Server
-    {
-        $this->medias = $medias;
 
         return $this;
     }

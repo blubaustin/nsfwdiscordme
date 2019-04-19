@@ -54,3 +54,8 @@ services:
         arguments:
             - '@App\Media\Adapter\AdapterInterface'
             - '%cdns%'
+
+    App\Storage\Snowflake\SnowflakeGeneratorInterface:
+        class: App\Storage\Snowflake\RedisGenerator
+        arguments:
+            - '@Redis'

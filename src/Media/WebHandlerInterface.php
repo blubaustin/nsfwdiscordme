@@ -43,6 +43,7 @@ interface WebHandlerInterface
      * @param string $localFile Path to the local file
      *
      * @return Media
+     * @throws Adapter\Exception\WriteException
      * @throws Adapter\Exception\FileExistsException
      * @throws Adapter\Exception\FileNotFoundException
      */

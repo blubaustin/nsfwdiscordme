@@ -52,8 +52,13 @@ class LocalAdapter implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function write($path, $localFile, $overwrite = false)
+    public function write($path, $localFile, array $options = [])
     {
+        $options = array_merge([
+            'mkdir'     => false,
+            'overwrite' => false
+        ], $options);
+
         if (!is_readable($localFile)) {
             throw new Exception\FileNotFoundException(
                 "File ${localFile} does not exist or is not readable."
@@ -61,11 +66,27 @@ class LocalAdapter implements AdapterInterface
         }
 
         if ($this->exists($path)) {
-            if ($overwrite) {
+            if ($options['overwrite']) {
                 $this->remove($path);
             } else {
                 throw new Exception\FileExistsException(
                     "File ${path} already exists."
+                );
+            }
+        }
+
+        $writePath = $this->getWritePath($path);
+        $directory = pathinfo($writePath, PATHINFO_DIRNAME);
+        if (!is_writable($directory)) {
+            if ($options['mkdir']) {
+                if (!@mkdir($directory)) {
+                    throw new Exception\WriteException(
+                        "Unable to create directory ${directory}."
+                    );
+                }
+            } else {
+                throw new Exception\FileNotFoundException(
+                    "Directory ${directory} does not exist or is not writable."
                 );
             }
         }
