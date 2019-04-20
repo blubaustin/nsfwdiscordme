@@ -1,2 +1,2 @@
 parameters:
-    cdns: { local: 'http://cdn.nsfwdiscordme.com', aws: '' }
+    cdns: { local: 'http://dev.nsfwdiscordme.com/cdn', aws: '' }
