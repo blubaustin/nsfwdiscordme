@@ -7,7 +7,7 @@ use Exception;
 
 /**
  * @ORM\Table(name="tag")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
  */
 class Tag
 {

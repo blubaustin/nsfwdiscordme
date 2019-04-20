@@ -97,7 +97,7 @@ class Server
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity="Category")
+     * @ORM\ManyToMany(targetEntity="Category", cascade={"persist"})
      * @ORM\JoinTable(
      *     name="server_categories",
      *     joinColumns={@ORM\JoinColumn(name="server_id", referencedColumnName="id")},
@@ -108,7 +108,7 @@ class Server
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity="Tag")
+     * @ORM\ManyToMany(targetEntity="Tag", cascade={"persist"})
      * @ORM\JoinTable(
      *     name="server_tags",
      *     joinColumns={@ORM\JoinColumn(name="server_id", referencedColumnName="id")},

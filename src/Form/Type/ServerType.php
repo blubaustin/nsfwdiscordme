@@ -3,8 +3,10 @@ namespace App\Form\Type;
 
 use App\Entity\Category;
 use App\Entity\Server;
+use App\Repository\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -25,13 +27,20 @@ class ServerType extends AbstractType
     protected $urlGenerator;
 
     /**
+     * @var TagRepository
+     */
+    protected $tagRepository;
+
+    /**
      * Constructor
      *
      * @param UrlGeneratorInterface $urlGenerator
+     * @param TagRepository         $tagRepository
      */
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, TagRepository $tagRepository)
     {
-        $this->urlGenerator = $urlGenerator;
+        $this->urlGenerator  = $urlGenerator;
+        $this->tagRepository = $tagRepository;
     }
 
     /**
@@ -91,6 +100,15 @@ class ServerType extends AbstractType
                     'class'        => Category::class,
                     'choice_label' => 'name',
                     'multiple'     => true
+                ]
+            )
+            ->add(
+                'tags',
+                TextType::class,
+                [
+                    'required' => false,
+                    'label' => 'Tags',
+                    'help' => 'Comma separated list of tags describing the server.'
                 ]
             )
             ->add(
@@ -182,7 +200,24 @@ class ServerType extends AbstractType
                     ],
                     'help'       => 'If this is unchecked your Discord URL will not accept new people.'
                 ]
-            );
+            )
+        ;
+
+        $builder->get('tags')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($tagsCollection) {
+                    $tags = [];
+                    foreach($tagsCollection as $tag) {
+                        $tags[] = $tag->getName();
+                    }
+                    return implode(', ', $tags);
+                },
+                function ($tagsAsString) {
+                    $tags = array_filter(array_map('trim', explode(',', $tagsAsString)));
+                    return $this->tagRepository->stringsToTags($tags);
+                }
+            ))
+        ;
     }
 
     /**

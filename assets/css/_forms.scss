@@ -17,6 +17,12 @@
   margin-bottom: $gutter-size-lg;
 }
 
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: #d4d4d4;
+  opacity: 1;
+}
+
 .custom-checkbox .custom-control-input:checked~.custom-control-label::before{
   background-color: $color-info;
 }

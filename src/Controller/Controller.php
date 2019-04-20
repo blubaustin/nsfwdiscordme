@@ -3,7 +3,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Storage\Snowflake\SnowflakeGeneratorInterface;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +17,7 @@ class Controller extends AbstractController
     const LIMIT = 20;
 
     /**
-     * @var ManagerRegistry
+     * @var EntityManagerInterface
      */
     protected $em;
 
@@ -39,13 +39,13 @@ class Controller extends AbstractController
     /**
      * Constructor
      *
-     * @param ManagerRegistry             $em
+     * @param EntityManagerInterface      $em
      * @param EventDispatcherInterface    $eventDispatcher
      * @param SnowflakeGeneratorInterface $snowflakeGenerator
      * @param PaginatorInterface          $paginator
      */
     public function __construct(
-        ManagerRegistry $em,
+        EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,
         SnowflakeGeneratorInterface $snowflakeGenerator,
         PaginatorInterface $paginator

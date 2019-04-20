@@ -5,12 +5,13 @@
   <div class="card-body">
     {{ form_start(form, { attr: { 'id': 'server-add-form' }}) }}
     <section class="form-section">
-      {{ form_row(form.discordID) }}
+      {{ form_row(form.discordID, { attr: { readonly: isEditing }}) }}
       {{ form_row(form.name) }}
-      {{ form_row(form.slug) }}
+      {{ form_row(form.slug, { attr: { readonly: isEditing }}) }}
       {{ form_row(form.summary) }}
       {{ form_row(form.description) }}
       {{ form_row(form.categories) }}
+      {{ form_row(form.tags) }}
       {{ form_row(form.botInviteChannelID) }}
       {{ form_row(form.iconFile) }}
       {{ form_row(form.bannerFile) }}
@@ -34,7 +35,11 @@
     </section>
 
     <button class="btn btn-info btn-lg btn-block" type="submit">
-      Add Discord Server
+      {% if isEditing %}
+        Update Discord Server
+      {% else %}
+        Add Discord Server
+      {% endif %}
     </button>
 
     {{ form_rest(form) }}
