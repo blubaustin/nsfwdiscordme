@@ -46,7 +46,12 @@ class SearchController extends Controller
         }
 
         $query = new Query();
-        $query->addSort([$orderField => ['order' => 'desc']]);
+        $query->addSort([
+            $orderField => [
+                'order'         => 'desc',
+                'unmapped_type' => 'long'
+            ]
+        ]);
         $query->setQuery(new QueryString($searchTerm));
 
         $query = $this->finder->createPaginatorAdapter($query);
