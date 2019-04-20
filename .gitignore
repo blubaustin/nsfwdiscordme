@@ -13,7 +13,8 @@ node_modules
 public/build
 bin/db-dump-scp.sh
 config/packages/version.yaml
-/.env.test
+.env.test
+.env-prod
 
 ###> symfony/phpunit-bridge ###
 .phpunit

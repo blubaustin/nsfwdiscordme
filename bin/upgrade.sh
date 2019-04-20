@@ -3,6 +3,6 @@ git reset --hard HEAD && \
 git pull && \
 bin/version.sh && \
 rm .env && \
-mv .env-local .env && \
+mv .env-prod .env && \
 yarn run build && \
 bin/console cache:clear
