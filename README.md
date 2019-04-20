@@ -6,6 +6,7 @@ nsfwdiscordme
 * MySQL 5.7+
 * Nginx 1.10+
 * [Elasticsearch 6+](https://tecadmin.net/setup-elasticsearch-on-ubuntu/)
+* [Redis 3+](https://tecadmin.net/install-redis-ubuntu/)
 
 # Installing
 ```
