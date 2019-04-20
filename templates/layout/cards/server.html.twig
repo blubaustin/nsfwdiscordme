@@ -7,7 +7,9 @@
       </h2>
       <h3 class="card-server-categories">
         {% for category in server.categories %}
-          {{ category.name }}
+          <a href="{{ path('home_category', { slug: category.slug }) }}">
+            {{ category.name }}
+          </a>
           {% if not loop.last %}|{% endif %}
         {% endfor %}
       </h3>

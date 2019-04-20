@@ -25,6 +25,12 @@ class Category
     protected $name;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $slug;
+
+    /**
      * @var DateTime
      * @ORM\Column(type="datetime")
      */
@@ -79,6 +85,26 @@ class Category
     public function setName(string $name): Category
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return Category
+     */
+    public function setSlug(string $slug): Category
+    {
+        $this->slug = $slug;
 
         return $this;
     }

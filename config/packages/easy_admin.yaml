@@ -14,9 +14,11 @@ easy_admin:
             list:
                 fields:
                     - name
+                    - slug
             form:
                 fields:
                     - name
+                    - slug
 
         Server:
             class: App\Entity\Server

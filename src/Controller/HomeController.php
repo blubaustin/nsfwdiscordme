@@ -27,12 +27,12 @@ class HomeController extends Controller
     }
 
     /**
-     * @Route("/category/{name}", name="category")
+     * @Route("/category/{slug}", name="category")
      *
-     * @param string $name
+     * @param string $slug
      */
-    public function categoryAction($name)
+    public function categoryAction($slug)
     {
-        die($name);
+        die($slug);
     }
 }
