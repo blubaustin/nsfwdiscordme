@@ -1,8 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Repository\CategoryRepository;
-use App\Repository\ServerRepository;
+use App\Entity\Category;
+use App\Entity\Server;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,39 +14,42 @@ class HomeController extends Controller
     /**
      * @Route("/", name="index")
      *
-     * @param ServerRepository $serverRepository
-     *
      * @return Response
      */
-    public function indexAction(ServerRepository $serverRepository)
+    public function indexAction()
     {
-        $servers = $serverRepository->findByRecent();
+        $query = $this->em->getRepository(Server::class)
+            ->createQueryBuilder('s')
+            ->where('s.isEnabled = 1');
 
         return $this->render('home/index.html.twig', [
-            'servers' => $servers
+            'servers' => $this->paginate($query)
         ]);
     }
 
     /**
      * @Route("/category/{slug}", name="category")
      *
-     * @param string             $slug
-     * @param CategoryRepository $categoryRepository
-     * @param ServerRepository   $serverRepository
+     * @param string $slug
      *
      * @return Response
      */
-    public function categoryAction($slug, CategoryRepository $categoryRepository, ServerRepository $serverRepository)
+    public function categoryAction($slug)
     {
-        $category = $categoryRepository->findBySlug($slug);
+        $category = $this->em->getRepository(Category::class)->findBySlug($slug);
         if (!$category) {
             throw $this->createNotFoundException();
         }
 
-        $servers = $serverRepository->findByCategory($category);
+        $query = $this->em->getRepository(Server::class)
+            ->createQueryBuilder('s')
+            ->leftJoin('s.categories', 'category')
+            ->where('s.isEnabled = 1')
+            ->andWhere('category = :category')
+            ->setParameter(':category', $category);
 
         return $this->render('home/category.html.twig', [
-            'servers'  => $servers,
+            'servers'  => $this->paginate($query),
             'category' => $category
         ]);
     }
