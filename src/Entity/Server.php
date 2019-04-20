@@ -8,7 +8,9 @@ use DateTime;
 use Exception;
 
 /**
- * @ORM\Table(name="server")
+ * @ORM\Table(name="server", indexes={
+ *     @ORM\Index(name="enabled_idx", columns={"is_enabled"})
+ * })
  * @ORM\Entity(repositoryClass="App\Repository\ServerRepository")
  */
 class Server
