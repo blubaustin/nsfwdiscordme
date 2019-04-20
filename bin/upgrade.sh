@@ -2,4 +2,5 @@
 git reset --hard HEAD && \
 git pull && \
 bin/version.sh && \
-yarn run build
+yarn run build && \
+bin/console cache:clear
