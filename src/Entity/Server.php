@@ -571,7 +571,7 @@ class Server
      *
      * @return Server
      */
-    public function setDateNextBump(DateTime $dateNextBump): Server
+    public function setDateNextBump(DateTime $dateNextBump = null): Server
     {
         $this->dateNextBump = $dateNextBump;
 
