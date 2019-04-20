@@ -1,6 +1,12 @@
 nsfwdiscordme
 =============
 
+# Requirements
+* PHP 7.1+
+* MySQL 5.7+
+* Nginx 1.10+
+* [Elasticsearch 6+](https://tecadmin.net/setup-elasticsearch-on-ubuntu/)
+
 # Installing
 ```
 cd /var/www
