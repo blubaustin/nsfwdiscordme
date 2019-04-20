@@ -3,8 +3,10 @@ nsfwdiscordme
 
 # Installing
 ```
+cd /var/www
 git clone git@github.com:blubaustin/nsfwdiscordme.git
-cd nsfwdiscordme
+mv nsfwdiscordme www.nsfwdiscordme.com
+cd www.nsfwdiscordme.com
 composer install
 yarn install
 yarn run build
@@ -15,6 +17,13 @@ Edit the `.env-local` configuration file and then run the migrations.
 
 ```
 bin/console doctrine:migrations:migrate
+```
+
+Ensure the `www-data` user owns all the files.
+
+```
+sudo chown -R www-data:www-data /var/www/www.nsfwdiscordme.com
+sudo chmod -R g+w /var/www/www.nsfwdiscordme.com
 ```
 
 Configure the Nginx virtual host. Create a new file `/etc/nginx/sites-available/nsfwdiscordme.conf` with the following configuration.
