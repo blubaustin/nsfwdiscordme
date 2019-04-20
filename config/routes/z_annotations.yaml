@@ -12,6 +12,9 @@ discord:
 search:
     resource: ../../src/Controller/SearchController.php
     type: annotation
+category:
+    resource: ../../src/Controller/CategoryController.php
+    type: annotation
 server:
     resource: ../../src/Controller/ServerController.php
     type: annotation
