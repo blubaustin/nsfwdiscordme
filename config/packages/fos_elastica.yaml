@@ -1,18 +1,20 @@
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/Resources/doc/setup.md
 fos_elastica:
     clients:
-        default: { host: localhost, port: 9200 }
+        default: { host: '%env(ELASTICSEARCH_HOST)%', port: '%env(int:ELASTICSEARCH_PORT)%' }
     indexes:
         app:
             types:
                 server:
+                    indexable_callback: ['App\Storage\Elastica\ServerIndexableChecker', 'isIndexable']
                     properties:
                         name: ~
                         summary: ~
                         description: ~
+                        categories: ~
+                        bumpPoints: { fielddata: true }
                     persistence:
                         driver: orm
                         model: App\Entity\Server
                         provider: ~
                         finder: ~
-

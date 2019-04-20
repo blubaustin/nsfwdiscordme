@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use Elastica\Query;
+use Elastica\Query\QueryString;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SearchController extends Controller
 {
+    const ORDER_FIELDS = [
+        'bumpPoints'
+    ];
+
     /**
      * @var PaginatedFinderInterface
      */
@@ -34,11 +40,16 @@ class SearchController extends Controller
     public function indexAction(Request $request)
     {
         $searchTerm = trim($request->query->get('q', ''));
-        if (!$searchTerm) {
+        $orderField = trim($request->query->get('order', 'bumpPoints'));
+        if (!$searchTerm || !in_array($orderField, self::ORDER_FIELDS)) {
             throw $this->createNotFoundException();
         }
 
-        $query = $this->finder->createPaginatorAdapter($searchTerm);
+        $query = new Query();
+        $query->addSort([$orderField => ['order' => 'desc']]);
+        $query->setQuery(new QueryString($searchTerm));
+
+        $query = $this->finder->createPaginatorAdapter($query);
 
         return $this->render('search/index.html.twig', [
             'servers'    => $this->paginate($query),
