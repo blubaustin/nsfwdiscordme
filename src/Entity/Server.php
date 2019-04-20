@@ -135,6 +135,12 @@ class Server
     protected $isActive = true;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $isEnabled = true;
+
+    /**
      * @var DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -255,7 +261,7 @@ class Server
     /**
      * @return string
      */
-    public function getIconHash(): string
+    public function getIconHash(): ?string
     {
         return $this->iconHash;
     }
@@ -275,7 +281,7 @@ class Server
     /**
      * @return string
      */
-    public function getBannerHash(): string
+    public function getBannerHash(): ?string
     {
         return $this->bannerHash;
     }
@@ -528,6 +534,26 @@ class Server
     public function setIsActive(bool $isActive): Server
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param bool $isEnabled
+     *
+     * @return Server
+     */
+    public function setIsEnabled(bool $isEnabled): Server
+    {
+        $this->isEnabled = $isEnabled;
 
         return $this;
     }

@@ -58,7 +58,7 @@ class ServerRepository extends ServiceEntityRepository
      */
     public function findByUser(User $user)
     {
-        return $this->findBy(['user' => $user]);
+        return $this->findBy(['user' => $user, 'isEnabled' => true]);
     }
 
     /**
@@ -70,6 +70,7 @@ class ServerRepository extends ServiceEntityRepository
     public function findByRecent($limit = 20, $offset = 0)
     {
         return $this->createQueryBuilder('s')
+            ->where('s.isEnabled = 1')
             ->setMaxResults($limit)
             ->setFirstResult($offset)
             ->getQuery()

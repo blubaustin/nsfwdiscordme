@@ -1,0 +1,46 @@
+easy_admin:
+    site_name: nsfwdiscordme
+    design:
+        brand_color: '#2e365a'
+        assets:
+            css:
+                - 'bundles/easyadmin/bootstrap-all.css'
+            js:
+                - 'bundles/easyadmin/bootstrap-all.js'
+    entities:
+        Category:
+            class: App\Entity\Category
+            list:
+                fields:
+                    - name
+            form:
+                fields:
+                    - name
+        Server:
+            class: App\Entity\Server
+            list:
+                fields:
+                    - id
+                    - isEnabled
+                    - { property: 'discordID', label: 'Discord ID', type: 'string' }
+                    - name
+                    - slug
+                    - summary
+        User:
+            class: App\Entity\User
+            list:
+                fields:
+                    - id
+                    - { property: 'discordID', label: 'Discord ID', type: 'string' }
+                    - discordEmail
+                    - discordUsername
+                    - discordDiscriminator
+        Media:
+            class: App\Entity\Media
+            list:
+                fields:
+                    - id
+                    - path
+                    - name
+                    - adapter
+                    - dateCreated
