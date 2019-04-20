@@ -67,3 +67,8 @@ services:
         class: App\Storage\Snowflake\RedisGenerator
         arguments:
             - '@Redis'
+
+    # Controllers
+    App\Controller\SearchController:
+        calls:
+            - [setFinder, ['@fos_elastica.finder.app.server']]

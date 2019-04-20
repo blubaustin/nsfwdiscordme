@@ -8,6 +8,7 @@
         "ext-json": "*",
         "ext-redis": "*",
         "easycorp/easyadmin-bundle": "^2.1",
+        "friendsofsymfony/elastica-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "^2.3",
         "friendsofsymfony/user-bundle": "~2.0",
         "guzzlehttp/guzzle": "~6.0",

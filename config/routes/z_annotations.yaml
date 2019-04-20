@@ -9,6 +9,9 @@ profile:
 discord:
     resource: ../../src/Controller/DiscordOAuthController.php
     type: annotation
+search:
+    resource: ../../src/Controller/SearchController.php
+    type: annotation
 server:
     resource: ../../src/Controller/ServerController.php
     type: annotation

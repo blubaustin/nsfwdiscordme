@@ -3,7 +3,6 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Server;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -52,24 +51,6 @@ class HomeController extends Controller
         return $this->render('home/category.html.twig', [
             'servers'  => $this->paginate($query),
             'category' => $category
-        ]);
-    }
-
-    /**
-     * @Route("/search", name="search")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function searchAction(Request $request)
-    {
-        $query = $this->em->getRepository(Server::class)
-            ->createQueryBuilder('s')
-            ->where('s.isEnabled = 1');
-
-        return $this->render('home/index.html.twig', [
-            'servers' => $this->paginate($query)
         ]);
     }
 }

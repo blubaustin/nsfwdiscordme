@@ -4,7 +4,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Storage\Snowflake\SnowflakeGeneratorInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,12 +66,12 @@ class Controller extends AbstractController
     }
 
     /**
-     * @param QueryBuilder $query
-     * @param int          $limit
+     * @param mixed $query
+     * @param int   $limit
      *
      * @return PaginationInterface
      */
-    public function paginate(QueryBuilder $query, $limit = self::LIMIT)
+    public function paginate($query, $limit = self::LIMIT)
     {
         return $this->paginator->paginate(
             $query,

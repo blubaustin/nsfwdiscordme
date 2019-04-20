@@ -94,6 +94,21 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
+    "elasticsearch/elasticsearch": {
+        "version": "v6.1.0"
+    },
+    "friendsofsymfony/elastica-bundle": {
+        "version": "5.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "5.0",
+            "ref": "3f73f240ee0c3719e89f1c994ce66904e2ef84f6"
+        },
+        "files": [
+            "config/packages/fos_elastica.yaml"
+        ]
+    },
     "friendsofsymfony/jsrouting-bundle": {
         "version": "2.3",
         "recipe": {
@@ -124,6 +139,12 @@
     "guzzlehttp/psr7": {
         "version": "1.5.2"
     },
+    "guzzlehttp/ringphp": {
+        "version": "1.1.1"
+    },
+    "guzzlehttp/streams": {
+        "version": "3.0.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -151,9 +172,6 @@
     "pagerfanta/pagerfanta": {
         "version": "v2.1.2"
     },
-    "predis/predis": {
-        "version": "v1.1.1"
-    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -172,8 +190,14 @@
     "ralouphie/getallheaders": {
         "version": "2.0.5"
     },
+    "react/promise": {
+        "version": "v2.7.1"
+    },
     "restcord/restcord": {
         "version": "0.3.1"
+    },
+    "ruflin/elastica": {
+        "version": "6.1.1"
     },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.0"
