@@ -60,4 +60,19 @@ class ServerRepository extends ServiceEntityRepository
     {
         return $this->findBy(['user' => $user]);
     }
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return Server[]
+     */
+    public function findByRecent($limit = 20, $offset = 0)
+    {
+        return $this->createQueryBuilder('s')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->execute();
+    }
 }

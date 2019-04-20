@@ -28,15 +28,11 @@
           Categories
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarCategoriesDropdown">
-          <a class="dropdown-item" href="#">
-            Action
-          </a>
-          <a class="dropdown-item" href="#">
-            Another action
-          </a>
-          <a class="dropdown-item" href="#">
-            Something else here
-          </a>
+          {% for category in categories %}
+            <a class="dropdown-item" href="{{ path('home_category', { name: category.name|lower|url_encode }) }}">
+              {{ category.name }}
+            </a>
+          {% endfor %}
         </div>
       </li>
       <li class="nav-item">
