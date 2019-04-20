@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
 use App\Repository\ServerRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,10 +30,24 @@ class HomeController extends Controller
     /**
      * @Route("/category/{slug}", name="category")
      *
-     * @param string $slug
+     * @param string             $slug
+     * @param CategoryRepository $categoryRepository
+     * @param ServerRepository   $serverRepository
+     *
+     * @return Response
      */
-    public function categoryAction($slug)
+    public function categoryAction($slug, CategoryRepository $categoryRepository, ServerRepository $serverRepository)
     {
-        die($slug);
+        $category = $categoryRepository->findBySlug($slug);
+        if (!$category) {
+            throw $this->createNotFoundException();
+        }
+
+        $servers = $serverRepository->findByCategory($category);
+
+        return $this->render('home/category.html.twig', [
+            'servers'  => $servers,
+            'category' => $category
+        ]);
     }
 }

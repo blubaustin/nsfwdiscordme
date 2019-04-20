@@ -31,10 +31,10 @@
   </head>
   <body>
     {% block nav %}
-      {% include "layout/nav.html.twig" %}
+      {% include "_layout/nav.html.twig" %}
     {% endblock %}
     <div class="container">
-      {% include "layout/flash.html.twig" %}
+      {% include "_layout/flash.html.twig" %}
       {% block body %}{% endblock %}
     </div>
     {% block javascripts %}

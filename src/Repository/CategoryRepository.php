@@ -29,4 +29,14 @@ class CategoryRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['id' => $id]);
     }
+
+    /**
+     * @param string $slug
+     *
+     * @return object|Category
+     */
+    public function findBySlug($slug)
+    {
+        return $this->findOneBy(['slug' => $slug]);
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Server;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -71,6 +72,27 @@ class ServerRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @param Category $category
+     * @param int      $limit
+     * @param int      $offset
+     *
+     * @return Server[]
+     */
+    public function findByCategory(Category $category, $limit = 20, $offset = 0)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s')
+            ->leftJoin('s.categories', 'category')
+            ->where('s.isEnabled = 1')
+            ->andWhere('category = :category')
+            ->setParameter(':category', $category)
             ->setMaxResults($limit)
             ->setFirstResult($offset)
             ->getQuery()
