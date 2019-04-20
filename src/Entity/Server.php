@@ -107,6 +107,17 @@ class Server
     protected $categories;
 
     /**
+     * @var Collection
+     * @ORM\ManyToMany(targetEntity="Tag")
+     * @ORM\JoinTable(
+     *     name="server_tags",
+     *     joinColumns={@ORM\JoinColumn(name="server_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+     * )
+     */
+    protected $tags;
+
+    /**
      * @var int
      * @ORM\Column(type="bigint", options={"unsigned"=true}, nullable=true)
      */
@@ -169,6 +180,7 @@ class Server
     {
         $this->dateCreated = new DateTime();
         $this->dateUpdated = new DateTime();
+        $this->tags        = new ArrayCollection();
         $this->categories  = new ArrayCollection();
     }
 
@@ -416,6 +428,26 @@ class Server
     public function setCategories(Collection $categories): Server
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Collection $tags
+     *
+     * @return Server
+     */
+    public function setTags(Collection $tags): Server
+    {
+        $this->tags = $tags;
 
         return $this;
     }

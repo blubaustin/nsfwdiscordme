@@ -9,17 +9,6 @@ easy_admin:
             js:
                 - 'build/js/admin.js'
     entities:
-        Category:
-            class: App\Entity\Category
-            list:
-                fields:
-                    - name
-                    - slug
-            form:
-                fields:
-                    - name
-                    - slug
-
         Server:
             class: App\Entity\Server
             list:
@@ -71,3 +60,14 @@ easy_admin:
                     - name
                     - adapter
                     - dateCreated
+
+        Category:
+            class: App\Entity\Category
+            list:
+                fields:
+                    - name
+                    - slug
+            form:
+                fields:
+                    - name
+                    - slug
