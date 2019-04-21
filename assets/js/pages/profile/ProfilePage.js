@@ -19,7 +19,7 @@ class ProfilePage
     this.bumpPeriodNext = new Date($page.data('bump-period-next')).getTime();
     this.$activeCard    = null;
 
-    $('#modal-server-bump-btn').on('click', this.handleModalBumpButtonClick);
+    this.$modalBumpBtn.on('click', this.handleModalBumpButtonClick);
     $('.card-server-admin-bump-btn').on('click', this.handleBumpButtonClick);
 
     this.runBumpCountdown();
