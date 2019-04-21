@@ -12,6 +12,7 @@ fos_elastica:
                         summary: ~
                         description: ~
                         categories: ~
+                        tags: ~
                         bumpPoints: { fielddata: true }
                     persistence:
                         driver: orm
