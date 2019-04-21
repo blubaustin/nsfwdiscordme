@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\BumpPeriod;
 use App\Entity\Server;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +18,7 @@ class ProfileController extends Controller
      *
      * @return Response
      * @throws NonUniqueResultException
+     * @throws DBALException
      */
     public function indexAction()
     {

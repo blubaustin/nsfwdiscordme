@@ -3,7 +3,9 @@ namespace App\Repository;
 
 use App\Entity\BumpPeriod;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use DateInterval;
 use DateTime;
@@ -36,11 +38,12 @@ class BumpPeriodRepository extends ServiceEntityRepository
     /**
      * @return BumpPeriod
      * @throws NonUniqueResultException
+     * @throws DBALException
      */
     public function findCurrentPeriod()
     {
-        $now  = new DateTime();
-        $hour = (int)date('H');
+        $now  = $this->getDatabaseDateTimeNow();
+        $hour = (int)$now->format('H');
         if ($hour >= 0 && $hour < 6) {
             $then = clone $now->setTime(0, 0, 0);
         } else if ($hour >= 6 && $hour < 12) {
@@ -64,6 +67,7 @@ class BumpPeriodRepository extends ServiceEntityRepository
     /**
      * @return BumpPeriod
      * @throws NonUniqueResultException
+     * @throws DBALException
      */
     public function findNextPeriod()
     {
@@ -74,5 +78,24 @@ class BumpPeriodRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * Returns a DateTime representing the time right now
+     *
+     * Gets the NOW() time from the database, which acts as a single source of
+     * truth for the current date/time. Required because web server times may be
+     * out of sync.
+     *
+     * @return DateTime
+     * @throws Exception
+     * @throws DBALException
+     */
+    public function getDatabaseDateTimeNow()
+    {
+        $stmt = $this->getEntityManager()->getConnection()->prepare('SELECT NOW()');
+        $stmt->execute();
+
+        return new DateTime((string)$stmt->fetchColumn(0));
     }
 }
