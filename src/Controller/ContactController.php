@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Form\Model\ContactModel;
 use App\Form\Type\ContactType;
 use App\Http\Request;
+use App\Services\RecaptchaService;
+use GuzzleHttp\Exception\GuzzleException;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,29 +22,33 @@ class ContactController extends Controller
     /**
      * @Route("/contact", name="index")
      *
-     * @param Request      $request
-     *
-     * @param Swift_Mailer $mailer
+     * @param Request          $request
+     * @param RecaptchaService $recaptchaService
+     * @param Swift_Mailer     $mailer
      *
      * @return Response
+     * @throws GuzzleException
      */
-    public function indexAction(Request $request, Swift_Mailer $mailer)
+    public function indexAction(Request $request, RecaptchaService $recaptchaService, Swift_Mailer $mailer)
     {
         $model = new ContactModel();
         $form  = $this->createForm(ContactType::class, $model);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $message = (new Swift_Message())
-                ->setFrom($model->getEmail())
-                ->setTo(self::TO_EMAIL)
-                ->setSubject('[nsfwdiscordme contact] ' . $model->getSubject())
-                ->setBody($model->getMessage());
-            $mailer->send($message);
+            $recaptchaToken = $request->request->get('g-recaptcha-response');
+            if ($recaptchaService->verify($recaptchaToken)) {
+                $message = (new Swift_Message())
+                    ->setFrom($model->getEmail())
+                    ->setTo(self::TO_EMAIL)
+                    ->setSubject('[nsfwdiscordme contact] ' . $model->getSubject())
+                    ->setBody($model->getMessage());
+                $mailer->send($message);
 
-            $this->addFlash('success', 'Thank you! Your message has been sent.');
+                $this->addFlash('success', 'Thank you! Your message has been sent.');
 
-            return new RedirectResponse($this->generateUrl('contact_index'));
+                return new RedirectResponse($this->generateUrl('contact_index'));
+            }
         }
 
         return $this->render(
