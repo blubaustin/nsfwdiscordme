@@ -1,0 +1,10 @@
+@import "vars";
+
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: $gutter-size;
+  height: $footer-height;
+  border-top: 1px solid #49558a;
+  background-color: $color-primary;
+}

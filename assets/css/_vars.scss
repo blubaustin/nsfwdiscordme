@@ -32,7 +32,7 @@ $gutter-size: 15px;
 $gutter-size-lg: $gutter-size * 2;
 $gutter-size-sm: $gutter-size / 2;
 $header-height: 65px;
-$input-height: 48px;
+$footer-height: 100px;
 
 @mixin media-xs {
   @media (min-width: #{$break-xs}) and (max-width: #{$break-sm - 1px}) {
