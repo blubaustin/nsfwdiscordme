@@ -1,48 +1,50 @@
 {% extends "base.html.twig" %}
 {% block body %}
-  {# Page Title #}
-  <div class="row">
-    <div class="col">
-      <h1 class="layout-page-title">
-        Manage Discord Servers
-      </h1>
-    </div>
-  </div>
-
-  {# Page Menu #}
-  <div class="row">
-    <div class="col">
-      <div class="menu-buttons">
-        <a href="{{ path('server_add') }}" class="btn btn-info">
-          {{ icon('plus') }}
-          Add Server
-        </a>
-        <a href="{{ path('profile_icons') }}" class="btn btn-info">
-          {{ icon('cog') }}
-          Settings
-        </a>
+  <div id="page-profile">
+    {# Page Title #}
+    <div class="row">
+      <div class="col">
+        <h1 class="layout-page-title">
+          Manage Discord Servers
+        </h1>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col col-md-8 col-sm-12 col-12">
-      {# Servers #}
-      <div class="row">
-        {% for server in servers %}
-          <div class="col col-md-6 col-sm-12 col-12">
-            {% include "_cards/server-admin.html.twig" %}
+    {# Page Menu #}
+    <div class="row">
+      <div class="col">
+        <div class="menu-buttons">
+          <a href="{{ path('server_add') }}" class="btn btn-info">
+            {{ icon('plus') }}
+            Add Server
+          </a>
+          <a href="{{ path('profile_icons') }}" class="btn btn-info">
+            {{ icon('cog') }}
+            Settings
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-md-8 col-sm-12 col-12">
+        {# Servers #}
+        <div class="row">
+          {% for server in servers %}
+            <div class="col col-md-6 col-sm-12 col-12">
+              {% include "_cards/server-admin.html.twig" %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col col-md-4 col-sm-12 col-12">
+        {# FAQs #}
+        <div class="row">
+          <div class="col">
+            {% include "profile/blocks/faqs.html.twig" %}
           </div>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="col col-md-4 col-sm-12 col-12">
-      {# FAQs #}
-      <div class="row">
-        <div class="col">
-          {% include "profile/blocks/faqs.html.twig" %}
         </div>
       </div>
     </div>
   </div>
+  {% include "profile/blocks/recaptcha-modal.html.twig" %}
 {% endblock %}

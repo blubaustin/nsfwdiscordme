@@ -1,0 +1,13 @@
+<div id="recaptcha-container"></div>
+<script type="text/javascript">
+  function onloadRecaptchaCallback() {
+    function recaptchaCallback(token) {
+      console.log(token);
+    }
+    grecaptcha.render('recaptcha-container', {
+      sitekey:  '{{ recaptchaSiteKey }}',
+      callback: recaptchaCallback
+    });
+  }
+</script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadRecaptchaCallback&render=explicit" async defer></script>

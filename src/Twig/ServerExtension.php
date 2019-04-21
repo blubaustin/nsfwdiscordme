@@ -65,7 +65,12 @@ class ServerExtension extends AbstractExtension
         }
 
         $interval = $dateNextBump->diff(new DateTime());
+        if ($interval->d !== 0) {
+            return $interval->format("%ad %hh %im %ss");
+        } else if ($interval->h !== 0) {
+            return $interval->format("%hh %im %ss");
+        }
 
-        return $interval->format("%ad %hh %im %ss");
+        return $interval->format("%im %ss");
     }
 }

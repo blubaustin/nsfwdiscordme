@@ -1,20 +1,11 @@
-import Discord from '../../lib/Discord';
-import { generateSlug } from '../../lib/utils';
+import Discord from 'lib/Discord';
+import { generateSlug } from 'lib/utils';
 
 /**
  *
  */
 class ServerAddPage
 {
-  /**
-   * Constructor
-   *
-   * @param {Routing} router
-   */
-  constructor(router) {
-    this.router = router;
-  }
-
   /**
    * Initializes the page
    */

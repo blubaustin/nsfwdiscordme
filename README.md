@@ -83,6 +83,8 @@ server {
                 fastcgi_param DISCORD_CLIENT_SECRET "xxx";
                 fastcgi_param DISCORD_BOT_TOKEN "xxx";
                 fastcgi_param DISCORD_OAUTH_REDIRECT_URL "http://www.nsfwdiscordme.com/discord/oauth2/redirect";
+                fastcgi_param RECAPTCHA_SITE_KEY "xxx";
+                fastcgi_param RECAPTCHA_SECRET_KEY "xxx";
                 fastcgi_param SNOWFLAKE_MACHINE_ID "1";
         }
 }

@@ -23,6 +23,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.4.3",
     "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
     "babel-plugin-module-resolver": "^3.2.0",
     "css-loader": "^2.1.1",
     "eslint": "^5.16.0",
@@ -38,8 +39,9 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
-    "cropperjs": "^1.5.1"
+    "cropperjs": "^1.5.1",
+    "jsonp-es6": "^1.0.0",
+    "promise-polyfill": "^8.1.0"
   }
 }

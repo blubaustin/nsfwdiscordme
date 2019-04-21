@@ -4,6 +4,7 @@ namespace App\Command;
 use App\Entity\Server;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,11 +40,11 @@ class ServerBumpsCommand extends Command
      * @param OutputInterface $output
      *
      * @return int|void|null
-     * @throws \Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $now = new DateTime();
+/*        $now = new DateTime();
         $serverRepository = $this->em->getRepository(Server::class);
         foreach($serverRepository->findAll() as $server) {
             if ($server->getDateNextBump() < $now) {
@@ -51,7 +52,7 @@ class ServerBumpsCommand extends Command
             }
         }
 
-        $this->em->flush();
+        $this->em->flush();*/
 
         $output->writeln('Done!');
     }

@@ -473,6 +473,14 @@ class Server
     }
 
     /**
+     * @return Server
+     */
+    public function incrementBumpPoints() : Server
+    {
+        return $this->setBumpPoints($this->getBumpPoints() + 1);
+    }
+
+    /**
      * @return int
      */
     public function getBotInviteChannelID(): ?int

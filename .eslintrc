@@ -96,6 +96,9 @@
     "globals": {
         "$": true,
         "google": true,
+        "Promise": true,
+        "grecaptcha": true,
+        "recaptchaSiteKey": true,
         "__DEV__": true
     }
 }

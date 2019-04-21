@@ -1,4 +1,4 @@
-<div class="card card-primary card-server-admin">
+<div class="card card-primary card-server-admin" data-server-id="{{ server.discordID }}">
   <div class="card-header card-server-admin-header">
     <div class="card-server-admin-header-meta">
       <img class="card-server-admin-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
@@ -7,20 +7,28 @@
     {#{{ icon('ellipsis-v', 'fa card-server-admin-menu') }}#}
   </div>
   <div class="card-img">
+    <button class="btn btn-sm btn-success card-server-admin-bump-btn">
+      Bump
+    </button>
     <img src="{{ server.bannerMedia|webPath }}" alt="Banner" class="card-server-admin-banner" />
     <div class="card-server-admin-info">
-      <div>
-        Bump Points: {{ server.bumpPoints }}
+      <div class="card-server-admin-info-bump-points">
+        Bump Points:
+        <span class="server-bump-points">
+          {{ server.bumpPoints }}
+        </span>
       </div>
-      <div>
+      <div class="card-server-admin-info-next-bump">
         Next Bump:
         <span class="server-next-bump" data-next-bump-date="{{ server.dateNextBump|date('Y-m-d H:i:s') }}">
           {{ server|serverNextBump }}
         </span>
       </div>
-      <a href="{{ server|serverURL }}">
-        {{ server|serverURL }}
-      </a>
+      <div class="card-server-admin-info-url">
+        <a href="{{ server|serverURL }}">
+          {{ server|serverURL }}
+        </a>
+      </div>
     </div>
   </div>
   <div class="card-footer card-server-admin-footer">

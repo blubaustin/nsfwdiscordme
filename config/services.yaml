@@ -68,6 +68,11 @@ services:
         arguments:
             - '@Redis'
 
+    App\Services\RecaptchaService:
+        class: App\Services\RecaptchaService
+        arguments:
+            - '%env(RECAPTCHA_SECRET_KEY)%'
+
     # Controllers
     App\Controller\SearchController:
         calls:

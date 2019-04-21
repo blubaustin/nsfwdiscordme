@@ -1,0 +1,30 @@
+@import "vars";
+
+.modal-primary {
+  .modal-content {
+    @extend .card-primary;
+  }
+
+  .modal-header {
+    @extend .card-header;
+    border-bottom: 0;
+  }
+
+  .modal-footer {
+    border-top: 0;
+  }
+
+  .close {
+    color: #FFF;
+  }
+}
+
+/**
+ * Server recaptcha
+ */
+.modal-server-admin-bump {
+
+  .server-next-bump {
+    font-size: 3rem;
+  }
+}

@@ -15,6 +15,9 @@ search:
 category:
     resource: ../../src/Controller/CategoryController.php
     type: annotation
+api:
+    resource: ../../src/Controller/ApiController.php
+    type: annotation
 server:
     resource: ../../src/Controller/ServerController.php
     type: annotation

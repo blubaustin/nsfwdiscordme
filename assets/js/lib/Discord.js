@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export const DISCORD_API_URL = 'https://discordapp.com/api';
 
 /**
@@ -19,13 +17,18 @@ class Discord
 
   /**
    * @param {string} serverID
-   * @returns {Promise<AxiosResponse<any> | never>}
+   * @returns {Promise}
    */
   static fetchWidget(serverID) {
-    return axios.get(`${DISCORD_API_URL}/guilds/${serverID}/widget.json`)
-      .then((resp) => {
-        return resp.data;
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: `${DISCORD_API_URL}/guilds/${serverID}/widget.json`
+      }).done((resp) => {
+        resolve(resp);
+      }).fail((jqXHR, textStatus, errorThrown) => {
+        reject(errorThrown);
       });
+    });
   }
 }
 

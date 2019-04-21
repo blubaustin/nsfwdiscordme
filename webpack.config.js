@@ -13,14 +13,20 @@ module.exports = {
   },
   devtool: 'source-map',
   module:  {
-    rules: [{
-      test: /\.scss$/,
-      use:  [
-        MiniCssExtractPlugin.loader,
-        'css-loader',
-        'sass-loader'
-      ]
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.scss$/,
+        use:  [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
+      }
+    ]
   },
   plugins: [
     new MiniCssExtractPlugin({
