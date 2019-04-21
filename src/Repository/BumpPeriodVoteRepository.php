@@ -1,14 +1,14 @@
 <?php
 namespace App\Repository;
 
-use App\Entity\Category;
+use App\Entity\BumpPeriodVote;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * Class CategoryRepository
+ * Class BumpPeriodVoteRepository
  */
-class CategoryRepository extends ServiceEntityRepository
+class BumpPeriodVoteRepository extends ServiceEntityRepository
 {
     /**
      * Constructor
@@ -17,26 +17,16 @@ class CategoryRepository extends ServiceEntityRepository
      */
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Category::class);
+        parent::__construct($registry, BumpPeriodVote::class);
     }
 
     /**
      * @param int $id
      *
-     * @return object|Category
+     * @return object|BumpPeriodVote
      */
     public function findByID($id)
     {
         return $this->findOneBy(['id' => $id]);
-    }
-
-    /**
-     * @param string $slug
-     *
-     * @return object|Category
-     */
-    public function findBySlug($slug)
-    {
-        return $this->findOneBy(['slug' => $slug]);
     }
 }

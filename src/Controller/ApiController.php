@@ -2,9 +2,12 @@
 namespace App\Controller;
 
 use App\Discord\Discord;
+use App\Entity\BumpPeriod;
+use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
 use App\Http\Request;
 use App\Services\RecaptchaService;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use RestCord\DiscordClient;
@@ -13,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/v1", name="api_", options={"expose"=true})
+ * @Route("/api/v1", name="api_", options={"expose"=true}, requirements={"serverID"="\d+"})
  */
 class ApiController extends Controller
 {
@@ -53,12 +56,26 @@ class ApiController extends Controller
     }
 
     /**
+     * @Route("/bump/period", name="bump_period")
+     */
+    public function bumpPeriod()
+    {
+        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
+
+        return new JsonResponse([
+            'message' => 'ok',
+            'period'  => $bumpPeriod->getDate()->format('Y-m-d H:i:s')
+        ]);
+    }
+
+    /**
      * @Route("/bump/{serverID}", name="bump", methods={"POST"})
      *
      * @param Request $request
      * @param int     $serverID
      *
      * @return JsonResponse
+     * @throws NonUniqueResultException
      */
     public function bumpAction(Request $request, $serverID)
     {
@@ -76,6 +93,20 @@ class ApiController extends Controller
         if ($request->getSession()->get('recaptcha_id') != $serverID) {
             throw $this->createAccessDeniedException();
         }
+        $request->getSession()->remove('recaptcha_id');
+
+        if ($this->hasVotedCurrentBumpPeriod($server)) {
+            return new JsonResponse([
+                'message' => 'Already voted for this bump period.'
+            ], 403);
+        }
+
+        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
+        $bumpPeriodVote = (new BumpPeriodVote())
+            ->setUser($this->getUser())
+            ->setBumpPeriod($bumpPeriod)
+            ->setServer($server);
+        $this->em->persist($bumpPeriodVote);
 
         $server->incrementBumpPoints();
         $this->em->flush();
@@ -83,6 +114,32 @@ class ApiController extends Controller
         return new JsonResponse([
             'message'    => 'ok',
             'bumpPoints' => $server->getBumpPoints()
+        ]);
+    }
+
+    /**
+     * @Route("/bump/{serverID}/me", name="bump_me")
+     *
+     * @param int $serverID
+     *
+     * @return JsonResponse
+     * @throws NonUniqueResultException
+     */
+    public function bumpMeAction($serverID)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
+        if (!$server) {
+            throw $this->createNotFoundException();
+        }
+        if ($server->getUser()->getId() !== $this->getUser()->getId()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return new JsonResponse([
+            'message' => 'ok',
+            'voted'   => $this->hasVotedCurrentBumpPeriod($server)
         ]);
     }
 
@@ -114,5 +171,24 @@ class ApiController extends Controller
         return new JsonResponse([
             'success' => false
         ]);
+    }
+
+    /**
+     * @param Server $server
+     *
+     * @return bool
+     * @throws NonUniqueResultException
+     */
+    private function hasVotedCurrentBumpPeriod(Server $server)
+    {
+        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
+        $vote       = $this->em->getRepository(BumpPeriodVote::class)
+            ->findOneBy([
+                'user'       => $this->getUser(),
+                'bumpPeriod' => $bumpPeriod,
+                'server'     => $server
+            ]);
+
+        return (bool)$vote;
     }
 }
