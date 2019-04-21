@@ -5,8 +5,10 @@ use App\Discord\Discord;
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
+use App\Event\BumpEvent;
 use App\Http\Request;
 use App\Services\RecaptchaService;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -57,6 +59,8 @@ class ApiController extends Controller
 
     /**
      * @Route("/bump/period", name="bump_period")
+     *
+     * @throws Exception
      */
     public function bumpPeriod()
     {
@@ -76,6 +80,7 @@ class ApiController extends Controller
      *
      * @return JsonResponse
      * @throws NonUniqueResultException
+     * @throws DBALException
      */
     public function bumpAction(Request $request, $serverID)
     {
@@ -106,10 +111,11 @@ class ApiController extends Controller
             ->setUser($this->getUser())
             ->setBumpPeriod($bumpPeriod)
             ->setServer($server);
-        $this->em->persist($bumpPeriodVote);
-
         $server->incrementBumpPoints();
+        $this->em->persist($bumpPeriodVote);
         $this->em->flush();
+
+        $this->eventDispatcher->dispatch('app.bump', new BumpEvent($server, $request));
 
         return new JsonResponse([
             'message'    => 'ok',
@@ -124,6 +130,7 @@ class ApiController extends Controller
      *
      * @return JsonResponse
      * @throws NonUniqueResultException
+     * @throws DBALException
      */
     public function bumpMeAction($serverID)
     {
@@ -178,6 +185,7 @@ class ApiController extends Controller
      *
      * @return bool
      * @throws NonUniqueResultException
+     * @throws DBALException
      */
     private function hasVotedCurrentBumpPeriod(Server $server)
     {

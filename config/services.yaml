@@ -77,3 +77,9 @@ services:
     App\Controller\SearchController:
         calls:
             - [setFinder, ['@fos_elastica.finder.app.server']]
+
+    # Event Listeners
+    App\Event\Listener\BumpStatsListener:
+        class: App\Event\Listener\BumpStatsListener
+        tags:
+            - { name: kernel.event_listener, event: 'app.bump', method: 'onBump' }
