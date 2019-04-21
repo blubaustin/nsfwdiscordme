@@ -28,6 +28,8 @@
         "symfony/twig-bundle": "4.2.*",
         "symfony/var-dumper": "4.2.*",
         "symfony/yaml": "4.2.*",
+        "symfony/phpunit-bridge": "4.2.*",
+        "symfony/profiler-pack": "^1.0",
         "twig/extensions": "^1.5",
         "wohali/oauth2-discord-new": "^1.0"
     },
@@ -71,13 +73,9 @@
         "symfony/symfony": "*"
     },
     "extra": {
-        "symfony": {
-            "allow-contrib": false,
-            "require": "4.2.*"
-        }
-    },
-    "require-dev": {
-        "symfony/phpunit-bridge": "4.2.*",
-        "symfony/profiler-pack": "^1.0"
+      "symfony": {
+        "allow-contrib": false,
+        "require": "4.2.*"
+      }
     }
 }
