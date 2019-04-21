@@ -19,7 +19,8 @@ class HomeController extends Controller
     {
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
-            ->where('s.isEnabled = 1');
+            ->where('s.isEnabled = 1')
+            ->orderBy('s.bumpPoints', 'desc');
 
         return $this->render('home/index.html.twig', [
             'servers' => $this->paginate($query)

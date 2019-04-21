@@ -30,7 +30,8 @@ class CategoryController extends Controller
             ->leftJoin('s.categories', 'category')
             ->where('s.isEnabled = 1')
             ->andWhere('category = :category')
-            ->setParameter(':category', $category);
+            ->setParameter(':category', $category)
+            ->orderBy('s.bumpPoints', 'desc');
 
         return $this->render('category/index.html.twig', [
             'servers'  => $this->paginate($query),
