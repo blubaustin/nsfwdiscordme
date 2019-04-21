@@ -26,4 +26,24 @@ class HomeController extends Controller
             'servers' => $this->paginate($query)
         ]);
     }
+
+    /**
+     * @Route("/privacy", name="privacy")
+     *
+     * @return Response
+     */
+    public function privacyAction()
+    {
+        return $this->render('home/privacy.html.twig');
+    }
+
+    /**
+     * @Route("/terms", name="terms")
+     *
+     * @return Response
+     */
+    public function termsAction()
+    {
+        return $this->render('home/terms.html.twig');
+    }
 }
