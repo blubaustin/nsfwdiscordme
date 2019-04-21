@@ -28,12 +28,12 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route("/profile/icons", name="icons")
+     * @Route("/profile/settings", name="settings")
      *
      * @return Response
      */
-    public function iconsAction()
+    public function settingsAction()
     {
-        return $this->render('profile/index.html.twig');
+        return $this->render('profile/settings.html.twig');
     }
 }

@@ -1,7 +1,6 @@
 {% extends "base.html.twig" %}
 {% block body %}
   <div id="page-profile">
-    {# Page Title #}
     <div class="row">
       <div class="col">
         <h1 class="layout-page-title">
@@ -10,21 +9,8 @@
       </div>
     </div>
 
-    {# Page Menu #}
-    <div class="row">
-      <div class="col">
-        <div class="menu-buttons">
-          <a href="{{ path('server_add') }}" class="btn btn-info">
-            {{ icon('plus') }}
-            Add Server
-          </a>
-          <a href="{{ path('profile_icons') }}" class="btn btn-info">
-            {{ icon('cog') }}
-            Settings
-          </a>
-        </div>
-      </div>
-    </div>
+    {% include "profile/blocks/menu.html.twig" %}
+
     <div class="row">
       <div class="col col-md-8 col-sm-12 col-12">
         {# Servers #}
