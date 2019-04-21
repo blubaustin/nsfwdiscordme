@@ -1,8 +1,9 @@
 <?php
 namespace App\Controller;
 
-use App\Repository\ServerRepository;
-use App\Services\RecaptchaService;
+use App\Entity\BumpPeriod;
+use App\Entity\Server;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,16 +15,17 @@ class ProfileController extends Controller
     /**
      * @Route("/profile", name="index")
      *
-     * @param ServerRepository $serverRepository
-     *
      * @return Response
+     * @throws NonUniqueResultException
      */
-    public function indexAction(ServerRepository $serverRepository)
+    public function indexAction()
     {
-        $servers = $serverRepository->findByUser($this->getUser());
+        $bumpPeriodNext = $this->em->getRepository(BumpPeriod::class)->findNextPeriod();
+        $servers        = $this->em->getRepository(Server::class)->findByUser($this->getUser());
 
         return $this->render('profile/index.html.twig', [
-            'servers' => $servers
+            'servers'        => $servers,
+            'bumpPeriodNext' => $bumpPeriodNext->getFormattedDate()
         ]);
     }
 

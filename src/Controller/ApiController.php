@@ -64,7 +64,7 @@ class ApiController extends Controller
 
         return new JsonResponse([
             'message' => 'ok',
-            'period'  => $bumpPeriod->getDate()->format('Y-m-d H:i:s')
+            'period'  => $bumpPeriod->getFormattedDate()
         ]);
     }
 

@@ -60,4 +60,19 @@ class BumpPeriodRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return BumpPeriod
+     * @throws NonUniqueResultException
+     */
+    public function findNextPeriod()
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.date > :current')
+            ->setParameter(':current', $this->findCurrentPeriod()->getDate())
+            ->orderBy('b.id', 'asc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

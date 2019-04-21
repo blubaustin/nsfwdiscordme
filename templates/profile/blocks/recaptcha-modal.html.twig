@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
-          Bump Server
+          Bump Your Server
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -13,13 +13,16 @@
         <div class="text-center">
           <h4>Bump your server</h4>
           <div class="server-next-bump">2h 3m</div>
-          <div>Until next bump window</div>
-          <div id="recaptcha-container" class="recaptcha d-flex justify-content-center gutter-top"></div>
+          <div class="gutter-bottom">Until next bump window</div>
+          <div class="modal-server-admin-voted hidden">
+            You already bumped this server during this period.
+          </div>
+          <div id="recaptcha-container" class="recaptcha-container hidden"></div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" disabled="disabled">
-          Bump Server
+        <button id="modal-server-bump-btn" type="button" class="btn btn-block btn-success" disabled="disabled">
+          Bump
         </button>
       </div>
     </div>

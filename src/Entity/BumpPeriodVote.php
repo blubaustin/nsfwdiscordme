@@ -8,7 +8,7 @@ use Exception;
 /**
  * @ORM\Table(name="bump_period_vote",
  *     uniqueConstraints={
- *          @ORM\UniqueConstraint(name="vote_index", columns={"user_id", "bump_period_id", "server_id"})
+ *          @ORM\UniqueConstraint(columns={"user_id", "bump_period_id", "server_id"})
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\BumpPeriodVoteRepository")
@@ -24,22 +24,22 @@ class BumpPeriodVote
 
     /**
      * @var User
-     * @ORM\OneToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", referencedColumnName="id", nullable=false)
      */
     protected $user;
 
     /**
      * @var BumpPeriod
-     * @ORM\OneToOne(targetEntity="BumpPeriod")
-     * @ORM\JoinColumn(name="bump_period_id", onDelete="CASCADE", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="BumpPeriod")
+     * @ORM\JoinColumn(name="bump_period_id", onDelete="CASCADE", referencedColumnName="id", nullable=false)
      */
     protected $bumpPeriod;
 
     /**
      * @var Server
-     * @ORM\OneToOne(targetEntity="Server")
-     * @ORM\JoinColumn(name="server_id", onDelete="CASCADE", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Server")
+     * @ORM\JoinColumn(name="server_id", onDelete="CASCADE", referencedColumnName="id", nullable=false)
      */
     protected $server;
 

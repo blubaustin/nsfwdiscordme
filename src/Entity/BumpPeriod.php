@@ -35,6 +35,14 @@ class BumpPeriod
     }
 
     /**
+     * @return string
+     */
+    public function getFormattedDate()
+    {
+        return $this->getDate()->format('Y-m-d H:i:s');
+    }
+
+    /**
      * @return mixed
      */
     public function getId()
