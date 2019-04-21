@@ -9,6 +9,9 @@ nsfwdiscordme
 * [Redis 3+](https://tecadmin.net/install-redis-ubuntu/)
 
 # Installing
+The site is a standard Symfony 4 application which uses webpack to build assets.
+
+### Clone and Build
 ```
 cd /var/www
 git clone git@github.com:blubaustin/nsfwdiscordme.git
@@ -17,13 +20,6 @@ cd www.nsfwdiscordme.com
 composer install
 yarn install
 yarn run build
-cp .env .env-local
-```
-
-Edit the `.env-local` configuration file and then run the migrations.
-
-```
-bin/console doctrine:migrations:migrate
 ```
 
 Ensure the `www-data` user owns all the files.
@@ -33,6 +29,32 @@ sudo chown -R www-data:www-data /var/www/www.nsfwdiscordme.com
 sudo chmod -R g+w /var/www/www.nsfwdiscordme.com
 ```
 
+### Configuration
+Edit the `.env` configuration file and then run the migrations.
+
+### Database
+Create the database and user from the MySQL command line:
+
+```
+CREATE USER 'nsfwdiscordme'@'localhost' IDENTIFIED BY 'xxx';
+CREATE DATABASE nsfwdiscordme CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+GRANT ALL PRIVILEGES ON nsfwdiscordme.* TO 'nsfwdiscordme'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Then run the Doctrine migration command to create the database tables.
+```
+bin/console doctrine:migrations:migrate
+```
+
+### Cron
+Install the cron jobs using the `crontab -e` command.
+
+```
+@hourly /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:server:online
+```
+
+### Nginx
 Configure the Nginx virtual host. Create a new file `/etc/nginx/sites-available/nsfwdiscordme.conf` with the following configuration.
 
 ```
@@ -91,9 +113,9 @@ server {
 
 ```
 
-*Note: the same environment variables from `.env-local` must be added to the configuration.*
+*Note: the same environment variables from `.env` must be added to the configuration.*
 
-Add the conf file to the enabled sites and restart Nginx.
+Create a symbolic link to the `sites-enabled` directory and restart Nginx.
 
 ```
 sudo ln -s /etc/nginx/sites-available/nsfwdiscordme.conf /etc/nginx/sites-enabled/nsfwdiscordme.conf

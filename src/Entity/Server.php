@@ -96,6 +96,12 @@ class Server
     protected $bumpPoints = 0;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer", options={"unsigned"=true})
+     */
+    protected $membersOnline = 0;
+
+    /**
      * @var Collection
      * @ORM\ManyToMany(targetEntity="Category", cascade={"persist"})
      * @ORM\JoinTable(
@@ -478,6 +484,26 @@ class Server
     public function incrementBumpPoints() : Server
     {
         return $this->setBumpPoints($this->getBumpPoints() + 1);
+    }
+
+    /**
+     * @return int
+     */
+    public function getMembersOnline(): int
+    {
+        return $this->membersOnline;
+    }
+
+    /**
+     * @param int $membersOnline
+     *
+     * @return Server
+     */
+    public function setMembersOnline(int $membersOnline): Server
+    {
+        $this->membersOnline = $membersOnline;
+
+        return $this;
     }
 
     /**

@@ -13,6 +13,10 @@
           {% if not loop.last %}|{% endif %}
         {% endfor %}
       </h3>
+      <div class="card-server-members-online">
+        {{ icon('circle') }}
+        {{ server.membersOnline|number_format }} online
+      </div>
       <div class="card-server-description">
         {{ server.summary }}
       </div>

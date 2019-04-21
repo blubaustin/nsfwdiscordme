@@ -51,7 +51,7 @@ class Discord
     /**
      * @param int|string $serverID
      *
-     * @return string
+     * @return array
      * @throws GuzzleException
      */
     public function fetchWidget($serverID)

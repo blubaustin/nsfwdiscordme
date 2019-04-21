@@ -34,7 +34,7 @@
     }
 
     .card-server-info {
-      height: 180px;
+      height: 195px;
     }
 
     .card-server-description {
@@ -68,7 +68,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 100px;
+  height: 115px;
   z-index: 2;
   transition: height 0.25s;
   background-color: rgba(0, 0, 0, 0.5);
@@ -112,10 +112,32 @@
   }
 }
 
+.card-server-on-dot {
+  text-shadow: 0 0 10px;
+  display: inline-block;
+  background-color: $color-success;
+}
+
+.card-server-members-online {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.9rem;
+
+  .icon {
+    font-size: 0.75rem;
+    text-shadow: 0 0 10px;
+    display: inline-block;
+    color: $color-success;
+  }
+}
+
 .card-server-description {
   position: absolute;
   color: #FFF;
-  top: 95px;
+  top: 115px;
   left: $gutter-size;
   right: $gutter-size;
   opacity: 0;
