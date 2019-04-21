@@ -2,6 +2,15 @@
 
 .form-search {
   margin-bottom: $gutter-size;
+
+  input {
+    background-color: #000;
+    border: 1px solid #525252;
+
+    &.active {
+      background-color: #FFF;
+    }
+  }
 }
 
 .form-control-description {

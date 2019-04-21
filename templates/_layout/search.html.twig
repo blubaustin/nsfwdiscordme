@@ -3,11 +3,11 @@
     type="search"
     name="q"
     value="{{ searchTerm|default }}"
-    class="form-control"
+    class="form-control form-control-lg {% if searchTerm|default %}active{% endif %}"
     placeholder="Search"
     aria-label="Search"
   >
-  <button class="btn btn-primary" type="submit">
-    Search
+  <button class="btn btn-primary btn-lg" type="submit">
+    {{ icon('search') }}
   </button>
 </form>
