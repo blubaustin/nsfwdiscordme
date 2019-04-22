@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\BumpServerEvent;
+use App\Entity\JoinServerEvent;
 use App\Entity\Server;
 use DateTime;
 use Doctrine\DBAL\DBALException;
@@ -66,12 +67,12 @@ class HomeController extends Controller
     {
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
-            ->leftJoin(BumpServerEvent::class, 'b', Join::WITH, 'b.server = s')
+            ->leftJoin(JoinServerEvent::class, 'j', Join::WITH, 'j.server = s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->andWhere('b.dateCreated > :then')
+            ->andWhere('j.dateCreated > :then')
             ->setParameter(':then', new DateTime('24 hours ago'))
-            ->orderBy('s.bumpPoints', 'desc');
+            ->orderBy('j.id', 'desc');
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'trending',
