@@ -12,7 +12,7 @@
     >
       <div class="server-jumbotron-info">
         <div class="container">
-          <h1 class="display-4">
+          <h1 class="server-jumbotron-name display-4">
             {{ server.name }}
           </h1>
           <p class="lead">
@@ -52,7 +52,7 @@
             </div>
             <div class="card-server-about-description gutter-top">
               {% if server.description %}
-                {{ server.description }}
+                {{ server.description|nl2br }}
               {% else %}
                 Click 'Join Server' above to join this community.
               {% endif %}

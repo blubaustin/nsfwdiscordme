@@ -6,6 +6,10 @@
   background-position: center;
   padding: 8rem 0;
   margin-bottom: 0;
+
+  @include media-xs {
+    padding: 4rem 0;
+  }
 }
 
 .server-jumbotron-info {
@@ -15,9 +19,16 @@
 
 .server-jumbotron-members-online {
   .icon {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    margin-right: 0.25rem;
     text-shadow: 0 0 10px;
     display: inline-block;
     color: $color-success;
+  }
+}
+
+.server-jumbotron-name {
+  @include media-xs {
+    font-size: 2.5rem;
   }
 }
