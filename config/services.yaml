@@ -41,6 +41,8 @@ services:
             - '%env(DISCORD_CLIENT_ID)%'
             - '%env(DISCORD_CLIENT_SECRET)%'
             - '%env(DISCORD_BOT_TOKEN)%'
+        calls:
+            - [setLogger, ['@logger']]
 
     RestCord\DiscordClient:
         class: RestCord\DiscordClient

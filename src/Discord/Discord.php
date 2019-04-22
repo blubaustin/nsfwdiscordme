@@ -3,6 +3,7 @@ namespace App\Discord;
 
 use App\Entity\AccessToken;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use GuzzleHttp\Client as Guzzle;
 
@@ -11,6 +12,8 @@ use GuzzleHttp\Client as Guzzle;
  */
 class Discord
 {
+    use LoggerAwareTrait;
+
     const BASE_URL   = 'https://discordapp.com/api/v6';
     const USER_AGENT = 'DiscordBot (http://dev.nsfwdiscordme.com/, 1)';
     const TIMEOUT    = 2.0;
@@ -131,7 +134,9 @@ class Discord
             $options['body'] = json_encode($body);
         }
 
-        $response = $client->request($method, $this->buildURL($path), $options);
+        $url = $this->buildURL($path);
+        $this->logger->debug($method . ': ' . $url, [$headers, $options]);
+        $response = $client->request($method, $url, $options);
 
         return json_decode((string)$response->getBody(), true);
     }
