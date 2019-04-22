@@ -74,14 +74,25 @@ class Discord
     }
 
     /**
+     * @param string $serverID
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function fetchGuildChannels($serverID)
+    {
+        return $this->doRequest('GET', "guilds/${serverID}/channels", true);
+    }
+
+    /**
      * @param string $method
      * @param string $path
-     * @param AccessToken $token
+     * @param AccessToken|bool $token
      *
      * @return mixed
      * @throws GuzzleException
      */
-    protected function doRequest($method, $path, AccessToken $token = null)
+    protected function doRequest($method, $path, $token = null)
     {
         $client = new Guzzle([
             'timeout' => self::TIMEOUT
@@ -93,7 +104,11 @@ class Discord
             'Content-Type' => 'application/json'
         ];
         if ($token) {
-            $headers['Authorization'] = sprintf('%s %s', $token->getType(), $token->getToken());
+            if ($token instanceof AccessToken) {
+                $headers['Authorization'] = sprintf('%s %s', $token->getType(), $token->getToken());
+            } else {
+                $headers['Authorization'] = sprintf('Bot %s', $this->botToken);
+            }
         }
 
         $response = $client->request($method, $this->buildURL($path), [

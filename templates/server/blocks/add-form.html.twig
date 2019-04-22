@@ -4,24 +4,50 @@
       Add Discord Server
     </div>
     <div class="card-body">
-        {{ form_row(form.discordID, { attr: { readonly: isEditing }}) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.slug, { attr: { readonly: isEditing }}) }}
-        {{ form_row(form.summary) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.categories) }}
-        {{ form_row(form.tags) }}
-        {{ form_row(form.botInviteChannelID) }}
+      {{ form_row(form.discordID, { attr: { readonly: isEditing }}) }}
+      {{ form_row(form.name) }}
+      {{ form_row(form.slug, { attr: { readonly: isEditing }}) }}
     </div>
   </div>
 
   <div class="card card-primary">
     <div class="card-header">
-      Media
+      Bot
     </div>
     <div class="card-body">
-      {{ form_row(form.iconFile) }}
-      {{ form_row(form.bannerFile) }}
+      <div class="gutter-bottom">
+        <a
+          href="https://discordapp.com/api/oauth2/authorize?client_id={{ discordClientID }}&scope=bot&permissions=0"
+          target="_blank"
+          class="btn btn-success"
+        >
+          Add Discord Bot
+        </a>
+      </div>
+      <p class="form-help">
+        Our bot is required to create server invites.
+      </p>
+      {{ form_row(form.botInviteChannelID) }}
+      <div class="text-right">
+        <button id="server-refresh-btn" type="button" class="btn btn-link">
+          {{ icon('sync') }}
+          Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-primary">
+    <div class="card-header">
+      Details
+    </div>
+    <div class="card-body">
+      {{ form_row(form.summary) }}
+      {{ form_row(form.description) }}
+      {{ form_row(form.categories) }}
+      {{ form_row(form.tags) }}
+      {{ form_row(form.isPublic) }}
+      {{ form_row(form.isActive) }}
     </div>
   </div>
 
@@ -38,11 +64,11 @@
 
   <div class="card card-primary">
     <div class="card-header">
-      Visibility
+      Media
     </div>
     <div class="card-body">
-      {{ form_row(form.isPublic) }}
-      {{ form_row(form.isActive) }}
+      {{ form_row(form.iconFile) }}
+      {{ form_row(form.bannerFile) }}
     </div>
   </div>
 

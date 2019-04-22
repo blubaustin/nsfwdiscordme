@@ -217,6 +217,7 @@ class ServerController extends Controller
         }
 
         if ($form['updatePassword']->getData()) {
+            dump($form['updatePassword']->getData());die();
             $server->setServerPassword(
                 password_hash($server->getServerPassword(), PASSWORD_BCRYPT)
             );

@@ -18,6 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -123,8 +125,7 @@ class ServerType extends AbstractType
                 TextType::class,
                 [
                     'required' => false,
-                    'label'    => 'Bot Invite Channel ID',
-                    'help'     => 'You will need to go into your Discord App Personal Settings -> Appearance -> Developer Mode to get the ID, and then you can disable Developer Mode after this step is complete. Now on Discord App <b>right click</b> the channel you want the invites to be created in and click "Copy ID". Paste the ID here. This must be set for bot invites to work. This would be your welcome/general channel.'
+                    'label'    => 'Bot Invite Channel'
                 ]
             )
             ->add(
@@ -162,6 +163,7 @@ class ServerType extends AbstractType
                 PasswordType::class,
                 [
                     'required' => false,
+                    'empty_data' => '',
                     'label'    => 'Server Join Password',
                     'attr'     => [
                         // Prevents the browser from auto completing the password field.
@@ -226,6 +228,7 @@ class ServerType extends AbstractType
             ))
         ;
 
+        // Adds the user's servers to the drop down list.
         if ($options['user'] && ($accessToken = $options['user']->getDiscordAccessToken())) {
             $servers = [
                 'Select...' => 0
@@ -244,6 +247,8 @@ class ServerType extends AbstractType
                 ]
             );
         } else {
+            // Otherwise make it a plain text field. This will be used by the admin
+            // site to make the discord ID editable.
             $builder->add('discordID');
         }
     }

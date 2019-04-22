@@ -32,4 +32,5 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profile, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/server, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/admin/, role: ROLE_ADMIN }

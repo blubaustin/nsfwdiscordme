@@ -25,15 +25,14 @@ class ApiController extends Controller
      * @Route("/widget/{serverID}", name="widget")
      *
      * @param string $serverID
-     * @param Discord $discord
      *
      * @return Response
      * @throws GuzzleException
      */
-    public function widgetAction($serverID, Discord $discord)
+    public function widgetAction($serverID)
     {
         try {
-            $resp = $discord->fetchWidget($serverID);
+            $resp = $this->discord->fetchWidget($serverID);
         } catch (Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 500);
         }
@@ -44,18 +43,30 @@ class ApiController extends Controller
     /**
      * @Route("/guilds", name="guilds")
      *
-     * @param Discord $discord
+     * @return JsonResponse
+     * @throws GuzzleException
+     */
+    public function meGuildsAction()
+    {
+        $resp = $this->discord->fetchMeGuilds($this->getUser()->getDiscordAccessToken());
+
+        return new JsonResponse($resp);
+    }
+
+    /**
+     * @Route("/guilds/{serverID}/channels", name="guild_channels")
+     *
+     * @param string $serverID
      *
      * @return JsonResponse
      * @throws GuzzleException
      */
-    public function meGuildsAction(Discord $discord)
+    public function guildChannelsAction($serverID)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        $resp = $discord->fetchMeGuilds($this->getUser()->getDiscordAccessToken());
-
-        return new JsonResponse((array)$resp);
+        return new JsonResponse([
+            'message'  => 'ok',
+            'channels' => $this->discord->fetchGuildChannels($serverID)
+        ]);
     }
 
     /**
@@ -85,8 +96,6 @@ class ApiController extends Controller
      */
     public function bumpAction(Request $request, $serverID)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
         if (!$server) {
             throw $this->createNotFoundException();
@@ -135,8 +144,6 @@ class ApiController extends Controller
      */
     public function bumpMeAction($serverID)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
         if (!$server) {
             throw $this->createNotFoundException();
@@ -194,6 +201,8 @@ class ApiController extends Controller
      */
     public function joinAction($serverID, Request $request)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $session  = $request->getSession();
         $password = trim($request->request->get('password'));
         $server   = $this->em->getRepository(Server::class)->findByDiscordID($serverID);

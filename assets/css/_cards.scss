@@ -7,6 +7,10 @@
 .card-primary {
   @extend .text-white;
   @extend .bg-primary;
+
+  .btn-link {
+    color: #FFF;
+  }
 }
 
 .card-header {

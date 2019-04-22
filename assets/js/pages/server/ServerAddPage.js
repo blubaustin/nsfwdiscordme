@@ -1,4 +1,5 @@
 import Discord from 'lib/Discord';
+import router from 'lib/router';
 import { generateSlug } from 'lib/utils';
 
 /**
@@ -10,8 +11,11 @@ class ServerAddPage
    * Initializes the page
    */
   setup = () => {
+    this.serverID = null;
+
     this.setupFormServerID();
     this.setupFormSlug();
+    this.setupFormBot();
     this.setupFormUploads();
   };
 
@@ -21,16 +25,21 @@ class ServerAddPage
   setupFormServerID = () => {
     const $serverID   = $('#server_discordID');
     const $serverName = $('#server_name');
+    this.serverID     = $serverID.val();
+    if (this.serverID) {
+      this.handleRefreshClick();
+    }
 
     $serverID.on('input', () => {
-      const snowflake = $serverID.val();
-      if (Discord.isSnowflake(snowflake)) {
-        Discord.fetchWidget(snowflake)
+      this.serverID = $serverID.val();
+      if (Discord.isSnowflake(this.serverID)) {
+        Discord.fetchWidget(this.serverID)
           .then(({ name }) => {
             if (name) {
               $serverName.val(name);
               $serverName.trigger('input');
             }
+            this.handleRefreshClick();
           });
       }
     }).focus();
@@ -51,7 +60,7 @@ class ServerAddPage
      *
      */
     function updateSlugHelp() {
-      $serverSlugHelp.html(`${slugHelpText}<br />Your custom URL will be: https://nsfwdiscordme.com/s/${$serverSlug.val()}`);
+      $serverSlugHelp.html(`${slugHelpText}<br />Your custom URL will be: https://nsfwdiscordme.com/${$serverSlug.val()}`);
     }
 
     $serverName.on('input', (e) => {
@@ -76,6 +85,33 @@ class ServerAddPage
   };
 
   /**
+   * Replaces the text input with a drop down
+   *
+   * Required because Symfony's form types don't allow dynamic values, but the channel
+   * values are populated by this javascript.
+   */
+  setupFormBot = () => {
+    const $input  = $('#server_botInviteChannelID');
+    const $select = $('<select />', {
+      'id':         'server_botInviteChannelID',
+      'name':       'server[botInviteChannelID]',
+      'class':      'form-control',
+      'data-value': $input.val()
+    });
+    $('<option />', {
+      'value': 0,
+      'html':  'Select...'
+    }).appendTo($select);
+    $input.replaceWith($select);
+
+    $('#server-refresh-btn').on('click', this.handleRefreshClick);
+
+    if (this.serverID) {
+      this.handleRefreshClick();
+    }
+  };
+
+  /**
    *
    */
   setupFormUploads = () => {
@@ -90,6 +126,42 @@ class ServerAddPage
     };
     $("#server_iconFile").fileinput(options);
     $("#server_bannerFile").fileinput(options);
+  };
+
+  /**
+   *
+   */
+  handleRefreshClick = () => {
+    const { serverID } = this;
+
+    const $input = $('#server_botInviteChannelID');
+
+    $.ajax({
+      url: router.generate('api_guild_channels', { serverID })
+    }).done((resp) => {
+      if (resp.message === 'ok') {
+        $input.html('');
+        $('<option />', {
+          'value': 0,
+          'html':  'Select...'
+        }).appendTo($input);
+
+        resp.channels.forEach((channel) => {
+          if (channel.type === 0) {
+            $('<option />', {
+              'value': channel.id,
+              'html':  channel.name
+            }).appendTo($input);
+          }
+        });
+
+        if ($input.data('value')) {
+          $input.val($input.data('value'));
+        }
+      } else {
+        // @todo
+      }
+    })
   };
 }
 
