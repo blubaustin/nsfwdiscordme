@@ -9,7 +9,9 @@ use Exception;
 
 /**
  * @ORM\Table(name="server", indexes={
- *     @ORM\Index(name="enabled_idx", columns={"is_enabled"})
+ *     @ORM\Index(name="enabled_public_idx", columns={"is_enabled", "is_public"}),
+ *     @ORM\Index(name="enabled_public_bump_points_idx", columns={"is_enabled", "is_public", "bump_points"}),
+ *     @ORM\Index(name="enabled_public_members_online_idx", columns={"is_enabled", "is_public", "members_online"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ServerRepository")
  */

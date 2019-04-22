@@ -14,6 +14,7 @@ fos_elastica:
                         categories: ~
                         tags: ~
                         bumpPoints: { fielddata: true }
+                        membersOnline: { fielddata: true }
                     persistence:
                         driver: orm
                         model: App\Entity\Server

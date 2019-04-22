@@ -51,6 +51,10 @@
 .btn {
   .icon {
     margin-right: 0.25rem;
+
+    @include media-xs {
+      margin-right: 0;
+    }
   }
 }
 
