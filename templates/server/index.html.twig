@@ -1,0 +1,69 @@
+{% set fluidContainer = true %}
+{% extends "base.html.twig" %}
+{% block body %}
+  <div
+    id="page-server"
+    data-server-id="{{ server.discordID }}"
+    data-requires-password="{{ server.serverPassword|toBool }}"
+    data-requires-recaptcha="{{ server.botHumanCheck|toBool }}"
+  >
+    <div
+      class="jumbotron jumbotron-fluid server-jumbotron"
+      style="background-image: url({{ server.bannerMedia|webPath }});"
+    >
+      <div class="server-jumbotron-info">
+        <div class="container">
+          <h1 class="display-4">
+            {{ server.name }}
+          </h1>
+          <p class="lead">
+            {{ server.summary }}
+          </p>
+          <div class="server-jumbotron-members-online">
+            {{ icon('circle') }}
+            {{ server.membersOnline|number_format }} online
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="card card-primary card-server-about">
+            <div class="card-header">
+              <button
+                id="server-join-btn"
+                class="btn btn-lg btn-success"{% if not server.active %} disabled="disabled"{% endif %}
+              >
+                {{ icon('sign-in-alt') }}
+                Join Server
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="card-server-about-owner">
+                Owned by {{ server.user.discordUsername }}
+              </div>
+              <div class="card-server-about-categories">
+                Categories
+                {% for category in server.categories %}
+                  <a href="{{ path('category_index', { slug: category.slug }) }}">
+                    {{ category.name }}
+                  </a>
+                  {% if not loop.last %}, {% endif %}
+                {% endfor %}
+              </div>
+              <div class="card-server-about-description gutter-top">
+                {% if server.description %}
+                  {{ server.description }}
+                {% else %}
+                  Click 'Join Server' above to join this community.
+                {% endif %}
+              </div>
+            </div> {# body #}
+          </div> {# card #}
+        </div> {# col #}
+      </div> {# row #}
+    </div> {# container #}
+    {% include "server/blocks/join-modal.html.twig" %}
+  </div> {# page #}
+{% endblock %}

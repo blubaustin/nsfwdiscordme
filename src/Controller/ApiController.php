@@ -95,10 +95,10 @@ class ApiController extends Controller
         }
 
         // Was saved in recaptchaVerifyAction() when verifying the recaptcha.
-        if ($request->getSession()->get('recaptcha_id') != $serverID) {
+        if ($request->getSession()->get('recaptcha_nonce') != $serverID) {
             throw $this->createAccessDeniedException();
         }
-        $request->getSession()->remove('recaptcha_id');
+        $request->getSession()->remove('recaptcha_nonce');
 
         if ($this->hasVotedCurrentBumpPeriod($server)) {
             return new JsonResponse([
@@ -161,22 +161,61 @@ class ApiController extends Controller
      */
     public function recaptchaVerifyAction(Request $request, RecaptchaService $recaptchaService)
     {
-        $id    = $request->request->get('id');
-        $token = $request->request->get('token');
-        if (!$id || !$token) {
+        $session = $request->getSession();
+        $nonce   = $request->request->get('nonce');
+        $token   = $request->request->get('token');
+        if (!$nonce || !$token) {
             throw $this->createNotFoundException();
         }
 
         if ($recaptchaService->verify($token)) {
-            $request->getSession()->set('recaptcha_id', $id);
+            $session->set('recaptcha_nonce', $nonce);
 
             return new JsonResponse([
                 'success' => true
             ]);
+        } else {
+            $session->remove('recaptcha_nonce');
         }
 
         return new JsonResponse([
             'success' => false
+        ]);
+    }
+
+    /**
+     * @Route("/join/{serverID}", name="join", methods={"POST"})
+     *
+     * @param string  $serverID
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function joinAction($serverID, Request $request)
+    {
+        $session  = $request->getSession();
+        $password = trim($request->request->get('password'));
+        $server   = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
+        if (!$server) {
+            throw $this->createNotFoundException();
+        }
+
+        if ($server->isBotHumanCheck() && $session->get('recaptcha_nonce') !== "join-${serverID}") {
+            return new JsonResponse([
+                'message' => 'recaptcha'
+            ]);
+        }
+        if ($server->getServerPassword() && !password_verify($password, $server->getServerPassword())) {
+            return new JsonResponse([
+                'message' => 'password'
+            ]);
+        }
+
+        $session->remove('recaptcha_nonce');
+
+        return new JsonResponse([
+            'message'  => 'ok',
+            'redirect' => 'https://discordapp.com'
         ]);
     }
 

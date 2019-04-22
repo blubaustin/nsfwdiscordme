@@ -33,7 +33,7 @@
     {% block nav %}
       {% include "_layout/nav.html.twig" %}
     {% endblock %}
-    <div id="page-container" class="container">
+    <div id="page-container" class="{% if fluidContainer|default %}container-fluid{% else %}container{% endif %}">
       {% include "_layout/flash.html.twig" %}
       {% block body %}{% endblock %}
     </div>

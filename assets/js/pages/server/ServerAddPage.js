@@ -9,16 +9,16 @@ class ServerAddPage
   /**
    * Initializes the page
    */
-  run() {
+  setup = () => {
     this.runFormServerID();
     this.runFormSlug();
     this.runFormUploads();
-  }
+  };
 
   /**
    *
    */
-  runFormServerID() {
+  runFormServerID = () => {
     const $serverID   = $('#server_discordID');
     const $serverName = $('#server_name');
 
@@ -34,12 +34,12 @@ class ServerAddPage
           });
       }
     }).focus();
-  }
+  };
 
   /**
    *
    */
-  runFormSlug() {
+  runFormSlug = () => {
     const $serverName     = $('#server_name');
     const $serverSlug     = $('#server_slug');
     const $serverSlugHelp = $serverSlug.next('.form-help:first');
@@ -73,12 +73,12 @@ class ServerAddPage
     });
 
     updateSlugHelp();
-  }
+  };
 
   /**
    *
    */
-  runFormUploads() {
+  runFormUploads = () => {
     const options = {
       theme:             'fas',
       showBrowse:        false,
@@ -90,7 +90,7 @@ class ServerAddPage
     };
     $("#server_iconFile").fileinput(options);
     $("#server_bannerFile").fileinput(options);
-  }
+  };
 }
 
 export default ServerAddPage;

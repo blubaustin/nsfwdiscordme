@@ -25,16 +25,16 @@ export function recaptchaShow(id) {
  * Resolves to a boolean indicating whether the given recaptcha token is valid
  *
  * @param {string} token Token returned by recaptcha service
- * @param {*}      id    Backend saves this ID associated with the recaptcha verification
+ * @param {string} nonce Backend saves this value associated with the recaptcha verification
  * @returns {Promise<any> | Promise | Promise}
  */
-export function recaptchaVerify(token, id) {
+export function recaptchaVerify(token, nonce) {
   return new Promise((resolve) => {
     $.ajax({
       url:    router.generate('api_recaptcha_verify'),
       method: 'post',
       data:   {
-        id,
+        nonce,
         token
       }
     }).done(resolve);

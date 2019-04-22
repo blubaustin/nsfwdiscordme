@@ -8,7 +8,7 @@ if (window.Promise === undefined) {
 for(const selector in pages) {
   const $page = $(selector);
   if ($page.length) {
-    (new pages[selector]()).run($page);
+    (new pages[selector]()).setup($page);
     break;
   }
 }

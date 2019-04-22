@@ -6,9 +6,9 @@ class HomePage
   /**
    * Initializes the page
    */
-  run() {
+  setup = () => {
     console.log('home page');
-  }
+  };
 }
 
 export default HomePage;

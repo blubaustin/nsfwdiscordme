@@ -11,7 +11,7 @@ class ProfilePage
    *
    * @param {jQuery} $page
    */
-  run = ($page) => {
+  setup = ($page) => {
     this.$modal         = $('#recaptcha-model');
     this.$modalBumpBtn  = $('#modal-server-bump-btn');
     this.$modalVoted    = $('.modal-server-admin-voted:first');

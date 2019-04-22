@@ -1,0 +1,22 @@
+@import "vars";
+
+.server-jumbotron {
+  margin-top: -$gutter-size;
+  background-size: cover;
+  padding: 10rem 0;
+  margin-bottom: $gutter-size;
+}
+
+.server-jumbotron-info {
+  padding: $gutter-size-lg;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.server-jumbotron-members-online {
+  .icon {
+    font-size: 1rem;
+    text-shadow: 0 0 10px;
+    display: inline-block;
+    color: $color-success;
+  }
+}

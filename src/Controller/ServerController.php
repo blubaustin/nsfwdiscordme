@@ -35,7 +35,16 @@ class ServerController extends Controller
      */
     public function indexAction($slug)
     {
-        die($slug);
+        $server = $this->em->getRepository(Server::class)->findBySlug($slug);
+        if (!$server || !$server->isEnabled()) {
+            throw $this->createNotFoundException();
+        }
+
+        $server->setBotHumanCheck(true);
+
+        return $this->render('server/index.html.twig', [
+            'server' => $server
+        ]);
     }
 
     /**
