@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Discord\Discord;
 use App\Entity\User;
 use App\Storage\Snowflake\SnowflakeGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,23 +35,31 @@ class Controller extends AbstractController
     /**
      * @var PaginatorInterface
      */
-    private $paginator;
+    protected $paginator;
+
+    /**
+     * @var Discord
+     */
+    protected $discord;
 
     /**
      * Constructor
      *
+     * @param Discord                     $discord
      * @param EntityManagerInterface      $em
      * @param EventDispatcherInterface    $eventDispatcher
      * @param SnowflakeGeneratorInterface $snowflakeGenerator
      * @param PaginatorInterface          $paginator
      */
     public function __construct(
+        Discord $discord,
         EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,
         SnowflakeGeneratorInterface $snowflakeGenerator,
         PaginatorInterface $paginator
     )
     {
+        $this->discord            = $discord;
         $this->em                 = $em;
         $this->eventDispatcher    = $eventDispatcher;
         $this->snowflakeGenerator = $snowflakeGenerator;

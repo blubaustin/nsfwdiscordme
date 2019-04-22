@@ -1,48 +1,61 @@
-<div class="card card-primary">
-  <div class="card-header">
-    Add Discord Server
+{{ form_start(form, { attr: { 'id': 'server-add-form' }}) }}
+  <div class="card card-primary">
+    <div class="card-header">
+      Add Discord Server
+    </div>
+    <div class="card-body">
+        {{ form_row(form.discordID, { attr: { readonly: isEditing }}) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.slug, { attr: { readonly: isEditing }}) }}
+        {{ form_row(form.summary) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.categories) }}
+        {{ form_row(form.tags) }}
+        {{ form_row(form.botInviteChannelID) }}
+    </div>
   </div>
-  <div class="card-body">
-    {{ form_start(form, { attr: { 'id': 'server-add-form' }}) }}
-    <section class="form-section">
-      {{ form_row(form.discordID, { attr: { readonly: isEditing }}) }}
-      {{ form_row(form.name) }}
-      {{ form_row(form.slug, { attr: { readonly: isEditing }}) }}
-      {{ form_row(form.summary) }}
-      {{ form_row(form.description) }}
-      {{ form_row(form.categories) }}
-      {{ form_row(form.tags) }}
-      {{ form_row(form.botInviteChannelID) }}
+
+  <div class="card card-primary">
+    <div class="card-header">
+      Media
+    </div>
+    <div class="card-body">
       {{ form_row(form.iconFile) }}
       {{ form_row(form.bannerFile) }}
-    </section>
+    </div>
+  </div>
 
-    <section class="form-section">
-      <h4>
-        Human Verification Options
-      </h4>
+  <div class="card card-primary">
+    <div class="card-header">
+      Human Verification
+    </div>
+    <div class="card-body">
       {{ form_row(form.botHumanCheck) }}
       {{ form_row(form.serverPassword) }}
       {{ form_row(form.updatePassword) }}
-    </section>
+    </div>
+  </div>
 
-    <section class="form-section">
-      <h4>
-        Visibility
-      </h4>
+  <div class="card card-primary">
+    <div class="card-header">
+      Visibility
+    </div>
+    <div class="card-body">
       {{ form_row(form.isPublic) }}
       {{ form_row(form.isActive) }}
-    </section>
-
-    <button class="btn btn-info btn-lg btn-block" type="submit">
-      {% if isEditing %}
-        Update Discord Server
-      {% else %}
-        Add Discord Server
-      {% endif %}
-    </button>
-
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
+    </div>
   </div>
-</div>
+
+  <div class="card card-primary">
+    <div class="card-body">
+      <button class="btn btn-info btn-lg btn-block" type="submit">
+        {% if isEditing %}
+          Update Discord Server
+        {% else %}
+          Add Discord Server
+        {% endif %}
+      </button>
+    </div>
+  </div>
+  {{ form_rest(form) }}
+{{ form_end(form) }}

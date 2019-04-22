@@ -226,10 +226,7 @@ class ServerType extends AbstractType
             ))
         ;
 
-        if ($options['user']) {
-            $user        = $options['user'];
-            $accessToken = $user->getDiscordAccessToken();
-
+        if ($options['user'] && ($accessToken = $options['user']->getDiscordAccessToken())) {
             $servers = [
                 'Select...' => 0
             ];
@@ -241,15 +238,14 @@ class ServerType extends AbstractType
                 'discordID',
                 ChoiceType::class,
                 [
-                    'label' => 'Discord Server',
-                    'help'  => 'Which one of your servers are you adding?',
+                    'label'   => 'Discord Server',
+                    'help'    => 'Which one of your servers are you adding?',
                     'choices' => $servers
                 ]
             );
         } else {
             $builder->add('discordID');
         }
-
     }
 
     /**

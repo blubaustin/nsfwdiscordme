@@ -77,6 +77,9 @@ services:
     App\Controller\SearchController:
         calls:
             - [setFinder, ['@fos_elastica.finder.app.server']]
+    App\Controller\ServerController:
+        calls:
+            - [setWebHandler, ['@App\Media\WebHandlerInterface']]
 
     # Event Listeners
     App\Event\Listener\BumpStatsListener:
