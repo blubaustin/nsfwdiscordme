@@ -31,7 +31,7 @@
           <div class="card-header">
             <button
               id="server-join-btn"
-              class="btn btn-lg btn-success"{% if not server.active %} disabled="disabled"{% endif %}
+              class="btn btn-lg btn-success"{% if not server.active or not server.botInviteChannelID %} disabled="disabled"{% endif %}
             >
               {{ icon('sign-in-alt') }}
               Join Server
