@@ -34,7 +34,11 @@ class ServerPage extends Page
       this.$joinPassword.on('input', this.handlePasswordInput);
     }
 
-    $('#server-join-btn').on('click', this.render);
+    if (!this.requiresPassword && !this.requiresRecaptcha) {
+      $('#server-join-btn').on('click', this.handleJoinClick);
+    } else {
+      $('#server-join-btn').on('click', this.render);
+    }
   };
 
   /**
