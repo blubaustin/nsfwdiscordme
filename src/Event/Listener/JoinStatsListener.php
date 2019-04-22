@@ -1,15 +1,15 @@
 <?php
 namespace App\Event\Listener;
 
-use App\Entity\BumpServerEvent;
-use App\Event\BumpEvent;
+use App\Entity\JoinServerEvent;
+use App\Event\JoinEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 /**
- * Records server bumps, the data will be used to generate bump stats.
+ * Records server joins, the data will be used to generate join stats.
  */
-class BumpStatsListener
+class JoinStatsListener
 {
     /**
      * @var EntityManagerInterface
@@ -27,12 +27,12 @@ class BumpStatsListener
     }
 
     /**
-     * @param BumpEvent $event
+     * @param JoinEvent $event
      */
-    public function onBump(BumpEvent $event)
+    public function onJoin(JoinEvent $event)
     {
         try {
-            $bse = (new BumpServerEvent())
+            $bse = (new JoinServerEvent())
                 ->setServer($event->getServer())
                 ->setIpString($event->getRequest()->getClientIp());
             $this->em->persist($bse);

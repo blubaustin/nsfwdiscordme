@@ -86,3 +86,7 @@ services:
         class: App\Event\Listener\BumpStatsListener
         tags:
             - { name: kernel.event_listener, event: 'app.bump', method: 'onBump' }
+    App\Event\Listener\JoinStatsListener:
+        class: App\Event\Listener\JoinStatsListener
+        tags:
+            - { name: kernel.event_listener, event: 'app.join', method: 'onJoin' }

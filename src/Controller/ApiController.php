@@ -1,11 +1,11 @@
 <?php
 namespace App\Controller;
 
-use App\Discord\Discord;
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
 use App\Event\BumpEvent;
+use App\Event\JoinEvent;
 use App\Http\Request;
 use App\Services\RecaptchaService;
 use Doctrine\DBAL\DBALException;
@@ -228,6 +228,8 @@ class ApiController extends Controller
                 'message' => 'error'
             ], 500);
         }
+
+        $this->eventDispatcher->dispatch('app.join', new JoinEvent($server, $request));
 
         return new JsonResponse([
             'message'  => 'ok',

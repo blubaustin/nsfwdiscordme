@@ -6,10 +6,10 @@ use DateTime;
 use Exception;
 
 /**
- * @ORM\Table(name="bump_server_event")
+ * @ORM\Table(name="join_server_event")
  * @ORM\Entity()
  */
-class BumpServerEvent
+class JoinServerEvent
 {
     /**
      * @ORM\Id
@@ -66,9 +66,9 @@ class BumpServerEvent
     /**
      * @param Server $server
      *
-     * @return BumpServerEvent
+     * @return JoinServerEvent
      */
-    public function setServer(Server $server): BumpServerEvent
+    public function setServer(Server $server): JoinServerEvent
     {
         $this->server = $server;
 
@@ -76,7 +76,7 @@ class BumpServerEvent
     }
 
     /**
-     * @return resource
+     * @return resource|string
      */
     public function getIp()
     {
@@ -93,11 +93,11 @@ class BumpServerEvent
     }
 
     /**
-     * @param string $ip
+     * @param resource|string $ip
      *
-     * @return BumpServerEvent
+     * @return JoinServerEvent
      */
-    public function setIp(string $ip): BumpServerEvent
+    public function setIp($ip): JoinServerEvent
     {
         $this->ip = $ip;
 
@@ -109,7 +109,7 @@ class BumpServerEvent
      *
      * @return $this
      */
-    public function setIpString($ipString): BumpServerEvent
+    public function setIpString($ipString): JoinServerEvent
     {
         $this->ip = inet_pton($ipString);
 
@@ -127,9 +127,9 @@ class BumpServerEvent
     /**
      * @param DateTime $dateCreated
      *
-     * @return BumpServerEvent
+     * @return JoinServerEvent
      */
-    public function setDateCreated(DateTime $dateCreated): BumpServerEvent
+    public function setDateCreated(DateTime $dateCreated): JoinServerEvent
     {
         $this->dateCreated = $dateCreated;
 
