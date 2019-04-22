@@ -74,12 +74,13 @@ class DiscordOAuthController extends Controller
         }
         $session->remove('oauth2state');
 
-        $token         = $provider->getAccessToken(
+        $token = $provider->getAccessToken(
             'authorization_code',
             [
                 'code' => $request->query->get('code')
             ]
         );
+
         $resourceOwner = $provider->getResourceOwner($token)->toArray();
 
         $em       = $this->getDoctrine()->getManager();

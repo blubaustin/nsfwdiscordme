@@ -12,7 +12,6 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use RestCord\DiscordClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,16 +42,18 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/guild/{serverID}", name="guild")
+     * @Route("/guilds", name="guilds")
      *
-     * @param string        $serverID
-     * @param DiscordClient $client
+     * @param Discord $discord
      *
      * @return JsonResponse
+     * @throws GuzzleException
      */
-    public function guildAction($serverID, DiscordClient $client)
+    public function meGuildsAction(Discord $discord)
     {
-        $resp = $client->guild->getGuild(['guild.id' => (int)$serverID]);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $resp = $discord->fetchMeGuilds($this->getUser()->getDiscordAccessToken());
 
         return new JsonResponse((array)$resp);
     }

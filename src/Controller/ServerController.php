@@ -102,7 +102,9 @@ class ServerController extends Controller
         $slug      = $server->getSlug();
         $discordID = $server->getDiscordID();
 
-        $form = $this->createForm(ServerType::class, $server);
+        $form = $this->createForm(ServerType::class, $server, [
+            'user' => $this->getUser()
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $server->setSlug($slug);           // Ensure the slug wasn't changed
@@ -148,9 +150,12 @@ class ServerController extends Controller
         WebHandlerInterface $webHandler
     )
     {
+        $user   = $this->getUser();
         $server = new Server();
-        $server->setUser($this->getUser());
-        $form = $this->createForm(ServerType::class, $server);
+        $server->setUser($user);
+        $form = $this->createForm(ServerType::class, $server, [
+            'user' => $user
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -10,15 +10,15 @@ class ServerAddPage
    * Initializes the page
    */
   setup = () => {
-    this.runFormServerID();
-    this.runFormSlug();
-    this.runFormUploads();
+    this.setupFormServerID();
+    this.setupFormSlug();
+    this.setupFormUploads();
   };
 
   /**
    *
    */
-  runFormServerID = () => {
+  setupFormServerID = () => {
     const $serverID   = $('#server_discordID');
     const $serverName = $('#server_name');
 
@@ -39,7 +39,7 @@ class ServerAddPage
   /**
    *
    */
-  runFormSlug = () => {
+  setupFormSlug = () => {
     const $serverName     = $('#server_name');
     const $serverSlug     = $('#server_slug');
     const $serverSlugHelp = $serverSlug.next('.form-help:first');
@@ -78,7 +78,7 @@ class ServerAddPage
   /**
    *
    */
-  runFormUploads = () => {
+  setupFormUploads = () => {
     const options = {
       theme:             'fas',
       showBrowse:        false,

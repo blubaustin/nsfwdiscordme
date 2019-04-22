@@ -1,13 +1,18 @@
 <?php
 namespace App\Form\Type;
 
+use App\Discord\Discord;
 use App\Entity\Category;
 use App\Entity\Server;
+use App\Entity\User;
 use App\Repository\TagRepository;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -22,6 +27,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ServerType extends AbstractType
 {
     /**
+     * @var Discord
+     */
+    protected $discord;
+
+    /**
      * @var UrlGeneratorInterface
      */
     protected $urlGenerator;
@@ -34,11 +44,13 @@ class ServerType extends AbstractType
     /**
      * Constructor
      *
+     * @param Discord               $discord
      * @param UrlGeneratorInterface $urlGenerator
      * @param TagRepository         $tagRepository
      */
-    public function __construct(UrlGeneratorInterface $urlGenerator, TagRepository $tagRepository)
+    public function __construct(Discord $discord, UrlGeneratorInterface $urlGenerator, TagRepository $tagRepository)
     {
+        $this->discord       = $discord;
         $this->urlGenerator  = $urlGenerator;
         $this->tagRepository = $tagRepository;
     }
@@ -46,6 +58,9 @@ class ServerType extends AbstractType
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
+     *
+     * @throws Exception
+     * @throws GuzzleException
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -62,14 +77,6 @@ class ServerType extends AbstractType
                 null,
                 [
                     'help' => 'Letters, numbers, and dashes are allowed.'
-                ]
-            )
-            ->add(
-                'discordID',
-                TextType::class,
-                [
-                    'label' => 'Discord Server ID',
-                    'help'  => 'This can be found in your server settings under "Widget".'
                 ]
             )
             ->add(
@@ -218,6 +225,31 @@ class ServerType extends AbstractType
                 }
             ))
         ;
+
+        if ($options['user']) {
+            $user        = $options['user'];
+            $accessToken = $user->getDiscordAccessToken();
+
+            $servers = [
+                'Select...' => 0
+            ];
+            foreach($this->discord->fetchMeGuilds($accessToken) as $server) {
+                $servers[$server['name']] = $server['id'];
+            }
+
+            $builder->add(
+                'discordID',
+                ChoiceType::class,
+                [
+                    'label' => 'Discord Server',
+                    'help'  => 'Which one of your servers are you adding?',
+                    'choices' => $servers
+                ]
+            );
+        } else {
+            $builder->add('discordID');
+        }
+
     }
 
     /**
@@ -228,7 +260,9 @@ class ServerType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => Server::class,
+                'user'       => null
             ]
         );
+        $resolver->setAllowedTypes('user', [User::class]);
     }
 }

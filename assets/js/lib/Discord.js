@@ -1,4 +1,4 @@
-export const DISCORD_API_URL = 'https://discordapp.com/api';
+export const DISCORD_API_URL = 'https://discordapp.com/api/v6';
 
 /**
  *

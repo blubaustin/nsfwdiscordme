@@ -1,6 +1,7 @@
 <?php
 namespace App\Discord;
 
+use App\Entity\AccessToken;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use GuzzleHttp\Client as Guzzle;
@@ -10,7 +11,9 @@ use GuzzleHttp\Client as Guzzle;
  */
 class Discord
 {
-    const BASE_URL = 'https://discordapp.com/api/v6';
+    const BASE_URL   = 'https://discordapp.com/api/v6';
+    const USER_AGENT = 'DiscordBot (http://dev.nsfwdiscordme.com/, 1)';
+    const TIMEOUT    = 2.0;
 
     /**
      * @var string
@@ -60,18 +63,43 @@ class Discord
     }
 
     /**
-     * @param $method
-     * @param $path
+     * @param AccessToken $token
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function fetchMeGuilds(AccessToken $token)
+    {
+        return $this->doRequest('GET', 'users/@me/guilds', $token);
+    }
+
+    /**
+     * @param string $method
+     * @param string $path
+     * @param AccessToken $token
      *
      * @return mixed
      * @throws GuzzleException
      */
-    protected function doRequest($method, $path)
+    protected function doRequest($method, $path, AccessToken $token = null)
     {
         $client = new Guzzle([
-            'timeout' => 2.0
+            'timeout' => self::TIMEOUT
         ]);
-        $response = $client->request($method, $this->buildURL($path));
+
+        $headers = [
+            'User-Agent'   => self::USER_AGENT,
+            'Accept'       => 'application/json',
+            'Content-Type' => 'application/json'
+        ];
+        if ($token) {
+            $headers['Authorization'] = sprintf('%s %s', $token->getType(), $token->getToken());
+        }
+
+        $response = $client->request($method, $this->buildURL($path), [
+            'http_errors' => false,
+            'headers'     => $headers
+        ]);
 
         return json_decode((string)$response->getBody(), true);
     }
