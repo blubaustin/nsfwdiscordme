@@ -14,6 +14,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,8 +51,6 @@ class ServerController extends Controller
         if (!$server || !$server->isEnabled()) {
             throw $this->createNotFoundException();
         }
-
-        $server->setBotHumanCheck(true);
 
         return $this->render('server/index.html.twig', [
             'server' => $server

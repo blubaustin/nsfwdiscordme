@@ -70,7 +70,7 @@ class Discord
      */
     public function fetchMeGuilds(AccessToken $token)
     {
-        return $this->doRequest('GET', 'users/@me/guilds', $token);
+        return $this->doRequest('GET', 'users/@me/guilds', null, $token);
     }
 
     /**
@@ -81,18 +81,30 @@ class Discord
      */
     public function fetchGuildChannels($serverID)
     {
-        return $this->doRequest('GET', "guilds/${serverID}/channels", true);
+        return $this->doRequest('GET', "guilds/${serverID}/channels", null, true);
     }
 
     /**
-     * @param string $method
-     * @param string $path
+     * @param string $channelID
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function createInvite($channelID)
+    {
+        return $this->doRequest('POST', "channels/${channelID}/invites", [], true);
+    }
+
+    /**
+     * @param string           $method
+     * @param string           $path
+     * @param array|null       $body
      * @param AccessToken|bool $token
      *
      * @return mixed
      * @throws GuzzleException
      */
-    protected function doRequest($method, $path, $token = null)
+    protected function doRequest($method, $path, $body = null, $token = null)
     {
         $client = new Guzzle([
             'timeout' => self::TIMEOUT
@@ -111,10 +123,15 @@ class Discord
             }
         }
 
-        $response = $client->request($method, $this->buildURL($path), [
+        $options = [
             'http_errors' => false,
             'headers'     => $headers
-        ]);
+        ];
+        if ($body !== null) {
+            $options['body'] = json_encode($body);
+        }
+
+        $response = $client->request($method, $this->buildURL($path), $options);
 
         return json_decode((string)$response->getBody(), true);
     }

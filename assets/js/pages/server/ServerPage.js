@@ -19,20 +19,25 @@ class ServerPage extends Page
     this.$joinPasswordWrap = $('#modal-server-join-password-wrap');
     this.$recaptcha        = $('#recaptcha-container');
     this.serverID          = $page.data('server-id');
-    this.requireRecaptcha  = $page.data('requires-recaptcha');
+    this.requiresRecaptcha = $page.data('requires-recaptcha');
     this.requiresPassword  = $page.data('requires-password');
     this.recaptchaSetup    = false;
 
     this.state = {
       passedPassword:  !this.requiresPassword,
-      passedRecaptcha: !this.requireRecaptcha
+      passedRecaptcha: !this.requiresRecaptcha
     };
 
-    $('#server-join-btn').on('click', this.render);
     this.$joinModal.on('shown.bs.modal', this.handleModalShown);
     this.$joinModalButton.on('click', this.handleJoinClick);
     if (this.requiresPassword) {
       this.$joinPassword.on('input', this.handlePasswordInput);
+    }
+
+    if (!this.requiresPassword && !this.requiresRecaptcha) {
+      $('#server-join-btn').on('click', this.handleJoinClick);
+    } else {
+      $('#server-join-btn').on('click', this.render);
     }
   };
 
@@ -75,6 +80,9 @@ class ServerPage extends Page
     return recaptchaVerify(token, `join-${this.serverID}`);
   };
 
+  /**
+   *
+   */
   handleJoinClick = () => {
     const { passedPassword, passedRecaptcha } = this.state;
     const { serverID } = this;
@@ -108,7 +116,7 @@ class ServerPage extends Page
     if (this.requiresPassword) {
       this.$joinPasswordWrap.show();
     }
-    if (this.requireRecaptcha) {
+    if (this.requiresRecaptcha) {
       this.$recaptcha.show();
 
       if (!this.recaptchaSetup) {

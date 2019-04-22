@@ -198,11 +198,10 @@ class ApiController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @throws GuzzleException
      */
     public function joinAction($serverID, Request $request)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         $session  = $request->getSession();
         $password = trim($request->request->get('password'));
         $server   = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
@@ -223,9 +222,16 @@ class ApiController extends Controller
 
         $session->remove('recaptcha_nonce');
 
+        $invite = $this->discord->createInvite($server->getBotInviteChannelID());
+        if (!$invite || !isset($invite['code'])) {
+            return new JsonResponse([
+                'message' => 'error'
+            ], 500);
+        }
+
         return new JsonResponse([
             'message'  => 'ok',
-            'redirect' => 'https://discordapp.com'
+            'redirect' => "https://discordapp.com/invite/${invite['code']}"
         ]);
     }
 
