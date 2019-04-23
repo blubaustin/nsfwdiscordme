@@ -1,1 +1,15 @@
 {% extends "server/add.html.twig" %}
+{% block body %}
+  <div class="row">
+    <div class="col">
+      <div class="menu-buttons">
+        <button id="server-delete-btn" class="btn btn-danger" type="button" data-server-id="{{ server.discordID }}">
+          {{ icon('trash-alt') }}
+          Delete Server
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ parent() }}
+  {% include "server/blocks/delete-modal.html.twig" %}
+{% endblock %}

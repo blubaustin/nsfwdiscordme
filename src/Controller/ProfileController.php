@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends Controller
 {
     /**
-     * @Route("/profile", name="index")
+     * @Route("/profile", name="index", options={"expose"=true})
      *
      * @return Response
      * @throws NonUniqueResultException

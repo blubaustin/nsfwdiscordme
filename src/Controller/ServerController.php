@@ -51,12 +51,9 @@ class ServerController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $user    = $this->getUser();
-        $isOwner = ($user && $user->getId() === $server->getUser()->getId());
-
         return $this->render('server/index.html.twig', [
             'server'  => $server,
-            'isOwner' => $isOwner
+            'isOwner' => $this->canManageServer($server)
         ]);
     }
 
@@ -97,7 +94,7 @@ class ServerController extends Controller
     public function settingsAction($slug, Request $request)
     {
         $server = $this->em->getRepository(Server::class)->findBySlug($slug);
-        if (!$server || $server->getUser()->getId() !== $this->getUser()->getId()) {
+        if (!$server || !$this->canManageServer($server, 'settings')) {
             throw $this->createNotFoundException();
         }
 
@@ -128,6 +125,7 @@ class ServerController extends Controller
             'server/settings.html.twig',
             [
                 'form'      => $form->createView(),
+                'server'    => $server,
                 'isEditing' => true
             ]
         );

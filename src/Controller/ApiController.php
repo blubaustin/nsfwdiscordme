@@ -7,6 +7,7 @@ use App\Entity\Server;
 use App\Event\BumpEvent;
 use App\Event\JoinEvent;
 use App\Http\Request;
+use App\Media\WebHandlerInterface;
 use App\Services\RecaptchaService;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -115,7 +116,7 @@ class ApiController extends Controller
         if (!$server) {
             throw $this->createNotFoundException();
         }
-        if ($server->getUser()->getId() !== $this->getUser()->getId()) {
+        if (!$this->canManageServer($server, 'bump')) {
             throw $this->createAccessDeniedException();
         }
 
@@ -163,7 +164,7 @@ class ApiController extends Controller
         if (!$server) {
             throw $this->createNotFoundException();
         }
-        if ($server->getUser()->getId() !== $this->getUser()->getId()) {
+        if (!$this->canManageServer($server, 'bump')) {
             throw $this->createAccessDeniedException();
         }
 
@@ -249,6 +250,64 @@ class ApiController extends Controller
         return new JsonResponse([
             'message'  => 'ok',
             'redirect' => "https://discordapp.com/invite/${invite['code']}"
+        ]);
+    }
+
+    /**
+     * @Route("/delete-server/{serverID}", name="delete_server", methods={"POST"})
+     *
+     * @param string              $serverID
+     * @param WebHandlerInterface $webHandler
+     *
+     * @return JsonResponse
+     */
+    public function deleteServerAction($serverID, WebHandlerInterface $webHandler)
+    {
+        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
+        if (!$server || !$this->canManageServer($server, 'delete')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $iconMedia   = $server->getIconMedia();
+        $bannerMedia = $server->getBannerMedia();
+        $this->em->remove($server);
+        $this->em->flush();
+
+        try {
+            if ($iconMedia) {
+                $webHandler->getAdapter()->remove($iconMedia->getPath());
+            }
+            if ($bannerMedia) {
+                $webHandler->getAdapter()->remove($bannerMedia->getPath());
+            }
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage(), ['serverID' => $serverID]);
+        }
+
+        return new JsonResponse([
+            'message' => 'ok'
+        ]);
+    }
+
+    /**
+     * @Route("/flash/{type}", name="flash", methods={"POST"})
+     *
+     * @param string $type
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function flashAction($type, Request $request)
+    {
+        $message = $request->request->get('message');
+        if (!$message || !in_array($type, ['success', 'danger'])) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->addFlash($type, $message);
+
+        return new JsonResponse([
+            'message' => 'ok'
         ]);
     }
 

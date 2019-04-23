@@ -2,11 +2,13 @@
 namespace App\Controller;
 
 use App\Discord\Discord;
+use App\Entity\Server;
 use App\Entity\User;
 use App\Storage\Snowflake\SnowflakeGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -21,6 +23,11 @@ class Controller extends AbstractController
      * @var EntityManagerInterface
      */
     protected $em;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @var EventDispatcherInterface
@@ -46,6 +53,7 @@ class Controller extends AbstractController
      * Constructor
      *
      * @param Discord                     $discord
+     * @param LoggerInterface             $logger
      * @param EntityManagerInterface      $em
      * @param EventDispatcherInterface    $eventDispatcher
      * @param SnowflakeGeneratorInterface $snowflakeGenerator
@@ -53,6 +61,7 @@ class Controller extends AbstractController
      */
     public function __construct(
         Discord $discord,
+        LoggerInterface $logger,
         EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,
         SnowflakeGeneratorInterface $snowflakeGenerator,
@@ -60,6 +69,7 @@ class Controller extends AbstractController
     )
     {
         $this->discord            = $discord;
+        $this->logger             = $logger;
         $this->em                 = $em;
         $this->eventDispatcher    = $eventDispatcher;
         $this->snowflakeGenerator = $snowflakeGenerator;
@@ -87,5 +97,21 @@ class Controller extends AbstractController
             $this->get('request_stack')->getMasterRequest()->query->getInt('page', 1),
             $limit
         );
+    }
+
+    /**
+     * @param Server $server
+     * @param string $action
+     *
+     * @return bool
+     */
+    public function canManageServer(Server $server, $action = 'any')
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return false;
+        }
+
+        return $server->getUser()->getId() === $user->getId();
     }
 }

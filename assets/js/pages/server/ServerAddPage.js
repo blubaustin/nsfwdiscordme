@@ -11,11 +11,16 @@ class ServerAddPage
    * Initializes the page
    */
   setup = () => {
-    this.serverID      = null;
-    this.$errorModal   = $('#modal-server-join-error');
-    this.$errorMessage = $('.server-join-error-message');
+    this.serverID       = null;
+    this.deleteServerID = null;
+    this.$errorModal    = $('#modal-server-join-error');
+    this.$errorMessage  = $('.server-join-error-message');
+    this.$deleteModal   = $('#modal-server-delete');
+    this.$deleteButton  = $('#server-delete-btn');
 
     this.$errorModal.on('hidden.bs.modal', this.handleErrorModalHidden);
+    this.$deleteButton.on('click', this.handleDeleteClick);
+    $('#modal-server-delete-btn').on('click', this.handleModalDeleteClick);
 
     this.setupFormServerID();
     this.setupFormSlug();
@@ -177,6 +182,36 @@ class ServerAddPage
         }
       } else {
         // @todo
+      }
+    });
+  };
+
+  /**
+   *
+   */
+  handleDeleteClick = () => {
+    this.deleteServerID = this.$deleteButton.data('server-id');
+    this.$deleteModal.modal('show');
+  };
+
+  /**
+   *
+   */
+  handleModalDeleteClick = () => {
+    $.ajax({
+      url:  router.generate('api_delete_server', { serverID: this.deleteServerID }),
+      type: 'post'
+    }).done((resp) => {
+      if (resp.message === 'ok') {
+        $.ajax({
+          url:  router.generate('api_flash', { type: 'success' }),
+          type: 'post',
+          data: {
+            message: 'The server has been deleted.'
+          }
+        }).done(() => {
+          document.location = router.generate('profile_index');
+        });
       }
     });
   };
