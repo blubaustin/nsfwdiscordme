@@ -36,6 +36,8 @@
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 
   &:hover {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+
     .card-server-bg {
       transform: scale(1.1);
     }
@@ -163,6 +165,8 @@
   box-shadow: 0 0 5px rgba($color-success, 0.5);
 
   &:hover {
+    box-shadow: 0 0 8px rgba($color-success, 0.5);
+
     .card-server-master-bg {
       transform: scale(1.05);
     }
