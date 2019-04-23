@@ -13,6 +13,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use PDO;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -286,6 +287,36 @@ class ApiController extends Controller
 
         return new JsonResponse([
             'message' => 'ok'
+        ]);
+    }
+
+    /**
+     * @Route("/stats/joins/{serverID}", name="stats_joins")
+     *
+     * @param string $serverID
+     *
+     * @return JsonResponse
+     * @throws DBALException
+     */
+    public function statsJoinsAction($serverID)
+    {
+        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
+        if (!$server || !$this->canManageServer($server, 'stats')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $stmt = $this->em->getConnection()->prepare('
+            SELECT DATE(date_created) as `day`, COUNT(*) as `count`
+            FROM `join_server_event`
+            WHERE `server_id` = ?
+            GROUP BY `day`
+        ');
+        $stmt->execute([$server->getId()]);
+        $joins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return new JsonResponse([
+            'message' => 'ok',
+            'data'    => $joins
         ]);
     }
 

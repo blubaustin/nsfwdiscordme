@@ -46,10 +46,7 @@ class ServerController extends Controller
      */
     public function indexAction($slug)
     {
-        $server = $this->em->getRepository(Server::class)->findBySlug($slug);
-        if (!$server || !$server->isEnabled()) {
-            throw $this->createNotFoundException();
-        }
+        $server = $this->fetchServerOrThrow($slug);
 
         return $this->render('server/index.html.twig', [
             'server'  => $server,
@@ -66,7 +63,14 @@ class ServerController extends Controller
      */
     public function upgradeAction($slug)
     {
-        die($slug);
+        $server = $this->fetchServerOrThrow($slug);
+        if (!$this->canManageServer($server, 'settings')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('server/upgrade.html.twig', [
+            'server' => $server
+        ]);
     }
 
     /**
@@ -78,7 +82,14 @@ class ServerController extends Controller
      */
     public function statsAction($slug)
     {
-        die($slug);
+        $server = $this->fetchServerOrThrow($slug);
+        if (!$this->canManageServer($server, 'stats')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('server/stats.html.twig', [
+            'server' => $server
+        ]);
     }
 
     /**
@@ -93,9 +104,9 @@ class ServerController extends Controller
      */
     public function settingsAction($slug, Request $request)
     {
-        $server = $this->em->getRepository(Server::class)->findBySlug($slug);
-        if (!$server || !$this->canManageServer($server, 'settings')) {
-            throw $this->createNotFoundException();
+        $server = $this->fetchServerOrThrow($slug);
+        if (!$this->canManageServer($server, 'settings')) {
+            throw $this->createAccessDeniedException();
         }
 
         $user      = $this->getUser();
@@ -268,6 +279,21 @@ class ServerController extends Controller
         }
 
         return $isValid;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return Server
+     */
+    private function fetchServerOrThrow($slug)
+    {
+        $server = $this->em->getRepository(Server::class)->findBySlug($slug);
+        if (!$server || !$server->isEnabled()) {
+            throw $this->createNotFoundException();
+        }
+
+        return $server;
     }
 
     /**

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div id="page-server-stats" data-server-id="{{ server.discordID }}">
+  <div class="row">
+    <div class="col">
+      <h1 class="layout-page-title">
+        Server Statistics
+      </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card card-primary card-server-stats">
+        <div class="card-header">
+          <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
+          {{ server.name }}
+        </div>
+        <div class="card-body">
+          <canvas id="server-stats-chart-joins" width="400" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
