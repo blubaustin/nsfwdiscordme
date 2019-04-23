@@ -32,6 +32,8 @@
   height: 240px;
   overflow: hidden;
   position: relative;
+  border: 1px solid #ababab;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 
   &:hover {
     .card-server-bg {
@@ -60,12 +62,15 @@
   right: 0;
   bottom: 0;
   z-index: 1;
+  width: 100%;
+  min-height: 100%;
   transition: all 0.25s;
 }
 
 .card-server-link {
   display: block;
   height: 100%;
+  z-index: 2;
 }
 
 .card-server-info {
@@ -143,7 +148,68 @@
   left: $gutter-size;
   right: $gutter-size;
   opacity: 0;
+  text-align: center;
   transition: opacity 0.5s;
+}
+
+/**
+ * Master server
+ */
+.card-server-master {
+  height: 265px;
+  overflow: hidden;
+  position: relative;
+  border-color: $color-success;
+  box-shadow: 0 0 5px rgba($color-success, 0.5);
+
+  &:hover {
+    .card-server-master-bg {
+      transform: scale(1.05);
+    }
+
+    .card-server-info {
+      // height: 195px;
+    }
+
+    .card-server-description {
+      // opacity: 1;
+    }
+
+    .card-server-master-info {
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+.card-server-master-bg {
+  @extend .card-server-bg;
+}
+
+.card-server-master-info {
+  @extend .card-server-info;
+  height: 150px;
+  bottom: 48px;
+}
+
+.card-server-master-icon {
+  @extend .card-server-icon;
+}
+
+.card-server-master-name {
+  @extend .card-server-name;
+}
+
+.card-server-master-categories {
+  @extend .card-server-categories;
+}
+
+.card-server-master-members-online {
+  @extend .card-server-members-online;
+}
+
+.card-server-master-description {
+  @extend .card-server-description;
+  opacity: 1;
 }
 
 /**

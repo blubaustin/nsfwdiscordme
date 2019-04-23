@@ -53,6 +53,13 @@
         </div>
       </div>
     {% endblock %}
+    {% if masterServer|default %}
+      <div class="row gutter-bottom">
+        <div class="col">
+          {% include "_cards/server-master.html.twig" with { server: masterServer } %}
+        </div>
+      </div>
+    {% endif %}
     {% include "_layout/servers-browse.html.twig" %}
   </div>
 {% endblock %}

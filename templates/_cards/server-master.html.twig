@@ -1,0 +1,26 @@
+<div class="card card-server-master">
+  <a href="{{ path('server_index', { slug: server.slug }) }}" class="card-server-link">
+    <div class="card-server-master-info">
+      <img class="card-server-master-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
+      <h2 class="card-server-master-name">
+        {{ server.name }}
+      </h2>
+      <h3 class="card-server-master-categories">
+        {% for category in server.categories %}
+          <a href="{{ path('category_index', { slug: category.slug }) }}">
+            {{ category.name }}
+          </a>
+          {% if not loop.last %}|{% endif %}
+        {% endfor %}
+      </h3>
+      <div class="card-server-master-members-online">
+        {{ icon('app-online') }}
+        {{ server.membersOnline|number_format }} online
+      </div>
+      <div class="card-server-master-description">
+        {{ server.summary }}
+      </div>
+    </div>
+    <img class="card-server-master-bg" src="{{ server.bannerMedia|webPath }}" alt="Background" />
+  </a>
+</div>

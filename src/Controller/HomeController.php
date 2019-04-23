@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\BumpServerEvent;
 use App\Entity\JoinServerEvent;
 use App\Entity\Server;
+use App\Http\Request;
 use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -21,10 +22,17 @@ class HomeController extends Controller
     /**
      * @Route("/", name="index")
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        $masterServer = null;
+        if ($request->query->get('page', 1) == 1) {
+            $masterServer = $this->em->getRepository(Server::class)->findByID(1);
+        }
+
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
@@ -32,8 +40,9 @@ class HomeController extends Controller
             ->orderBy('s.bumpPoints', 'desc');
 
         return $this->render('home/index.html.twig', [
-            'sort'    => 'most-bumped',
-            'servers' => $this->paginate($query)
+            'sort'         => 'most-bumped',
+            'masterServer' => $masterServer,
+            'servers'      => $this->paginate($query)
         ]);
     }
 
