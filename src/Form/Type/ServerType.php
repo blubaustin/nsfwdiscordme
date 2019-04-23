@@ -124,7 +124,7 @@ class ServerType extends AbstractType
                 'botInviteChannelID',
                 TextType::class,
                 [
-                    'required' => false,
+                    'required' => true,
                     'label'    => 'Bot Invite Channel'
                 ]
             )
