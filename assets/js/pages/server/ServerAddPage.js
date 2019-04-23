@@ -11,7 +11,11 @@ class ServerAddPage
    * Initializes the page
    */
   setup = () => {
-    this.serverID = null;
+    this.serverID      = null;
+    this.$errorModal   = $('#modal-server-join-error');
+    this.$errorMessage = $('.server-join-error-message');
+
+    this.$errorModal.on('hidden.bs.modal', this.handleErrorModalHidden);
 
     this.setupFormServerID();
     this.setupFormSlug();
@@ -26,7 +30,7 @@ class ServerAddPage
     const $serverID   = $('#server_discordID');
     const $serverName = $('#server_name');
     this.serverID     = $serverID.val();
-    if (this.serverID) {
+    if (this.serverID !== '0') {
       this.handleRefreshClick();
     }
 
@@ -40,6 +44,10 @@ class ServerAddPage
               $serverName.trigger('input');
             }
             this.handleRefreshClick();
+          })
+          .catch(() => {
+            this.$errorMessage.html('Widget not enabled for this server. Enable the widget and then try again.');
+            this.$errorModal.modal('show');
           });
       }
     }).focus();
@@ -106,7 +114,7 @@ class ServerAddPage
 
     $('#server-refresh-btn').on('click', this.handleRefreshClick);
 
-    if (this.serverID) {
+    if (this.serverID !== '0') {
       this.handleRefreshClick();
     }
   };
@@ -131,6 +139,13 @@ class ServerAddPage
   /**
    *
    */
+  handleErrorModalHidden = () => {
+    this.$errorMessage.html('');
+  };
+
+  /**
+   *
+   */
   handleRefreshClick = () => {
     const { serverID } = this;
 
@@ -146,14 +161,16 @@ class ServerAddPage
           'html':  'Select...'
         }).appendTo($input);
 
-        resp.channels.forEach((channel) => {
-          if (channel.type === 0) {
-            $('<option />', {
-              'value': channel.id,
-              'html':  channel.name
-            }).appendTo($input);
-          }
-        });
+        if (resp.channels) {
+          resp.channels.forEach((channel) => {
+            if (channel.type === 0) {
+              $('<option />', {
+                'value': channel.id,
+                'html':  channel.name
+              }).appendTo($input);
+            }
+          });
+        }
 
         if ($input.data('value')) {
           $input.val($input.data('value'));
@@ -161,7 +178,7 @@ class ServerAddPage
       } else {
         // @todo
       }
-    })
+    });
   };
 }
 

@@ -236,20 +236,20 @@ class ServerController extends Controller
         $iconMedia   = null;
         $bannerMedia = null;
         try {
-            if ($iconFile = $form['iconFile']->getData()) {
-                $iconMedia = $this->moveUploadedFile($iconFile, $server, 'icon');
+            $guild    = $this->discord->fetchGuild($server->getDiscordID());
+            $iconFile = $this->discord->writeGuildIcon($server->getDiscordID(), $guild['icon']);
+            if ($iconFile) {
+                $iconMedia = $this->moveIconFile($iconFile, $server);
                 if ($iconMedia) {
                     $server->setIconMedia($iconMedia);
                 } else {
                     $isValid = false;
-                    $form
-                        ->get('iconFile')
-                        ->addError(new FormError('There was an error uploading the file.'));
+                    $this->addFlash('danger', 'There was an error grabbing the server icon image.');
                 }
             }
 
             if ($bannerFile  = $form['bannerFile']->getData()) {
-                $bannerMedia = $this->moveUploadedFile($bannerFile, $server, 'banner');
+                $bannerMedia = $this->moveBannerFile($bannerFile, $server);
                 if ($bannerMedia) {
                     $server->setBannerMedia($bannerMedia);
                 } else {
@@ -298,14 +298,13 @@ class ServerController extends Controller
     /**
      * @param UploadedFile $file
      * @param Server       $server
-     * @param string       $name
      *
      * @return Media
      * @throws FileExistsException
      * @throws FileNotFoundException
      * @throws WriteException
      */
-    private function moveUploadedFile(UploadedFile $file, Server $server, $name)
+    private function moveBannerFile(UploadedFile $file, Server $server)
     {
         if ($file->getError() !== 0) {
             return null;
@@ -324,13 +323,35 @@ class ServerController extends Controller
 
         $paths = new Paths();
         $path  = $paths->getPathByType(
-            $name,
+            'banner',
             $server->getDiscordID(),
             $this->snowflakeGenerator->generate(),
             $mimeTypes[$mimeType]
         );
 
-        return $this->webHandler->write($name, $path, $file->getPathname());
+        return $this->webHandler->write('banner', $path, $file->getPathname());
+    }
+
+    /**
+     * @param string $filename
+     * @param Server $server
+     *
+     * @return Media
+     * @throws FileExistsException
+     * @throws FileNotFoundException
+     * @throws WriteException
+     */
+    private function moveIconFile($filename, Server $server)
+    {
+        $paths = new Paths();
+        $path  = $paths->getPathByType(
+            'icon',
+            $server->getDiscordID(),
+            $this->snowflakeGenerator->generate(),
+            'png'
+        );
+
+        return $this->webHandler->write('icon', $path, $filename);
     }
 
     /**

@@ -25,8 +25,8 @@ class Discord
         url: `${DISCORD_API_URL}/guilds/${serverID}/widget.json`
       }).done((resp) => {
         resolve(resp);
-      }).fail((jqXHR, textStatus, errorThrown) => {
-        reject(errorThrown);
+      }).fail((jqXHR) => {
+        reject(jqXHR.status);
       });
     });
   }

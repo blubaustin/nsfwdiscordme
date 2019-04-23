@@ -67,7 +67,6 @@
       Media
     </div>
     <div class="card-body">
-      {{ form_row(form.iconFile) }}
       {{ form_row(form.bannerFile) }}
     </div>
   </div>
@@ -85,3 +84,4 @@
   </div>
   {{ form_rest(form) }}
 {{ form_end(form) }}
+{% include "server/blocks/error-modal.html.twig" %}

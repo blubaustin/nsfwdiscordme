@@ -54,6 +54,21 @@ class ApiController extends Controller
     }
 
     /**
+     * @Route("/guild/{serverID}", name="guild")
+     *
+     * @param string $serverID
+     *
+     * @return JsonResponse
+     * @throws GuzzleException
+     */
+    public function guildAction($serverID)
+    {
+        $resp = $this->discord->fetchGuild($serverID);
+
+        return new JsonResponse($resp);
+    }
+
+    /**
      * @Route("/guilds/{serverID}/channels", name="guild_channels")
      *
      * @param string $serverID

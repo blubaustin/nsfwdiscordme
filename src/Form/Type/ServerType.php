@@ -18,8 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -126,15 +124,6 @@ class ServerType extends AbstractType
                 [
                     'required' => true,
                     'label'    => 'Bot Invite Channel'
-                ]
-            )
-            ->add(
-                'iconFile',
-                FileType::class,
-                [
-                    'mapped' => false,
-                    'required' => false,
-                    'label'    => 'Icon Image'
                 ]
             )
             ->add(

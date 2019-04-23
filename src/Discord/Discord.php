@@ -14,9 +14,10 @@ class Discord
 {
     use LoggerAwareTrait;
 
-    const BASE_URL   = 'https://discordapp.com/api/v6';
-    const USER_AGENT = 'DiscordBot (http://dev.nsfwdiscordme.com/, 1)';
-    const TIMEOUT    = 2.0;
+    const API_BASE_URL = 'https://discordapp.com/api/v6';
+    const CDN_BASE_URL = 'https://cdn.discordapp.com';
+    const USER_AGENT   = 'DiscordBot (http://dev.nsfwdiscordme.com/, 1)';
+    const TIMEOUT      = 2.0;
 
     /**
      * @var string
@@ -66,6 +67,17 @@ class Discord
     }
 
     /**
+     * @param string $serverID
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function fetchGuild($serverID)
+    {
+        return $this->doRequest('GET', "guilds/${serverID}", null, true);
+    }
+
+    /**
      * @param AccessToken $token
      *
      * @return array
@@ -99,6 +111,29 @@ class Discord
     }
 
     /**
+     * @param string $serverID
+     * @param string $iconHash
+     * @param string $ext
+     *
+     * @return string
+     */
+    public function writeGuildIcon($serverID, $iconHash, $ext = 'png')
+    {
+        $url = sprintf('%s/icons/%s/%s.%s', self::CDN_BASE_URL, $serverID, $iconHash, $ext);
+
+        $client = new Guzzle([
+            'timeout' => self::TIMEOUT
+        ]);
+        $resp = $client->get($url);
+        $data = (string)$resp->getBody();
+
+        $tmp = tempnam(sys_get_temp_dir(), 'icon_');
+        file_put_contents($tmp, $data);
+
+        return $tmp;
+    }
+
+    /**
      * @param string           $method
      * @param string           $path
      * @param array|null       $body
@@ -127,8 +162,7 @@ class Discord
         }
 
         $options = [
-            'http_errors' => false,
-            'headers'     => $headers
+            'headers' => $headers
         ];
         if ($body !== null) {
             $options['body'] = json_encode($body);
@@ -148,6 +182,6 @@ class Discord
      */
     private function buildURL($path)
     {
-        return sprintf('%s/%s', self::BASE_URL, $path);
+        return sprintf('%s/%s', self::API_BASE_URL, $path);
     }
 }
