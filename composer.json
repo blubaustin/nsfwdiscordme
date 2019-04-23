@@ -7,6 +7,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-redis": "*",
+        "charlottedunois/yasmin": "^0.6.0",
         "easycorp/easyadmin-bundle": "^2.1",
         "friendsofsymfony/elastica-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "^2.3",

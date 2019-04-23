@@ -1,4 +1,25 @@
 {
+    "cakephp/core": {
+        "version": "3.7.6"
+    },
+    "cakephp/utility": {
+        "version": "3.7.6"
+    },
+    "charlottedunois/collection": {
+        "version": "v0.2.0"
+    },
+    "charlottedunois/eventemitter": {
+        "version": "v0.1.6"
+    },
+    "charlottedunois/validator": {
+        "version": "v0.3.1"
+    },
+    "charlottedunois/yasmin": {
+        "version": "v0.6.0"
+    },
+    "clue/buzz-react": {
+        "version": "v2.6.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -97,6 +118,9 @@
     "elasticsearch/elasticsearch": {
         "version": "v6.1.0"
     },
+    "evenement/evenement": {
+        "version": "v3.0.1"
+    },
     "friendsofsymfony/elastica-bundle": {
         "version": "5.0",
         "recipe": {
@@ -145,6 +169,9 @@
     "guzzlehttp/streams": {
         "version": "3.0.0"
     },
+    "indigophp/hash-compat": {
+        "version": "v1.1.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -190,11 +217,50 @@
     "ralouphie/getallheaders": {
         "version": "2.0.5"
     },
+    "ratchet/pawl": {
+        "version": "v0.3.4"
+    },
+    "ratchet/rfc6455": {
+        "version": "v0.2.5"
+    },
+    "react/cache": {
+        "version": "v0.5.0"
+    },
+    "react/child-process": {
+        "version": "v0.6.1"
+    },
+    "react/dns": {
+        "version": "v0.4.17"
+    },
+    "react/event-loop": {
+        "version": "v1.1.0"
+    },
+    "react/filesystem": {
+        "version": "v0.1.2"
+    },
+    "react/http-client": {
+        "version": "v0.5.9"
+    },
     "react/promise": {
         "version": "v2.7.1"
     },
+    "react/promise-stream": {
+        "version": "v1.1.1"
+    },
+    "react/promise-timer": {
+        "version": "v1.5.1"
+    },
+    "react/socket": {
+        "version": "v1.2.0"
+    },
+    "react/stream": {
+        "version": "v1.1.0"
+    },
     "restcord/restcord": {
         "version": "0.3.1"
+    },
+    "ringcentral/psr7": {
+        "version": "1.2.2"
     },
     "ruflin/elastica": {
         "version": "6.1.1"
@@ -482,6 +548,9 @@
     "symfony/yaml": {
         "version": "v4.2.5"
     },
+    "tivie/php-os-detector": {
+        "version": "1.1.0"
+    },
     "twig/extensions": {
         "version": "1.0",
         "recipe": {
@@ -502,6 +571,30 @@
     },
     "wohali/oauth2-discord-new": {
         "version": "v1.0.0"
+    },
+    "wyrihaximus/cpu-core-detector": {
+        "version": "1.0.2"
+    },
+    "wyrihaximus/file-descriptors": {
+        "version": "0.1.0"
+    },
+    "wyrihaximus/json-throwable": {
+        "version": "2.0.0"
+    },
+    "wyrihaximus/json-utilities": {
+        "version": "1.0.0"
+    },
+    "wyrihaximus/react-child-process-messenger": {
+        "version": "2.9.3"
+    },
+    "wyrihaximus/react-child-process-pool": {
+        "version": "1.5.1"
+    },
+    "wyrihaximus/react-child-process-promise": {
+        "version": "2.0.2"
+    },
+    "wyrihaximus/ticking-promise": {
+        "version": "1.6.3"
     },
     "zendframework/zend-code": {
         "version": "3.3.1"
