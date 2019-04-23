@@ -3,6 +3,7 @@
 .navbar {
   margin-bottom: $gutter-size;
   background-color: $color-primary;
+  box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
 }
 
 .navbar-dark .navbar-nav .nav-link {
