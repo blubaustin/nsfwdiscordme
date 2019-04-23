@@ -12,7 +12,7 @@ class FontAwesomeExtension extends AbstractExtension
     /**
      * Icon names which are aliases to real icon names. An optional
      * css class can be specified by separating the real icon name
-     * by the class name, i.e. "gem far".
+     * by the classes, i.e. "gem far" and "circle fa online".
      */
     const ICON_ALIASES = [
         'app-bump'            => 'fire',
@@ -22,7 +22,7 @@ class FontAwesomeExtension extends AbstractExtension
         'app-upgrade'         => 'arrow-circle-up',
         'app-settings'        => 'cog',
         'app-trending'        => 'chart-line',
-        'app-online'          => 'circle',
+        'app-online'          => 'circle fa server-icon-online',
         'app-most-online'     => 'user',
         'app-random'          => 'random',
         'app-delete'          => 'trash-alt',
@@ -56,9 +56,10 @@ class FontAwesomeExtension extends AbstractExtension
         }
 
         if (isset(self::ICON_ALIASES[$id])) {
-            list($id, $c) = explode(' ', self::ICON_ALIASES[$id] . ' ');
-            if ($c) {
-                $classes = $c;
+            $parts = explode(' ', self::ICON_ALIASES[$id], 2);
+            $id = array_shift($parts);
+            if ($parts) {
+                $classes = $parts[0];
             }
         }
 
