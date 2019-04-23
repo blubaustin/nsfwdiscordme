@@ -249,7 +249,6 @@ class ApiController extends Controller
         $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
         $vote       = $this->em->getRepository(BumpPeriodVote::class)
             ->findOneBy([
-                'user'       => $this->getUser(),
                 'bumpPeriod' => $bumpPeriod,
                 'server'     => $server
             ]);
