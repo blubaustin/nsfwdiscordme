@@ -33,6 +33,38 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="card card-primary card-server-stats-bump-log">
+        <div class="card-header">
+          Bump Log
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>User</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for log in bumpLog %}
+              <tr>
+                <td>
+                  {{ log.dateCreated|date('Y-m-d H:i:s') }}
+                </td>
+                <td>
+                  {{ log.user.discordUsername }}#{{ log.user.discordDiscriminator }}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

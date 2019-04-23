@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\BumpPeriodVote;
 use App\Entity\Media;
 use App\Entity\Server;
 use App\Event\ViewEvent;
@@ -11,6 +12,7 @@ use App\Media\Adapter\Exception\FileNotFoundException;
 use App\Media\Adapter\Exception\WriteException;
 use App\Media\Paths;
 use App\Media\WebHandlerInterface;
+use DateTime;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Form\FormError;
@@ -85,6 +87,7 @@ class ServerController extends Controller
      * @param string $slug
      *
      * @return Response
+     * @throws Exception
      */
     public function statsAction($slug)
     {
@@ -93,8 +96,19 @@ class ServerController extends Controller
             throw $this->createAccessDeniedException();
         }
 
+        $bumpLog = $this->em->getRepository(BumpPeriodVote::class)
+            ->createQueryBuilder('b')
+            ->where('b.server = :server')
+            ->andWhere('b.dateCreated >= :date')
+            ->setParameter(':server', $server)
+            ->setParameter(':date', new DateTime('10 days ago'))
+            ->orderBy('b.id', 'desc')
+            ->getQuery()
+            ->execute();
+
         return $this->render('server/stats.html.twig', [
-            'server' => $server
+            'server'  => $server,
+            'bumpLog' => $bumpLog
         ]);
     }
 
