@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Entity\Media;
 use App\Entity\Server;
+use App\Event\ViewEvent;
+use App\Http\Request;
 use App\Form\Type\ServerType;
 use App\Media\Adapter\Exception\FileExistsException;
 use App\Media\Adapter\Exception\FileNotFoundException;
@@ -15,7 +17,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -40,13 +41,18 @@ class ServerController extends Controller
     /**
      * @Route("/{slug}", name="index")
      *
-     * @param string $slug
+     * @param string  $slug
+     *
+     * @param Request $request
      *
      * @return Response
+     * @throws Exception
      */
-    public function indexAction($slug)
+    public function indexAction($slug, Request $request)
     {
         $server = $this->fetchServerOrThrow($slug);
+
+        $this->eventDispatcher->dispatch('app.server.view', new ViewEvent($server, $request));
 
         return $this->render('server/index.html.twig', [
             'server'  => $server,

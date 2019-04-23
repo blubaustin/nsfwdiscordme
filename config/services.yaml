@@ -84,11 +84,9 @@ services:
             - [setWebHandler, ['@App\Media\WebHandlerInterface']]
 
     # Event Listeners
-    App\Event\Listener\BumpStatsListener:
-        class: App\Event\Listener\BumpStatsListener
+    App\Event\Listener\ServerStatsListener:
+        class: App\Event\Listener\ServerStatsListener
         tags:
-            - { name: kernel.event_listener, event: 'app.bump', method: 'onBump' }
-    App\Event\Listener\JoinStatsListener:
-        class: App\Event\Listener\JoinStatsListener
-        tags:
-            - { name: kernel.event_listener, event: 'app.join', method: 'onJoin' }
+            - { name: kernel.event_listener, event: 'app.server.bump', method: 'onBump' }
+            - { name: kernel.event_listener, event: 'app.server.join', method: 'onJoin' }
+            - { name: kernel.event_listener, event: 'app.server.view', method: 'onView' }

@@ -142,7 +142,7 @@ class ApiController extends Controller
         $this->em->persist($bumpPeriodVote);
         $this->em->flush();
 
-        $this->eventDispatcher->dispatch('app.bump', new BumpEvent($server, $request));
+        $this->eventDispatcher->dispatch('app.server.bump', new BumpEvent($server, $request));
 
         return new JsonResponse([
             'message'    => 'ok',
@@ -246,7 +246,7 @@ class ApiController extends Controller
             ], 500);
         }
 
-        $this->eventDispatcher->dispatch('app.join', new JoinEvent($server, $request));
+        $this->eventDispatcher->dispatch('app.server.join', new JoinEvent($server, $request));
 
         return new JsonResponse([
             'message'  => 'ok',
