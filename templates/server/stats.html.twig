@@ -1,4 +1,8 @@
 {% extends 'base.html.twig' %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+{% endblock %}
 {% block body %}
 <div id="page-server-stats" data-server-id="{{ server.discordID }}">
   <div class="row">
@@ -8,6 +12,7 @@
       </h1>
     </div>
   </div>
+
   <div class="row">
     <div class="col">
       <div class="card card-primary card-server-stats">
@@ -18,10 +23,10 @@
         <div class="card-body">
           <canvas id="server-stats-chart-joins" width="400" height="150"></canvas>
           <p class="form-help">
-            Views are when visitors visit the server page, and joins are when they join the server.
+            Views are when people visit the server page, and joins are when they join the server.
             You may need to improve your server banner, summary and description to be more enticing
             when views are much higher than joins. Bump your server more often to increase views and
-            consider <a href="{{ path('server_upgrade', { slug: server.slug }) }}">{{ icon('arrow-circle-up') }} upgrading your server</a>
+            <a href="{{ path('server_upgrade', { slug: server.slug }) }}">{{ icon('arrow-circle-up') }} upgrade your server</a>
             to get more bumps.
           </p>
         </div>

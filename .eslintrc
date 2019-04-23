@@ -97,6 +97,7 @@
         "$": true,
         "google": true,
         "Promise": true,
+        "Chart": true,
         "grecaptcha": true,
         "recaptchaSiteKey": true,
         "__DEV__": true

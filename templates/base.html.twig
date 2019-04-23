@@ -26,8 +26,8 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.1/css/fileinput.min.css"
       />
-      <link rel="stylesheet" href="{{ asset('build/css/app.css') }}" />
     {% endblock stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/css/app.css') }}" />
   </head>
   <body>
     {% block nav %}
@@ -58,7 +58,7 @@
       <script>
         var recaptchaSiteKey = '{{ recaptchaSiteKey }}';
       </script>
-      <script src="{{ asset('build/js/app.js') }}"></script>
     {% endblock %}
+    <script src="{{ asset('build/js/app.js') }}"></script>
   </body>
 </html>

@@ -1,4 +1,3 @@
-import Chart from 'chart.js';
 import Page from 'pages/Page';
 import router from 'lib/router';
 import styles from '../../../css/_vars.scss';
