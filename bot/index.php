@@ -1,5 +1,4 @@
 <?php
-
 use CharlotteDunois\Yasmin\Client;
 use React\EventLoop\Factory;
 
@@ -9,7 +8,7 @@ $loop = Factory::create();
 $client = new Client([], $loop);
 
 $client->on('ready', function () use ($client) {
-    echo 'Successfully logged into '.$client->user->tag.PHP_EOL;
+    echo 'Successfully logged into ' . $client->user->tag.PHP_EOL;
 });
 
 $client->login($_SERVER['DISCORD_BOT_TOKEN']);
