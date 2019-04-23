@@ -7,9 +7,48 @@
 <div id="page-server-stats" data-server-id="{{ server.discordID }}">
   <div class="row">
     <div class="col">
-      <h1 class="layout-page-title">
-        Server Statistics
-      </h1>
+      <div class="card card-primary card-server-stats">
+        <div class="card-header">
+          <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
+          <div>
+            <h4>{{ server.name }}</h4>
+            <span>{{ server.summary }}</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>
+              Owner: {{ server.user.username }}
+            </li>
+            <li>
+              Discord ID: {{ server.discordID }}
+            </li>
+            <li>
+              Online: {{ server.membersOnline|number_format }}
+            </li>
+            <li>
+              Bump points: {{ server.bumpPoints|number_format }}
+            </li>
+            <li>
+              Created: {{ server.dateCreated|date('Y-m-d') }}
+            </li>
+            <li>
+              Categories:
+              {% for category in server.categories %}
+                <a href="{{ path('category_index', { slug: category.slug }) }}">
+                  {{ category.name }}
+                </a>
+                {% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </li>
+            <li>
+              URL: <a href="{{ path('server_index', { slug: server.slug }) }}">
+                {{ url('server_index', { slug: server.slug }) }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -17,8 +56,7 @@
     <div class="col">
       <div class="card card-primary card-server-stats">
         <div class="card-header">
-          <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
-          {{ server.name }}
+          Views &amp; Joins
         </div>
         <div class="card-body">
           <canvas id="server-stats-chart-joins" width="400" height="150"></canvas>
@@ -41,26 +79,32 @@
           Bump Log
         </div>
         <div class="card-body">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>User</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for log in bumpLog %}
-              <tr>
-                <td>
-                  {{ log.dateCreated|date('Y-m-d H:i:s') }}
-                </td>
-                <td>
-                  {{ log.user.discordUsername }}#{{ log.user.discordDiscriminator }}
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+          {% if bumpLog|length == 0 %}
+            <p class="text-center">
+              This server does not have any bumps.
+            </p>
+          {% else %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>User</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for log in bumpLog %}
+                <tr>
+                  <td>
+                    {{ log.dateCreated|date('Y-m-d H:i:s') }}
+                  </td>
+                  <td>
+                    {{ log.user.discordUsername }}#{{ log.user.discordDiscriminator }}
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
         </div>
       </div>
     </div>

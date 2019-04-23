@@ -29,18 +29,30 @@ class ServerStatsPage extends Page {
         return;
       }
 
-      const labels = [];
-      const joins  = [];
-      const views  = [];
+      const labels  = [];
+      const joins   = [];
+      const views   = [];
+      let joinCount = 0;
+      let viewCount = 0;
       resp.joins.forEach((stat) => {
         labels.push(stat.day);
-        joins.push(parseInt(stat.count, 10));
+
+        const count = parseInt(stat.count, 10);
+        joinCount += count;
+        joins.push(count);
       });
       resp.views.forEach((stat) => {
-        views.push(parseInt(stat.count, 10));
+        const count = parseInt(stat.count, 10);
+        viewCount += count;
+        views.push(count);
       });
 
-      const chart = new Chart('server-stats-chart-joins', {
+      const $canvas = $('#server-stats-chart-joins');
+      if (joinCount === 0 && viewCount === 0) {
+        $canvas.replaceWith('<p class="text-center">No views or joins generated for this server yet.</p>')
+      }
+
+      new Chart($canvas, {
         type: 'bar',
         data: {
           labels,

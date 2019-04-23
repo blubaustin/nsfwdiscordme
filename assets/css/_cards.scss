@@ -254,8 +254,19 @@
  * Server stats
  */
 .card-server-stats {
+  .card-header {
+    display: flex;
 
+    span {
+      font-size: 0.9rem;
+    }
+  }
 
+  .card-body {
+    ul {
+      margin: 0;
+    }
+  }
 }
 
 .card-server-stats-icon {
