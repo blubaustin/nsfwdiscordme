@@ -9,6 +9,8 @@ use App\Event\JoinEvent;
 use App\Http\Request;
 use App\Media\WebHandlerInterface;
 use App\Services\RecaptchaService;
+use DateInterval;
+use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
@@ -305,18 +307,46 @@ class ApiController extends Controller
             throw $this->createAccessDeniedException();
         }
 
-        $stmt = $this->em->getConnection()->prepare('
-            SELECT DATE(date_created) as `day`, COUNT(*) as `count`
+        $stmtJoin = $this->em->getConnection()->prepare('
+            SELECT COUNT(*) as `count`
             FROM `join_server_event`
             WHERE `server_id` = ?
-            GROUP BY `day`
+            AND DATE(date_created) = ?
+            LIMIT 1
         ');
-        $stmt->execute([$server->getId()]);
-        $joins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmtView = $this->em->getConnection()->prepare('
+            SELECT COUNT(*) as `count`
+            FROM `view_server_event`
+            WHERE `server_id` = ?
+            AND DATE(date_created) = ?
+            LIMIT 1
+        ');
+
+        $joins = [];
+        $views = [];
+        $sid   = $server->getId();
+        $now   = new DateTime('30 days ago');
+        $int   = new DateInterval('P1D');
+
+        for($i = 30; $i > 0; $i--) {
+            $day = $now->add($int)->format('Y-m-d');
+            $stmtJoin->execute([$sid, $day]);
+            $stmtView->execute([$sid, $day]);
+
+            $joins[] = [
+                'day'   => $day,
+                'count' => $stmtJoin->fetchColumn(0)
+            ];
+            $views[] = [
+                'day'   => $day,
+                'count' => $stmtView->fetchColumn(0)
+            ];
+        }
 
         return new JsonResponse([
             'message' => 'ok',
-            'data'    => $joins
+            'joins'   => $joins,
+            'views'   => $views
         ]);
     }
 

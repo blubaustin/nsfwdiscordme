@@ -11,10 +11,10 @@ $color-danger: #a92d2d;
 $color-secondary: #5b5a6a;
 $color-info: #2384b1;
 $color-link: #00abe5;
-$color-table-border: #e2e2e2;
 
 :export {
   colorPrimary: $color-primary;
+  colorInfo:    $color-info;
   colorSuccess: $color-success;
   colorWarning: $color-warning;
   colorDanger:  $color-danger;

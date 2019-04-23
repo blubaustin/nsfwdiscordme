@@ -31,23 +31,34 @@ class ServerStatsPage extends Page {
       }
 
       const labels = [];
-      const data   = [];
-      resp.data.forEach((day) => {
-        labels.push(day.day);
-        data.push(parseInt(day.count, 10));
+      const joins  = [];
+      const views  = [];
+      resp.joins.forEach((stat) => {
+        labels.push(stat.day);
+        joins.push(parseInt(stat.count, 10));
+      });
+      resp.views.forEach((stat) => {
+        views.push(parseInt(stat.count, 10));
       });
 
       const chart = new Chart('server-stats-chart-joins', {
         type: 'bar',
         data: {
           labels,
-          datasets: [{
-            data,
-            label:           '# of Joins',
-            borderWidth:     1,
-            borderColor:     styles.colorPrimary,
-            backgroundColor: styles.colorSuccess,
-          }]
+          datasets: [
+            {
+              data:            views,
+              label:           '# of Views',
+              borderWidth:     0,
+              backgroundColor: styles.colorInfo,
+            },
+            {
+              data:            joins,
+              label:           '# of Joins',
+              borderWidth:     0,
+              backgroundColor: styles.colorSuccess,
+            }
+          ]
         },
         options: {
           legend: {

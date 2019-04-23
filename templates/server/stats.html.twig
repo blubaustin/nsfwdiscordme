@@ -17,6 +17,13 @@
         </div>
         <div class="card-body">
           <canvas id="server-stats-chart-joins" width="400" height="150"></canvas>
+          <p class="form-help">
+            Views are when visitors visit the server page, and joins are when they join the server.
+            You may need to improve your server banner, summary and description to be more enticing
+            when views are much higher than joins. Bump your server more often to increase views and
+            consider <a href="{{ path('server_upgrade', { slug: server.slug }) }}">{{ icon('arrow-circle-up') }} upgrading your server</a>
+            to get more bumps.
+          </p>
         </div>
       </div>
     </div>
