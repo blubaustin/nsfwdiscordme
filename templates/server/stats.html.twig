@@ -8,11 +8,11 @@
   <div class="row">
     <div class="col">
       <div class="card card-primary card-server-stats">
-        <div class="card-header">
+        <div class="card-header card-server-stats-header">
           <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
           <div>
             <h4>{{ server.name }}</h4>
-            <span>{{ server.summary }}</span>
+            <span class="card-server-stats-summary">{{ server.summary }}</span>
           </div>
         </div>
         <div class="card-body">
@@ -55,11 +55,14 @@
   <div class="row">
     <div class="col">
       <div class="card card-primary card-server-stats">
-        <div class="card-header">
-          Views &amp; Joins
+        <div class="card-header card-server-stats-header">
+          {{ icon('chart-bar') }} Views &amp; Joins
         </div>
         <div class="card-body">
           <canvas id="server-stats-chart-joins" width="400" height="150"></canvas>
+          <p class="server-stats-chart-joins-empty text-center hidden">
+            Statistics are still being generated for this server. Check back later.
+          </p>
           <p class="form-help">
             Views are when people visit the server page, and joins are when they join the server.
             You may need to improve your server banner, summary and description to be more enticing
@@ -75,8 +78,8 @@
   <div class="row">
     <div class="col">
       <div class="card card-primary card-server-stats-bump-log">
-        <div class="card-header">
-          Bump Log
+        <div class="card-header card-server-stats-header">
+          {{ icon('fire') }} Bump Log
         </div>
         <div class="card-body">
           {% if bumpLog|length == 0 %}

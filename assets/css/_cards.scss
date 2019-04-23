@@ -254,14 +254,6 @@
  * Server stats
  */
 .card-server-stats {
-  .card-header {
-    display: flex;
-
-    span {
-      font-size: 0.9rem;
-    }
-  }
-
   .card-body {
     ul {
       margin: 0;
@@ -269,9 +261,26 @@
   }
 }
 
+.card-server-stats-header {
+  display: flex;
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+}
+
+.card-server-stats-summary {
+  font-size: 0.9rem;
+}
+
 .card-server-stats-icon {
   border-radius: 50%;
-  height: 60px;
+  height: 50px;
   margin-right: 1rem;
 }
 

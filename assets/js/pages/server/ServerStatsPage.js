@@ -49,7 +49,9 @@ class ServerStatsPage extends Page {
 
       const $canvas = $('#server-stats-chart-joins');
       if (joinCount === 0 && viewCount === 0) {
-        $canvas.replaceWith('<p class="text-center">No views or joins generated for this server yet.</p>')
+        $canvas.hide();
+        $('.server-stats-chart-joins-empty:first').show();
+        return;
       }
 
       new Chart($canvas, {
