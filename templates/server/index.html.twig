@@ -28,16 +28,15 @@
     <div class="row">
       <div class="col">
         <div class="card card-primary card-server-about">
-          <div class="card-header">
+          <div class="card-body">
             <button
               id="server-join-btn"
-              class="btn btn-lg btn-success"{% if not server.active or not server.botInviteChannelID %} disabled="disabled"{% endif %}
+              class="btn btn-lg btn-success float-right"
+              {% if not server.active or not server.botInviteChannelID %} disabled="disabled"{% endif %}
             >
               {{ icon('sign-in-alt') }}
               Join Server
             </button>
-          </div>
-          <div class="card-body">
             <div class="card-server-about-owner">
               Owned by {{ server.user.discordUsername }}
             </div>
