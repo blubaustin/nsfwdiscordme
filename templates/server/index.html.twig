@@ -29,14 +29,22 @@
       <div class="col">
         <div class="card card-primary card-server-about">
           <div class="card-body">
-            <button
-              id="server-join-btn"
-              class="btn btn-lg btn-success float-md-right"
-              {% if not server.active or not server.botInviteChannelID %} disabled="disabled"{% endif %}
-            >
-              {{ icon('sign-in-alt') }}
-              Join Server
-            </button>
+            <div class="server-buttons float-md-right">
+              {% if isOwner %}
+                <a href="{{ path('server_settings', { slug: server.slug }) }}" class="btn btn-lg btn-info">
+                  {{ icon('cog') }}
+                  Settings
+                </a>
+              {% endif %}
+              <button
+                id="server-join-btn"
+                class="btn btn-lg btn-success"
+                {% if not server.active or not server.botInviteChannelID %} disabled="disabled"{% endif %}
+              >
+                {{ icon('sign-in-alt') }}
+                Join Server
+              </button>
+            </div>
             <div class="card-server-about-owner">
               Owned by {{ server.user.discordUsername }}
             </div>

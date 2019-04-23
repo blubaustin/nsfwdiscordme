@@ -51,8 +51,12 @@ class ServerController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $user    = $this->getUser();
+        $isOwner = ($user && $user->getId() === $server->getUser()->getId());
+
         return $this->render('server/index.html.twig', [
-            'server' => $server
+            'server'  => $server,
+            'isOwner' => $isOwner
         ]);
     }
 
