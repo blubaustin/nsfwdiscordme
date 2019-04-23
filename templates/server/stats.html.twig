@@ -56,7 +56,7 @@
     <div class="col">
       <div class="card card-primary card-server-stats">
         <div class="card-header card-server-stats-header">
-          {{ icon('chart-bar') }} Views &amp; Joins
+          {{ icon('app-stats') }} Views &amp; Joins
         </div>
         <div class="card-body">
           <canvas id="server-stats-chart-joins" width="400" height="150"></canvas>
@@ -79,7 +79,7 @@
     <div class="col">
       <div class="card card-primary card-server-stats-bump-log">
         <div class="card-header card-server-stats-header">
-          {{ icon('fire') }} Bump Log
+          {{ icon('app-bump') }} Bump Log
         </div>
         <div class="card-body">
           {% if bumpLog|length == 0 %}

@@ -10,6 +10,26 @@ use Twig\TwigFunction;
 class FontAwesomeExtension extends AbstractExtension
 {
     /**
+     * Icon names which are aliases to real icon names. An optional
+     * css class can be specified by separating the real icon name
+     * by the class name, i.e. "gem far".
+     */
+    const ICON_ALIASES = [
+        'app-bump'            => 'fire',
+        'app-recently-bumped' => 'burn',
+        'app-gem'             => 'gem far',
+        'app-stats'           => 'chart-bar',
+        'app-upgrade'         => 'arrow-circle-up',
+        'app-settings'        => 'cog',
+        'app-trending'        => 'chart-line',
+        'app-online'          => 'circle',
+        'app-most-online'     => 'user',
+        'app-random'          => 'random',
+        'app-delete'          => 'trash-alt',
+        'app-join'            => 'sign-in-alt'
+    ];
+
+    /**
      * @return TwigFunction[]
      */
     public function getFunctions()
@@ -33,6 +53,13 @@ class FontAwesomeExtension extends AbstractExtension
         if ($title) {
             $title = htmlspecialchars($title, ENT_HTML5 | ENT_QUOTES);
             $title = " title=\"{$title}\"";
+        }
+
+        if (isset(self::ICON_ALIASES[$id])) {
+            list($id, $c) = explode(' ', self::ICON_ALIASES[$id] . ' ');
+            if ($c) {
+                $classes = $c;
+            }
         }
 
         return sprintf('<span class="icon %s fa-%s"%s></span>', $classes, $id, $title);

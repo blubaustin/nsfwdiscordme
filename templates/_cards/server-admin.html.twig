@@ -4,7 +4,6 @@
       <img class="card-server-admin-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
       <h2>{{ server.name }}</h2>
     </div>
-    {#{{ icon('ellipsis-v', 'fa card-server-admin-menu') }}#}
   </div>
   <div class="card-img">
     <button class="btn btn-sm btn-success card-server-admin-bump-btn">
@@ -27,16 +26,16 @@
   </div>
   <div class="card-footer card-server-admin-footer">
     <a href="{{ path('server_upgrade', { slug: server.slug }) }}" title="Upgrade" data-toggle="tooltip">
-      {{ icon('arrow-circle-up') }}
+      {{ icon('app-upgrade') }}
     </a>
     <a href="{{ path('server_upgrade', { slug: server.slug }) }}" title="Diamond" data-toggle="tooltip">
-      {{ icon('gem', 'far') }}
+      {{ icon('app-gem') }}
     </a>
     <a href="{{ path('server_stats', { slug: server.slug }) }}" title="Statistics" data-toggle="tooltip">
-      {{ icon('chart-bar') }}
+      {{ icon('app-stats') }}
     </a>
     <a href="{{ path('server_settings', { slug: server.slug }) }}" title="Edit Server" data-toggle="tooltip">
-      {{ icon('cog') }}
+      {{ icon('app-settings') }}
     </a>
   </div>
 </div>

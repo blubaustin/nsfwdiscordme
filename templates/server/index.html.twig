@@ -19,7 +19,7 @@
             {{ server.summary }}
           </p>
           <div class="server-jumbotron-members-online">
-            {{ icon('circle') }}
+            {{ icon('app-online') }}
             {{ server.membersOnline|number_format }} online
           </div>
         </div>
@@ -32,7 +32,7 @@
             <div class="server-buttons float-md-right">
               {% if isOwner %}
                 <a href="{{ path('server_settings', { slug: server.slug }) }}" class="btn btn-lg btn-info">
-                  {{ icon('cog') }}
+                  {{ icon('app-settings') }}
                   Settings
                 </a>
               {% endif %}
@@ -41,7 +41,7 @@
                 class="btn btn-lg btn-success"
                 {% if not server.active or not server.botInviteChannelID %} disabled="disabled"{% endif %}
               >
-                {{ icon('sign-in-alt') }}
+                {{ icon('app-join') }}
                 Join Server
               </button>
             </div>
