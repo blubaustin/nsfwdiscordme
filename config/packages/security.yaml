@@ -32,5 +32,9 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profile, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/server, role: IS_AUTHENTICATED_REMEMBERED }
-        - { path: ^/api, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/guild, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/guilds/, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/bump/, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/delete-server/, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/stats/, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/admin/, role: ROLE_ADMIN }
