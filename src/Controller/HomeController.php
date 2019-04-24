@@ -189,4 +189,19 @@ class HomeController extends Controller
     {
         return $this->render('home/terms.html.twig');
     }
+
+    /**
+     * @Route("/login", name="login")
+     *
+     * FOSUserBundle redirects to this URL but it doesn't really exist. Redirect to
+     * the real login URL.
+     *
+     * @return RedirectResponse
+     */
+    public function loginAction()
+    {
+        return new RedirectResponse(
+            $this->generateUrl('discord_oauth2')
+        );
+    }
 }
