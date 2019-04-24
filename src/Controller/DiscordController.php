@@ -19,7 +19,7 @@ use DateTime;
 /**
  * @Route("/discord", name="discord_")
  */
-class DiscordOAuthController extends Controller
+class DiscordController extends Controller
 {
     /**
      * @Route("/oauth2", name="oauth2")
@@ -29,7 +29,7 @@ class DiscordOAuthController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request, Discord $provider)
+    public function oauth2Action(Request $request, Discord $provider)
     {
         $url = $provider->getAuthorizationUrl();
 
@@ -49,7 +49,7 @@ class DiscordOAuthController extends Controller
      *
      * @return RedirectResponse
      */
-    public function logoutAction(Request $request, TokenStorageInterface $tokenStorage)
+    public function oauth2LogoutAction(Request $request, TokenStorageInterface $tokenStorage)
     {
         $tokenStorage->setToken(null);
         $request->getSession()->invalidate();
