@@ -230,7 +230,7 @@
   }
 
   .card-img {
-    height: 200px;
+    height: 100px;
     overflow: hidden;
     position: relative;
   }
@@ -294,6 +294,15 @@
   bottom: 0;
   padding: $gutter-size;
   background-color: rgba(0, 0, 0, 0.65);
+
+  ul {
+    margin: 0;
+
+    li span {
+      width: 100px;
+      display: inline-block;
+    }
+  }
 }
 
 .card-server-admin-footer {
@@ -302,24 +311,21 @@
   background-color: inherit;
   justify-content: space-between;
 
-  a {
+  a,
+  span {
+    cursor: pointer;
     color: #ffffffc7;
     font-size: 2rem;
-    padding: 2px $gutter-size 0 $gutter-size;
+    padding: 4px $gutter-size 0 $gutter-size;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+    transition: padding-bottom 0.15s, padding-top 0.15s;
 
     &:hover {
       color: #FFF;
-      padding: 0 $gutter-size 2px $gutter-size;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.75);
+      padding: 0 $gutter-size 4px $gutter-size;
     }
   }
-}
-
-.card-server-admin-bump-btn {
-  position: absolute;
-  top: $gutter-size;
-  right: $gutter-size;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 /**

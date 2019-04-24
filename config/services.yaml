@@ -75,6 +75,12 @@ services:
         arguments:
             - '%env(RECAPTCHA_SECRET_KEY)%'
 
+    twig.extension.date:
+        class: Twig_Extensions_Extension_Date
+        arguments: ["@translator"]
+        tags:
+            - { name: twig.extension }
+
     # Controllers
     App\Controller\SearchController:
         calls:

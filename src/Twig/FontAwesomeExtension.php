@@ -15,11 +15,10 @@ class FontAwesomeExtension extends AbstractExtension
      * by the classes, i.e. "gem far" and "circle fa online".
      */
     const ICON_ALIASES = [
-        'app-bump'            => 'fire',
+        'app-bump'            => 'arrow-alt-circle-up',
         'app-recently-bumped' => 'burn',
-        'app-gem'             => 'gem far',
+        'app-upgrade'         => 'gem far',
         'app-stats'           => 'chart-bar',
-        'app-upgrade'         => 'arrow-circle-up',
         'app-settings'        => 'cog',
         'app-trending'        => 'chart-line',
         'app-online'          => 'circle fa server-icon-online',
@@ -63,6 +62,6 @@ class FontAwesomeExtension extends AbstractExtension
             }
         }
 
-        return sprintf('<span class="icon %s fa-%s"%s></span>', $classes, $id, $title);
+        return sprintf('<i class="icon %s fa-%s"%s></i>', $classes, $id, $title);
     }
 }

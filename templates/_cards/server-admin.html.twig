@@ -6,30 +6,40 @@
     </div>
   </div>
   <div class="card-img">
-    <button class="btn btn-sm btn-success card-server-admin-bump-btn">
-      Bump
-    </button>
     <img src="{{ server.bannerMedia|webPath }}" alt="Banner" class="card-server-admin-banner" />
     <div class="card-server-admin-info">
-      <div class="card-server-admin-info-bump-points">
-        Bump Points:
-        <span class="server-bump-points">
+      <ul>
+        <li>
+          <span>Bump Points</span>
+          <i class="server-bump-points">
           {{ server.bumpPoints }}
-        </span>
-      </div>
-      <div class="card-server-admin-info-url">
-        <a href="{{ server|serverURL }}">
-          {{ server|serverURL }}
-        </a>
-      </div>
+          </i>
+        </li>
+        <li>
+          <span>Bumped Last</span>
+          {% if server.lastBump %}
+            {{ server.lastBump.dateCreated|time_diff }}
+          {% else %}
+            Never
+          {% endif %}
+        </li>
+        <li>
+          <span>Bumped By</span>
+          {% if server.lastBump %}
+            {{ server.lastBump.user.username }}#{{ server.lastBump.user.discordDiscriminator }}
+          {% else %}
+            N/A
+          {% endif %}
+        </li>
+      </ul>
     </div>
   </div>
   <div class="card-footer card-server-admin-footer">
+    <span class="card-server-admin-bump-btn text-success" title="Bump" data-toggle="tooltip">
+      {{ icon('app-bump') }}
+    </span>
     <a href="{{ path('server_upgrade', { slug: server.slug }) }}" title="Upgrade" data-toggle="tooltip">
       {{ icon('app-upgrade') }}
-    </a>
-    <a href="{{ path('server_upgrade', { slug: server.slug }) }}" title="Diamond" data-toggle="tooltip">
-      {{ icon('app-gem') }}
     </a>
     <a href="{{ path('server_stats', { slug: server.slug }) }}" title="Statistics" data-toggle="tooltip">
       {{ icon('app-stats') }}
