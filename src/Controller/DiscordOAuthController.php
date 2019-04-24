@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\AccessToken;
+use App\Entity\BannedUser;
 use App\Entity\User;
 use FOS\UserBundle\Model\UserManagerInterface;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -82,6 +83,13 @@ class DiscordOAuthController extends Controller
         );
 
         $resourceOwner = $provider->getResourceOwner($token)->toArray();
+
+        $bannedUserRepo = $this->em->getRepository(BannedUser::class);
+        if ($bannedUserRepo->isBanned($resourceOwner['username'], $resourceOwner['discriminator'])) {
+            $this->addFlash('danger', 'You are banned from the site.');
+
+            return new RedirectResponse('/');
+        }
 
         $em       = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);

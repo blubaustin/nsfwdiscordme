@@ -71,3 +71,12 @@ easy_admin:
                 fields:
                     - name
                     - slug
+
+        BannedServer:
+            class: App\Entity\BannedServer
+
+        BannedUser:
+            class: App\Entity\BannedUser
+
+        BannedWord:
+            class: App\Entity\BannedWord

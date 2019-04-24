@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\BannedServer;
+use App\Entity\BannedWord;
 use App\Entity\BumpPeriodVote;
 use App\Entity\ServerJoinEvent;
 use App\Entity\Media;
@@ -234,6 +236,8 @@ class ServerController extends Controller
                 $this->addFlash('success', 'The server has been updated.');
 
                 return new RedirectResponse($this->generateUrl('profile_index'));
+            } else {
+                $this->addFlash('danger', 'Please fix the errors below.');
             }
         }
 
@@ -274,6 +278,8 @@ class ServerController extends Controller
                 $this->addFlash('success', 'The server has been added.');
 
                 return new RedirectResponse($this->generateUrl('profile_index'));
+            } else {
+                $this->addFlash('danger', 'Please fix the errors below.');
             }
         }
 
@@ -301,6 +307,35 @@ class ServerController extends Controller
         $server   = $form->getData();
         $repo     = $this->getDoctrine()->getRepository(Server::class);
         $isValid  = true;
+
+        if ($this->em->getRepository(BannedServer::class)->isBanned($server->getDiscordID())) {
+            $form
+                ->get('discordID')
+                ->addError(new FormError('Server is banned.'));
+            return false;
+        }
+
+        $bannedWordRepo = $this->em->getRepository(BannedWord::class);
+        foreach($server->getTags() as $tag) {
+            if ($bannedWordRepo->containsBannedWords($tag->getName())) {
+                $form
+                    ->get('tags')
+                    ->addError(new FormError('Contains banned words.'));
+                return false;
+            }
+        }
+        if ($bannedWordRepo->containsBannedWords($server->getSummary())) {
+            $form
+                ->get('summary')
+                ->addError(new FormError('Contains banned words.'));
+            return false;
+        }
+        if ($bannedWordRepo->containsBannedWords($server->getDescription())) {
+            $form
+                ->get('description')
+                ->addError(new FormError('Contains banned words.'));
+            return false;
+        }
 
         if (!$isEditing) {
             if ($repo->findByDiscordID($server->getDiscordID())) {
