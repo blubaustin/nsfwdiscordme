@@ -40,6 +40,7 @@
                   {{ icon('app-settings') }}
                 </a>
               {% endif %}
+              {#
               <a
                 href="{{ path('server_follow', { slug: server.slug }) }}"
                 class="btn btn-lg btn-info {% if isFollowing %}server-following{% endif %}"
@@ -48,6 +49,7 @@
               >
                 {{ icon('app-follow') }}
               </a>
+              #}
               <button
                 id="server-join-btn"
                 class="btn btn-lg btn-success"

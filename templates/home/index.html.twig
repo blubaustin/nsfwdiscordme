@@ -14,6 +14,7 @@
               Most Bumped
             </span>
           </a>
+          {#
           <a
             href="{{ path('home_following') }}"
             class="btn btn-primary{% if sort == 'following' %} btn-info{% endif %}"
@@ -23,6 +24,7 @@
               Following
             </span>
           </a>
+          #}
           <a
             href="{{ path('home_recently_bumped') }}"
             class="btn btn-primary{% if sort == 'recently-bumped' %} btn-info{% endif %}"
