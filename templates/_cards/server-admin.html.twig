@@ -2,7 +2,11 @@
   <div class="card-header card-server-admin-header">
     <div class="card-server-admin-header-meta">
       <img class="card-server-admin-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
-      <h2>{{ server.name }}</h2>
+      <h2>
+        <a href="{{ path('server_index', { slug: server.slug }) }}">
+          {{ server.name }}
+        </a>
+      </h2>
     </div>
   </div>
   <div class="card-img">
