@@ -329,6 +329,11 @@
   }
 }
 
+.card-server-admin-bump-btn {
+  color: $color-success;
+  text-shadow: 0 0 4px rgba($color-success, 0.5) !important;
+}
+
 /**
  * Server stats
  */
