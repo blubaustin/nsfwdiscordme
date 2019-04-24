@@ -6,6 +6,7 @@ use App\Entity\ServerJoinEvent;
 use App\Entity\Media;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
+use App\Entity\ServerViewEvent;
 use App\Event\ViewEvent;
 use App\Http\Request;
 use App\Form\Type\ServerType;
@@ -179,10 +180,20 @@ class ServerController extends Controller
             ->getQuery()
             ->getSingleScalarResult();
 
+        $viewCount = $this->em->getRepository(ServerViewEvent::class)
+            ->createQueryBuilder('j')
+            ->select('COUNT(j.id)')
+            ->where('j.server = :server')
+            ->setParameter(':server', $server)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
         return $this->render('server/stats.html.twig', [
             'server'    => $server,
             'bumpLog'   => $bumpLog,
-            'joinCount' => $joinCount
+            'joinCount' => $joinCount,
+            'viewCount' => $viewCount
         ]);
     }
 
