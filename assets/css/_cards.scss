@@ -300,6 +300,7 @@
 
     li span {
       width: 100px;
+      font-weight: bold;
       display: inline-block;
     }
   }
@@ -365,6 +366,14 @@
 .card-server-stats-bump-log {
   table {
     color: #FFF;
+  }
+}
+
+.card-server-stats-list {
+  li span {
+    display: inline-block;
+    font-weight: bold;
+    width: 150px;
   }
 }
 
