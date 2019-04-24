@@ -40,3 +40,10 @@
   display: inline-block;
   color: $color-success;
 }
+
+.card-server-stats-list {
+  li span {
+    display: inline-block;
+    width: 130px;
+  }
+}

@@ -14,26 +14,34 @@
             <h4>{{ server.name }}</h4>
             <span class="card-server-stats-summary">{{ server.summary }}</span>
           </div>
+          <a
+            href="{{ path('server_settings', { slug: server.slug }) }}"
+            class="card-server-stats-settings"
+            title="Server Settings"
+            data-toggle="tooltip"
+          >
+            {{ icon('app-settings') }}
+          </a>
         </div>
         <div class="card-body">
-          <ul>
+          <ul class="card-server-stats-list">
             <li>
-              Owner: {{ server.user.username }}
+              <span>Owner:</span> {{ server.user.username }}#{{ server.user.discordDiscriminator }}
             </li>
             <li>
-              Discord ID: {{ server.discordID }}
+              <span>Discord ID:</span> {{ server.discordID }}
             </li>
             <li>
-              Online: {{ server.membersOnline|number_format }}
+              <span>Members Online:</span> {{ server.membersOnline|number_format }}
             </li>
             <li>
-              Bump points: {{ server.bumpPoints|number_format }}
+              <span>Bump points:</span> {{ server.bumpPoints|number_format }}
             </li>
             <li>
-              Created: {{ server.dateCreated|date('Y-m-d') }}
+              <span>Created:</span> {{ server.dateCreated|date('Y-m-d') }}
             </li>
             <li>
-              Categories:
+              <span>Categories:</span>
               {% for category in server.categories %}
                 <a href="{{ path('category_index', { slug: category.slug }) }}">
                   {{ category.name }}
@@ -42,7 +50,7 @@
               {% endfor %}
             </li>
             <li>
-              URL: <a href="{{ path('server_index', { slug: server.slug }) }}">
+              <span>URL:</span> <a href="{{ path('server_index', { slug: server.slug }) }}">
                 {{ url('server_index', { slug: server.slug }) }}
               </a>
             </li>

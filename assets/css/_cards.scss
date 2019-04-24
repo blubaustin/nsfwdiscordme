@@ -140,6 +140,7 @@
 
   .icon {
     font-size: 0.75rem;
+    margin-right: 0.25rem;
   }
 }
 
@@ -338,6 +339,19 @@
   .icon {
     font-size: 1.5rem;
     margin-right: 0.5rem;
+  }
+}
+
+.card-server-stats-settings {
+  margin-left: auto;
+  color: #ffffffc7;
+  font-size: 2rem;
+  padding: 2px 0 0 0;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+
+  &:hover {
+    color: #FFF;
+    padding: 0 0 2px 0;
   }
 }
 
