@@ -7,7 +7,7 @@ use Exception;
 
 /**
  * @ORM\Table(name="bump_server_event")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\BumpServerEventRepository")
  */
 class BumpServerEvent
 {

@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\BumpPeriodVote;
+use App\Entity\JoinServerEvent;
 use App\Entity\Media;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
@@ -169,9 +170,19 @@ class ServerController extends Controller
             ->getQuery()
             ->execute();
 
+        $joinCount = $this->em->getRepository(JoinServerEvent::class)
+            ->createQueryBuilder('j')
+            ->select('COUNT(j.id)')
+            ->where('j.server = :server')
+            ->setParameter(':server', $server)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
         return $this->render('server/stats.html.twig', [
-            'server'  => $server,
-            'bumpLog' => $bumpLog
+            'server'    => $server,
+            'bumpLog'   => $bumpLog,
+            'joinCount' => $joinCount
         ]);
     }
 

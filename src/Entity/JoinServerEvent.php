@@ -7,7 +7,7 @@ use Exception;
 
 /**
  * @ORM\Table(name="join_server_event")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\JoinServerEventRepository")
  */
 class JoinServerEvent
 {
