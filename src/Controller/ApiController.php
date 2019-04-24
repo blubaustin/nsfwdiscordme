@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Component\NonceComponentInterface;
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
@@ -15,7 +16,6 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use PDO;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,6 +25,25 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApiController extends Controller
 {
+    const NONCE_RECAPTCHA = 'recaptcha';
+
+    /**
+     * @var NonceComponentInterface
+     */
+    protected $nonce;
+
+    /**
+     * @param NonceComponentInterface $nonce
+     *
+     * @return $this
+     */
+    public function setNonceComponent(NonceComponentInterface $nonce)
+    {
+        $this->nonce = $nonce;
+
+        return $this;
+    }
+
     /**
      * @Route("/widget/{serverID}", name="widget")
      *
@@ -124,10 +143,10 @@ class ApiController extends Controller
         }
 
         // Was saved in recaptchaVerifyAction() when verifying the recaptcha.
-        if ($request->getSession()->get('recaptcha_nonce') != $serverID) {
+        if ($this->nonce->get(self::NONCE_RECAPTCHA) != $serverID) {
             throw $this->createAccessDeniedException();
         }
-        $request->getSession()->remove('recaptcha_nonce');
+        $this->nonce->remove(self::NONCE_RECAPTCHA);
 
         if ($this->hasVotedCurrentBumpPeriod($server)) {
             return new JsonResponse([
@@ -188,21 +207,20 @@ class ApiController extends Controller
      */
     public function recaptchaVerifyAction(Request $request, RecaptchaService $recaptchaService)
     {
-        $session = $request->getSession();
-        $nonce   = $request->request->get('nonce');
-        $token   = $request->request->get('token');
+        $nonce = $request->request->get('nonce');
+        $token = $request->request->get('token');
         if (!$nonce || !$token) {
             throw $this->createNotFoundException();
         }
 
         if ($recaptchaService->verify($token)) {
-            $session->set('recaptcha_nonce', $nonce);
+            $this->nonce->set(self::NONCE_RECAPTCHA, $nonce);
 
             return new JsonResponse([
                 'success' => true
             ]);
         } else {
-            $session->remove('recaptcha_nonce');
+            $this->nonce->remove(self::NONCE_RECAPTCHA);
         }
 
         return new JsonResponse([
@@ -221,14 +239,13 @@ class ApiController extends Controller
      */
     public function joinAction($serverID, Request $request)
     {
-        $session  = $request->getSession();
         $password = trim($request->request->get('password'));
         $server   = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
         if (!$server) {
             throw $this->createNotFoundException();
         }
 
-        if ($server->isBotHumanCheck() && $session->get('recaptcha_nonce') !== "join-${serverID}") {
+        if ($server->isBotHumanCheck() && $this->nonce->get(self::NONCE_RECAPTCHA) !== "join-${serverID}") {
             return new JsonResponse([
                 'message' => 'recaptcha'
             ]);
@@ -239,7 +256,7 @@ class ApiController extends Controller
             ]);
         }
 
-        $session->remove('recaptcha_nonce');
+        $this->nonce->remove(self::NONCE_RECAPTCHA);
 
         $inviteChannel = $server->getBotInviteChannelID();
         if ($inviteChannel) {

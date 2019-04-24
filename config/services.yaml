@@ -75,6 +75,11 @@ services:
         arguments:
             - '%env(RECAPTCHA_SECRET_KEY)%'
 
+    App\Component\NonceComponentInterface:
+        class: App\Component\NonceComponent
+        arguments:
+            - '@session'
+
     twig.extension.date:
         class: Twig_Extensions_Extension_Date
         arguments: ["@translator"]
@@ -88,6 +93,9 @@ services:
     App\Controller\ServerController:
         calls:
             - [setWebHandler, ['@App\Media\WebHandlerInterface']]
+    App\Controller\ApiController:
+        calls:
+            - [setNonceComponent, ['@App\Component\NonceComponentInterface']]
 
     # Event Listeners
     App\Event\Listener\ServerStatsListener:
