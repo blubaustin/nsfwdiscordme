@@ -339,19 +339,6 @@
   }
 }
 
-.card-server-stats-header {
-  display: flex;
-
-  h4 {
-    margin-bottom: 0;
-  }
-
-  .icon {
-    font-size: 1.5rem;
-    margin-right: 0.5rem;
-  }
-}
-
 .card-server-stats-settings {
   margin-left: auto;
   color: #ffffffc7;
@@ -378,5 +365,18 @@
 .card-server-stats-bump-log {
   table {
     color: #FFF;
+  }
+}
+
+.card-server-summary-header {
+  display: flex;
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
   }
 }

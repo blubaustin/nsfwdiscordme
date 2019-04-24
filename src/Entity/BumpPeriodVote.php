@@ -16,6 +16,7 @@ use Exception;
 class BumpPeriodVote
 {
     /**
+     * @var int
      * @ORM\Id
      * @ORM\Column(type="bigint", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -60,9 +61,9 @@ class BumpPeriodVote
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

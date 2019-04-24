@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+  <div id="page-server-follow" class="row">
+    <div class="col col-md-8 offset-md-2 col-sm-12">
+      <div class="card card-primary">
+        <div class="card-header card-server-summary-header">
+          <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
+          <div>
+            <h4>{{ server.name }}</h4>
+            <span class="card-server-stats-summary">{{ server.summary }}</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="text-center">
+            {% if isFollowing %}
+              Are you sure you want to unfollow this server?
+            {% else %}
+              Are you sure you want to follow this server?
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-footer">
+          <form action="{{ path('server_follow_confirm', { slug: server.slug }) }}" method="post">
+            {% if isFollowing %}
+              <button id="server-follow-btn" type="submit" class="btn btn-danger btn-block">
+                {{ icon('app-follow') }}
+                Unfollow
+              </button>
+            {% else %}
+              <button id="server-follow-btn" type="submit" class="btn btn-success btn-block">
+                {{ icon('app-follow') }}
+                Follow
+              </button>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

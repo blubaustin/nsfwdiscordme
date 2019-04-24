@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\BumpServerEvent;
 use App\Entity\JoinServerEvent;
 use App\Entity\Server;
+use App\Entity\ServerFollow;
 use App\Http\Request;
 use DateTime;
 use Doctrine\DBAL\DBALException;
@@ -43,6 +44,33 @@ class HomeController extends Controller
             'sort'         => 'most-bumped',
             'masterServer' => $masterServer,
             'servers'      => $this->paginate($query)
+        ]);
+    }
+
+    /**
+     * @Route("/following", name="following")
+     *
+     * @return Response
+     */
+    public function followingAction()
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return new RedirectResponse($this->generateUrl('discord_oauth2'));
+        }
+
+        $query = $this->em->getRepository(Server::class)
+            ->createQueryBuilder('s')
+            ->leftJoin(ServerFollow::class, 'f', Join::WITH, 'f.server = s')
+            ->where('s.isEnabled = 1')
+            ->andWhere('s.isPublic = 1')
+            ->andWhere('f.user = :user')
+            ->setParameter(':user', $user)
+            ->orderBy('f.id', 'desc');
+
+        return $this->render('home/index.html.twig', [
+            'sort'    => 'following',
+            'servers' => $this->paginate($query)
         ]);
     }
 

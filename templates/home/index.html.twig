@@ -15,6 +15,15 @@
             </span>
           </a>
           <a
+            href="{{ path('home_following') }}"
+            class="btn btn-primary{% if sort == 'following' %} btn-info{% endif %}"
+          >
+            {{ icon('app-follow') }}
+            <span class="d-none d-lg-inline">
+              Following
+            </span>
+          </a>
+          <a
             href="{{ path('home_recently_bumped') }}"
             class="btn btn-primary{% if sort == 'recently-bumped' %} btn-info{% endif %}"
           >

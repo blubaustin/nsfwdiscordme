@@ -1,9 +1,17 @@
 <div class="row">
-  {% for server in servers %}
-    <div class="col col-md-4 col-sm-12 col-12">
-      {% include "_cards/server.html.twig" %}
+  {% if servers|length == 0 %}
+    <div class="col">
+      <p class="text-center gutter">
+        There are no servers here!
+      </p>
     </div>
-  {% endfor %}
+  {% else %}
+    {% for server in servers %}
+      <div class="col col-md-4 col-sm-12 col-12">
+        {% include "_cards/server.html.twig" %}
+      </div>
+    {% endfor %}
+  {% endif %}
 </div>
 <div class="pagination-wrap gutter-top">
   {{ knp_pagination_render(servers) }}

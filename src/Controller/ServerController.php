@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Media;
 use App\Entity\Server;
+use App\Entity\ServerFollow;
 use App\Event\ViewEvent;
 use App\Http\Request;
 use App\Form\Type\ServerType;
@@ -52,14 +53,76 @@ class ServerController extends Controller
      */
     public function indexAction($slug, Request $request)
     {
-        $server = $this->fetchServerOrThrow($slug);
+        $server      = $this->fetchServerOrThrow($slug);
+        $user        = $this->getUser();
+        $isFollowing = false;
+        if ($user) {
+            $isFollowing = $this->em->getRepository(ServerFollow::class)->isFollowing($server, $user);
+        }
 
         $this->eventDispatcher->dispatch('app.server.view', new ViewEvent($server, $request));
 
         return $this->render('server/index.html.twig', [
-            'server'  => $server,
-            'isOwner' => $this->canManageServer($server)
+            'server'      => $server,
+            'isOwner'     => $this->canManageServer($server),
+            'isFollowing' => $isFollowing
         ]);
+    }
+
+    /**
+     * @Route("/server/follow/{slug}", name="follow")
+     *
+     * @param string $slug
+     *
+     * @return Response
+     */
+    public function followAction($slug)
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return new RedirectResponse($this->generateUrl('discord_oauth2'));
+        }
+
+        $server = $this->fetchServerOrThrow($slug);
+
+        return $this->render('server/follow.html.twig', [
+            'server'      => $server,
+            'isFollowing' => $this->em->getRepository(ServerFollow::class)->isFollowing($server, $user)
+        ]);
+    }
+
+    /**
+     * @Route("/server/follow-confirm/{slug}", name="follow_confirm", methods={"POST"})
+     *
+     * @param string $slug
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function followConfirmAction($slug)
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return new RedirectResponse($this->generateUrl('discord_oauth2'));
+        }
+
+        $server = $this->fetchServerOrThrow($slug);
+        $follow = $this->em->getRepository(ServerFollow::class)->findFollow($server, $user);
+
+        if ($follow) {
+            $this->em->remove($follow);
+            $this->addFlash('success', 'You are no longer following the server.');
+        } else {
+            $follow = (new ServerFollow())
+                ->setServer($server)
+                ->setUser($user);
+            $this->em->persist($follow);
+            $this->addFlash('success', 'You are now following the server.');
+        }
+
+        $this->em->flush();
+
+        return new RedirectResponse($this->generateUrl('server_index', ['slug' => $server->getSlug()]));
     }
 
     /**

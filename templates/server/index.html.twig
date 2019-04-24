@@ -31,11 +31,23 @@
           <div class="card-body">
             <div class="server-buttons float-md-right">
               {% if isOwner %}
-                <a href="{{ path('server_settings', { slug: server.slug }) }}" class="btn btn-lg btn-info">
+                <a
+                  href="{{ path('server_settings', { slug: server.slug }) }}"
+                  class="btn btn-lg btn-info"
+                  title="Server Settings"
+                  data-toggle="tooltip"
+                >
                   {{ icon('app-settings') }}
-                  Settings
                 </a>
               {% endif %}
+              <a
+                href="{{ path('server_follow', { slug: server.slug }) }}"
+                class="btn btn-lg btn-info {% if isFollowing %}server-following{% endif %}"
+                title="{% if isFollowing %}Unfollow{% else %}Follow{% endif %} Server"
+                data-toggle="tooltip"
+              >
+                {{ icon('app-follow') }}
+              </a>
               <button
                 id="server-join-btn"
                 class="btn btn-lg btn-success"
