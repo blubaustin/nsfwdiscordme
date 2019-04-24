@@ -1,9 +1,9 @@
 <?php
 namespace App\Event\Listener;
 
-use App\Entity\BumpServerEvent;
-use App\Entity\JoinServerEvent;
-use App\Entity\ViewServerEvent;
+use App\Entity\ServerBumpEvent;
+use App\Entity\ServerJoinEvent;
+use App\Entity\ServerViewEvent;
 use App\Event\BumpEvent;
 use App\Event\JoinEvent;
 use App\Event\ViewEvent;
@@ -33,7 +33,7 @@ class ServerStatsListener
     public function onBump(BumpEvent $event)
     {
         try {
-            $bse = (new BumpServerEvent())
+            $bse = (new ServerBumpEvent())
                 ->setServer($event->getServer())
                 ->setIpString($event->getRequest()->getClientIp());
             $this->em->persist($bse);
@@ -47,7 +47,7 @@ class ServerStatsListener
     public function onJoin(JoinEvent $event)
     {
         try {
-            $jse = (new JoinServerEvent())
+            $jse = (new ServerJoinEvent())
                 ->setServer($event->getServer())
                 ->setIpString($event->getRequest()->getClientIp());
             $this->em->persist($jse);
@@ -61,7 +61,7 @@ class ServerStatsListener
     public function onView(ViewEvent $event)
     {
         try {
-            $vse = (new ViewServerEvent())
+            $vse = (new ServerViewEvent())
                 ->setServer($event->getServer())
                 ->setIpString($event->getRequest()->getClientIp());
             $this->em->persist($vse);

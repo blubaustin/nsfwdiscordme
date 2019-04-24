@@ -1,8 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\BumpServerEvent;
-use App\Entity\JoinServerEvent;
+use App\Entity\ServerBumpEvent;
+use App\Entity\ServerJoinEvent;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
 use App\Http\Request;
@@ -83,7 +83,7 @@ class HomeController extends Controller
     {
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
-            ->leftJoin(BumpServerEvent::class, 'b', Join::WITH, 'b.server = s')
+            ->leftJoin(ServerBumpEvent::class, 'b', Join::WITH, 'b.server = s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
             ->orderBy('b.id', 'desc');
@@ -104,7 +104,7 @@ class HomeController extends Controller
     {
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
-            ->leftJoin(JoinServerEvent::class, 'j', Join::WITH, 'j.server = s')
+            ->leftJoin(ServerJoinEvent::class, 'j', Join::WITH, 'j.server = s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
             ->andWhere('j.dateCreated > :then')

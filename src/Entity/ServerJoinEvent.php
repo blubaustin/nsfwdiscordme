@@ -6,10 +6,10 @@ use DateTime;
 use Exception;
 
 /**
- * @ORM\Table(name="join_server_event")
- * @ORM\Entity(repositoryClass="App\Repository\JoinServerEventRepository")
+ * @ORM\Table(name="server_join_event")
+ * @ORM\Entity(repositoryClass="App\Repository\ServerJoinEventRepository")
  */
-class JoinServerEvent
+class ServerJoinEvent
 {
     /**
      * @ORM\Id
@@ -66,9 +66,9 @@ class JoinServerEvent
     /**
      * @param Server $server
      *
-     * @return JoinServerEvent
+     * @return ServerJoinEvent
      */
-    public function setServer(Server $server): JoinServerEvent
+    public function setServer(Server $server): ServerJoinEvent
     {
         $this->server = $server;
 
@@ -95,9 +95,9 @@ class JoinServerEvent
     /**
      * @param resource|string $ip
      *
-     * @return JoinServerEvent
+     * @return ServerJoinEvent
      */
-    public function setIp($ip): JoinServerEvent
+    public function setIp($ip): ServerJoinEvent
     {
         $this->ip = $ip;
 
@@ -109,7 +109,7 @@ class JoinServerEvent
      *
      * @return $this
      */
-    public function setIpString($ipString): JoinServerEvent
+    public function setIpString($ipString): ServerJoinEvent
     {
         $this->ip = inet_pton($ipString);
 
@@ -127,9 +127,9 @@ class JoinServerEvent
     /**
      * @param DateTime $dateCreated
      *
-     * @return JoinServerEvent
+     * @return ServerJoinEvent
      */
-    public function setDateCreated(DateTime $dateCreated): JoinServerEvent
+    public function setDateCreated(DateTime $dateCreated): ServerJoinEvent
     {
         $this->dateCreated = $dateCreated;
 

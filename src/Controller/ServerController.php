@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\BumpPeriodVote;
-use App\Entity\JoinServerEvent;
+use App\Entity\ServerJoinEvent;
 use App\Entity\Media;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
@@ -170,7 +170,7 @@ class ServerController extends Controller
             ->getQuery()
             ->execute();
 
-        $joinCount = $this->em->getRepository(JoinServerEvent::class)
+        $joinCount = $this->em->getRepository(ServerJoinEvent::class)
             ->createQueryBuilder('j')
             ->select('COUNT(j.id)')
             ->where('j.server = :server')
