@@ -32,7 +32,12 @@ class DiscordOAuthController extends Controller
     public function indexAction(Request $request, Discord $provider)
     {
         $url = $provider->getAuthorizationUrl();
-        $request->getSession()->set('oauth2state', $url);
+
+        $session = $request->getSession();
+        $session->set('oauth2state', $url);
+        if ($back = $request->query->get('back')) {
+            $session->set('oauth2back', $back);
+        }
 
         return new RedirectResponse($url);
     }
@@ -75,17 +80,22 @@ class DiscordOAuthController extends Controller
         }
         $session->remove('oauth2state');
 
-        $token = $provider->getAccessToken(
-            'authorization_code',
-            [
-                'code' => $request->query->get('code')
-            ]
-        );
+        $code = $request->query->get('code');
+        if (!$code) {
+            if ($back = $session->get('oauth2back')) {
+                return new RedirectResponse($back);
+            }
 
-        $resourceOwner = $provider->getResourceOwner($token)->toArray();
+            return new RedirectResponse('/');
+        }
+
+        $token = $provider->getAccessToken('authorization_code', [
+            'code' => $code
+        ]);
+        $owner = $provider->getResourceOwner($token)->toArray();
 
         $bannedUserRepo = $this->em->getRepository(BannedUser::class);
-        if ($bannedUserRepo->isBanned($resourceOwner['username'], $resourceOwner['discriminator'])) {
+        if ($bannedUserRepo->isBanned($owner['username'], $owner['discriminator'])) {
             $this->addFlash('danger', 'You are banned from the site.');
 
             return new RedirectResponse('/');
@@ -93,7 +103,7 @@ class DiscordOAuthController extends Controller
 
         $em       = $this->getDoctrine()->getManager();
         $userRepo = $this->getDoctrine()->getRepository(User::class);
-        $user     = $userRepo->findByDiscordID($resourceOwner['id']);
+        $user     = $userRepo->findByDiscordID($owner['id']);
         if (!$user) {
             /** @var User $user */
             $user = $userManager->createUser();
@@ -102,12 +112,12 @@ class DiscordOAuthController extends Controller
                 ->setPassword('')
                 ->setEmail('')
                 ->setUsername('')
-                ->setDiscordID($resourceOwner['id'])
-                ->setDiscordUsername($resourceOwner['username'])
-                ->setDiscordEmail($resourceOwner['email'])
-                ->setDiscordAvatar($resourceOwner['avatar'])
-                ->setDiscordDiscriminator($resourceOwner['discriminator'])
-                ->setDiscordAvatar($resourceOwner['avatar']);
+                ->setDiscordID($owner['id'])
+                ->setDiscordUsername($owner['username'])
+                ->setDiscordEmail($owner['email'])
+                ->setDiscordAvatar($owner['avatar'])
+                ->setDiscordDiscriminator($owner['discriminator'])
+                ->setDiscordAvatar($owner['avatar']);
             $userManager->updateUser($user);
             $accessToken = new AccessToken();
         } else {
@@ -136,6 +146,10 @@ class DiscordOAuthController extends Controller
             'security.interactive_login',
             new InteractiveLoginEvent($request, $token)
         );
+
+        if ($back = $session->get('oauth2back')) {
+            return new RedirectResponse($back);
+        }
 
         return new RedirectResponse('/');
     }
