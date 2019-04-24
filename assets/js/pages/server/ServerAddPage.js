@@ -21,6 +21,7 @@ class ServerAddPage
     this.$errorModal.on('hidden.bs.modal', this.handleErrorModalHidden);
     this.$deleteButton.on('click', this.handleDeleteClick);
     $('#modal-server-delete-btn').on('click', this.handleModalDeleteClick);
+    $('#server-verify-widget-btn').on('click', this.handleVerifyWidgetClick);
 
     this.setupFormServerID();
     this.setupFormSlug();
@@ -73,7 +74,7 @@ class ServerAddPage
      *
      */
     function updateSlugHelp() {
-      $serverSlugHelp.html(`${slugHelpText}<br />Your custom URL will be: https://nsfwdiscordme.com/${$serverSlug.val()}`);
+      $serverSlugHelp.html(`${slugHelpText}<br />The server URL will be: https://nsfwdiscordme.com/${$serverSlug.val()}`);
     }
 
     $serverName.on('input', (e) => {
@@ -146,6 +147,31 @@ class ServerAddPage
    */
   handleErrorModalHidden = () => {
     this.$errorMessage.html('');
+  };
+
+  /**
+   *
+   */
+  handleVerifyWidgetClick = () => {
+    const { serverID } = this;
+
+    const $danger  = $('#server-verify-widget-danger');
+    const $success = $('#server-verify-widget-success');
+
+    Discord.fetchWidget(serverID)
+      .then((widget) => {
+        if (widget.instant_invite) {
+          $danger.hide();
+          $success.show();
+        } else {
+          $danger.show();
+          $success.hide();
+        }
+      })
+      .catch(() => {
+        $danger.show();
+        $success.hide();
+      });
   };
 
   /**

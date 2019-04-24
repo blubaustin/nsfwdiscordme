@@ -256,10 +256,18 @@ class ServerController extends Controller
         }
 
         if (!$server->getBotInviteChannelID()) {
-            $isValid = false;
-            $form
-                ->get('botInviteChannelID')
-                ->addError(new FormError('A channel is required.'));
+            $widget = [];
+            try {
+                $widget = $this->discord->fetchWidget($server->getDiscordID());
+            } catch (Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
+            if (!$widget || !isset($widget['instant_invite'])) {
+                $isValid = false;
+                $form
+                    ->get('botInviteChannelID')
+                    ->addError(new FormError('Instant invite not enabled. A channel is required.'));
+            }
         }
 
         $iconMedia   = null;

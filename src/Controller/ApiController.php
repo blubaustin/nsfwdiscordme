@@ -241,18 +241,30 @@ class ApiController extends Controller
 
         $session->remove('recaptcha_nonce');
 
-        $invite = $this->discord->createInvite($server->getBotInviteChannelID());
-        if (!$invite || !isset($invite['code'])) {
-            return new JsonResponse([
-                'message' => 'error'
-            ], 500);
+        $inviteChannel = $server->getBotInviteChannelID();
+        if ($inviteChannel) {
+            $invite = $this->discord->createInvite($inviteChannel);
+            if (!$invite || !isset($invite['code'])) {
+                return new JsonResponse([
+                    'message' => 'error'
+                ], 500);
+            }
+            $inviteURL = "https://discordapp.com/invite/${invite['code']}";
+        } else {
+            $widget = $this->discord->fetchWidget($server->getDiscordID());
+            if (!$widget || !isset($widget['instant_invite'])) {
+                return new JsonResponse([
+                    'message' => 'error'
+                ], 500);
+            }
+            $inviteURL = $widget['instant_invite'];
         }
 
         $this->eventDispatcher->dispatch('app.server.join', new JoinEvent($server, $request));
 
         return new JsonResponse([
             'message'  => 'ok',
-            'redirect' => "https://discordapp.com/invite/${invite['code']}"
+            'redirect' => $inviteURL
         ]);
     }
 

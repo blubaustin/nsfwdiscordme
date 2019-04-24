@@ -39,7 +39,7 @@
               <button
                 id="server-join-btn"
                 class="btn btn-lg btn-success"
-                {% if not server.active or not server.botInviteChannelID %} disabled="disabled"{% endif %}
+                {% if not server.active %} disabled="disabled"{% endif %}
               >
                 {{ icon('app-join') }}
                 Join Server
