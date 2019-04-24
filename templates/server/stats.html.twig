@@ -26,7 +26,7 @@
         <div class="card-body">
           <ul class="card-server-stats-list">
             <li>
-              <span>Owner:</span> {{ server.user.username }}#{{ server.user.discordDiscriminator }}
+              <span>Owner:</span> {{ server.user|displayUsername }}
             </li>
             <li>
               <span>Discord ID:</span> {{ server.discordID }}
@@ -115,7 +115,7 @@
                     {{ log.dateCreated|date('Y-m-d H:i:s') }}
                   </td>
                   <td>
-                    {{ log.user.discordUsername }}#{{ log.user.discordDiscriminator }}
+                    {{ log.user|displayUsername }}
                   </td>
                 </tr>
               {% endfor %}

@@ -30,7 +30,7 @@
         <li>
           <span>Bumped By</span>
           {% if server.lastBump %}
-            {{ server.lastBump.user.username }}#{{ server.lastBump.user.discordDiscriminator }}
+            {{ server.lastBump.user|displayUsername }}
           {% else %}
             N/A
           {% endif %}

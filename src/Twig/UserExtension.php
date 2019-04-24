@@ -18,7 +18,8 @@ class UserExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('avatar', [$this, 'avatar'])
+            new TwigFilter('avatar', [$this, 'avatar']),
+            new TwigFilter('displayUsername', [$this, 'displayUsername'])
         ];
     }
 
@@ -37,5 +38,28 @@ class UserExtension extends AbstractExtension
         }
 
         return '';
+    }
+
+    /**
+     * @param User $user
+     * @param bool $includeDiscriminator
+     *
+     * @return string
+     */
+    public function displayUsername(User $user, $includeDiscriminator = true)
+    {
+        $username = $user->getUsername();
+        if ($username) {
+            return $username;
+        }
+
+        $discordUsername      = $user->getDiscordUsername();
+        $discordDiscriminator = $user->getDiscordDiscriminator();
+
+        if (!$includeDiscriminator) {
+            return $discordUsername;
+        }
+
+        return "${discordUsername}#${discordDiscriminator}";
     }
 }

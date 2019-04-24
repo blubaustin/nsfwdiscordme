@@ -54,7 +54,7 @@
             aria-expanded="false"
           >
             <img src="{{ app.user|avatar }}" alt="Avatar" class="nav-avatar nav-image" />
-            <span>{{ app.user.username }}</span>
+            <span>{{ app.user|displayUsername(false) }}</span>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarAccountDropdown">
             <a href="{{ path('profile_index') }}" class="dropdown-item">

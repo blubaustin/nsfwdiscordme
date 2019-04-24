@@ -100,8 +100,8 @@ class DiscordOAuthController extends Controller
             $user
                 ->setEnabled(true)
                 ->setPassword('')
-                ->setEmail($resourceOwner['email'])
-                ->setUsername($resourceOwner['username'])
+                ->setEmail('')
+                ->setUsername('')
                 ->setDiscordID($resourceOwner['id'])
                 ->setDiscordUsername($resourceOwner['username'])
                 ->setDiscordEmail($resourceOwner['email'])
