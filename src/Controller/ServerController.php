@@ -24,6 +24,7 @@ use App\Media\Paths;
 use App\Media\WebHandlerInterface;
 use DateTime;
 use Exception;
+use Gumlet\ImageResize;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use Symfony\Component\Form\FormError;
@@ -383,6 +384,9 @@ class ServerController extends Controller
             $server->setUser($user);
 
             if ($this->processForm($form, false)) {
+                $widget = $this->discord->fetchWidget($server->getDiscordID());
+                $server->setMembersOnline(count($widget['members']));
+
                 $teamMember = (new ServerTeamMember())
                     ->setUser($user)
                     ->setServer($server)
@@ -528,7 +532,11 @@ class ServerController extends Controller
             }
 
             if ($bannerFile  = $form['bannerFile']->getData()) {
-                $bannerMedia = $this->moveBannerFile($bannerFile, $server);
+                $bannerCropData = $form['bannerCropData']->getData();
+                if ($bannerCropData) {
+                    $bannerCropData = json_decode($bannerCropData, true);
+                }
+                $bannerMedia = $this->moveBannerFile($bannerFile, $bannerCropData, $server);
                 if ($bannerMedia) {
                     $server->setBannerMedia($bannerMedia);
                 } else {
@@ -591,14 +599,16 @@ class ServerController extends Controller
 
     /**
      * @param UploadedFile $file
+     * @param array        $cropData
      * @param Server       $server
      *
      * @return Media
+     * @throws Exception
      * @throws FileExistsException
      * @throws FileNotFoundException
      * @throws WriteException
      */
-    private function moveBannerFile(UploadedFile $file, Server $server)
+    private function moveBannerFile(UploadedFile $file, $cropData, Server $server)
     {
         if ($file->getError() !== 0) {
             return null;
@@ -607,12 +617,17 @@ class ServerController extends Controller
         $mimeTypes = [
             'image/jpeg' => 'jpg',
             'image/jpg'  => 'jpg',
-            'image/png'  => 'png',
-            'image/gif'  => 'gif'
+            'image/png'  => 'png'
         ];
         $mimeType  = $file->getMimeType();
         if (!in_array($mimeType, array_keys($mimeTypes))) {
             return null;
+        }
+
+        if ($cropData) {
+            $resizer = new ImageResize($file->getPathname());
+            $resizer->freecrop($cropData['width'], $cropData['height'], $cropData['x'], $cropData['y']);
+            $resizer->save($file->getPathname());
         }
 
         $paths = new Paths();

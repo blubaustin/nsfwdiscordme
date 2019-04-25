@@ -1,4 +1,12 @@
 {% extends "base.html.twig" %}
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.css" />
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.js"></script>
+{% endblock %}
 {% block body %}
   <div id="page-server-add">
     <div class="row">

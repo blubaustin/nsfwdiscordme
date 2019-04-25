@@ -130,16 +130,44 @@ class ServerAddPage
    */
   setupFormUploads = () => {
     const options = {
-      theme:             'fas',
-      showBrowse:        false,
-      showCancel:        false,
-      showUpload:        false,
-      autoOrientImage:   false,
-      browseOnZoneClick: true,
-      previewFileType:   'any'
+      theme:                 'fas',
+      showBrowse:            false,
+      showCancel:            false,
+      showUpload:            false,
+      autoOrientImage:       false,
+      browseOnZoneClick:     true,
+      previewFileType:       'any',
+      allowedFileExtensions: ['jpg', 'jpeg', 'png']
     };
-    $("#server_iconFile").fileinput(options);
-    $("#server_bannerFile").fileinput(options);
+
+    const $modal      = $('#modal-server-cropper');
+    const $modalImage = $('#modal-server-cropper-image');
+    let cropper;
+    let $image;
+
+    $modal
+      .on('shown.bs.modal', () => {
+        $modalImage.attr('src', $image.attr('src'));
+        cropper = new Cropper($modalImage[0], {
+          viewMode:    1,
+          aspectRatio: 16 / 9,
+          rotatable:   false
+        });
+      })
+      .on('hidden.bs.modal', () => {
+        const data     = cropper.getData(true);
+        const imageURL = cropper.getCroppedCanvas().toDataURL();
+        $image.attr('src', imageURL);
+        $('#server_bannerCropData').val(JSON.stringify(data));
+
+        cropper.destroy();
+      });
+
+    $("#server_bannerFile").fileinput(options)
+      .on('fileimageloaded', (event, previewId) => {
+        $image = $('#' + previewId).find('img.file-preview-image');
+        $modal.modal('show');
+      })
   };
 
   /**

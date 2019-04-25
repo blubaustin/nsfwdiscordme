@@ -28,7 +28,8 @@
 }
 
 .card-body {
-  p:last-child {
+  p:last-child,
+  .form-group:last-child {
     margin-bottom: 0;
   }
 }

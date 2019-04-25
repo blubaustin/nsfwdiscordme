@@ -98,6 +98,7 @@
         "google": true,
         "Promise": true,
         "Chart": true,
+        "Cropper": true,
         "grecaptcha": true,
         "recaptchaSiteKey": true,
         "__DEV__": true

@@ -92,6 +92,7 @@
     </div>
     <div class="card-body">
       {{ form_row(form.bannerFile) }}
+      {{ form_row(form.bannerCropData) }}
     </div>
   </div>
 
@@ -109,3 +110,4 @@
   {{ form_rest(form) }}
 {{ form_end(form) }}
 {% include "server/blocks/error-modal.html.twig" %}
+{% include "server/blocks/cropper-modal.html.twig" %}

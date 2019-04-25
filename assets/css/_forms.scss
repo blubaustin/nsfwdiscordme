@@ -48,11 +48,35 @@
   font-size: 1rem;
 }
 
-.file-caption-icon,
-.file-caption .file-caption-name {
-  padding-top: 5px;
-}
-
 .file-drop-zone.clickable:hover {
   border: 1px dashed #999;
+}
+
+/**
+ * Bootstrap file input
+ */
+.kv-file-zoom,
+.file-upload-indicator {
+  display: none;
+}
+
+.file-preview-image {
+  border: 1px solid #FFF;
+}
+
+.krajee-default.file-preview-frame {
+  background-color: $color-info;
+}
+
+.krajee-default.file-preview-frame .kv-file-content {
+  height: auto;
+}
+
+.krajee-default.file-preview-frame .file-thumbnail-footer {
+  height: auto;
+}
+
+.krajee-default .file-footer-caption {
+  color: #FFF;
+  margin-bottom: 0;
 }

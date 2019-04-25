@@ -23,7 +23,6 @@
  * Server recaptcha
  */
 .modal-server-admin-bump {
-
   .server-next-bump {
     font-size: 3rem;
   }
@@ -31,4 +30,13 @@
 
 .modal-server-admin-voted {
   background-color: $color-danger;
+}
+
+/**
+ * Server add
+ */
+.modal-server-cropper {
+  .img-container {
+    height: 400px;
+  }
 }
