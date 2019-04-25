@@ -4,6 +4,10 @@
     <div class="row">
       <div class="col col-md-8 offset-md-2 col-sm-12 col-12">
         <div class="menu-buttons">
+          <a href="{{ path('server_team', { slug: server.slug }) }}" class="btn btn-info">
+            {{ icon('app-team') }}
+            Manage Team
+          </a>
           <button id="server-delete-btn" class="btn btn-danger" type="button" data-server-id="{{ server.discordID }}">
             {{ icon('app-delete') }}
             Delete Server

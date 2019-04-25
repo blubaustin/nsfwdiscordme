@@ -25,6 +25,10 @@
 .card-header {
   font-weight: bold;
   background-color: lighten($color-primary, 5%);
+
+  a {
+    color: #FFF;
+  }
 }
 
 .card-body {
@@ -355,19 +359,6 @@
     ul {
       margin: 0;
     }
-  }
-}
-
-.card-server-stats-settings {
-  margin-left: auto;
-  color: #ffffffc7;
-  font-size: 2rem;
-  padding: 2px 0 0 0;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
-
-  &:hover {
-    color: #FFF;
-    padding: 0 0 2px 0;
   }
 }
 

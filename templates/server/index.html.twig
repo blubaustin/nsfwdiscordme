@@ -41,6 +41,26 @@
                   {{ icon('app-settings') }}
                 </a>
               {% endif %}
+              {% if hasServerAccess(server, 'manager') %}
+                <a
+                  href="{{ path('server_team', { slug: server.slug }) }}"
+                  class="btn btn-lg btn-info"
+                  title="Manage Team"
+                  data-toggle="tooltip"
+                >
+                  {{ icon('app-team') }}
+                </a>
+              {% endif %}
+              {% if hasServerAccess(server, 'editor') %}
+                <a
+                  href="{{ path('server_stats', { slug: server.slug }) }}"
+                  class="btn btn-lg btn-info"
+                  title="Server Stats"
+                  data-toggle="tooltip"
+                >
+                  {{ icon('app-stats') }}
+                </a>
+              {% endif %}
               {#
               <a
                 href="{{ path('server_follow', { slug: server.slug }) }}"

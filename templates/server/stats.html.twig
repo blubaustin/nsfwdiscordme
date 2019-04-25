@@ -11,17 +11,13 @@
         <div class="card-header card-server-summary-header">
           <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
           <div>
-            <h4>{{ server.name }}</h4>
+            <h4>
+              <a href="{{ path('server_index', { slug: server.slug }) }}">
+                {{ server.name }}
+              </a>
+            </h4>
             <span class="card-server-stats-summary">{{ server.summary }}</span>
           </div>
-          <a
-            href="{{ path('server_settings', { slug: server.slug }) }}"
-            class="card-server-stats-settings"
-            title="Server Settings"
-            data-toggle="tooltip"
-          >
-            {{ icon('app-settings') }}
-          </a>
         </div>
         <div class="card-body">
           <ul class="card-server-stats-list">
