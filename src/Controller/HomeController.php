@@ -112,8 +112,7 @@ class HomeController extends Controller
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
             ->orderBy('s.id', 'desc')
-            ->getQuery()
-            ->useResultCache(true, self::CACHE_LIFETIME);
+            ->getQuery();
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'recently-added',
