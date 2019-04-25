@@ -102,8 +102,10 @@ services:
 
     # Event Listeners
     App\Event\Listener\ServerStatsListener:
-        class: App\Event\Listener\ServerStatsListener
         tags:
             - { name: kernel.event_listener, event: 'app.server.bump', method: 'onBump' }
             - { name: kernel.event_listener, event: 'app.server.join', method: 'onJoin' }
             - { name: kernel.event_listener, event: 'app.server.view', method: 'onView' }
+    App\Event\Listener\ServerActionRecorderListener:
+        tags:
+            - { name: kernel.event_listener, event: 'app.server.action', method: 'onAction' }

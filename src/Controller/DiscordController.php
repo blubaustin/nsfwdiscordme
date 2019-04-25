@@ -90,7 +90,6 @@ class DiscordController extends Controller
         if (!$code) {
             return $this->getRedirectResponse();
         }
-
         $token = $provider->getAccessToken('authorization_code', [
             'code' => $code
         ]);
@@ -121,6 +120,7 @@ class DiscordController extends Controller
                 ->setPassword('')
                 ->setEmail('')
                 ->setUsername('')
+                ->setLastLogin(new DateTime())
                 ->setDiscordID($owner['id'])
                 ->setDiscordUsername($owner['username'])
                 ->setDiscordEmail($owner['email'])
@@ -136,6 +136,7 @@ class DiscordController extends Controller
                 return $this->getRedirectResponse();
             }
 
+            $user->setLastLogin(new DateTime());
             $accessToken = $user->getDiscordAccessToken();
             if (!$accessToken) {
                 $accessToken = new AccessToken();
@@ -154,6 +155,8 @@ class DiscordController extends Controller
         $em->persist($accessToken);
         $em->flush();
 
+        // A team member may have been added by username/ID which doesn't have
+        // a user associated.
         $teamMember = $this->em->getRepository(ServerTeamMember::class)->findByDiscordUsernameAndDiscriminator(
             $user->getDiscordUsername(),
             $user->getDiscordDiscriminator()

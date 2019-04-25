@@ -7,6 +7,7 @@ use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
 use App\Event\BumpEvent;
 use App\Event\JoinEvent;
+use App\Event\ServerActionEvent;
 use App\Http\Request;
 use App\Media\WebHandlerInterface;
 use App\Services\RecaptchaService;
@@ -165,6 +166,10 @@ class ApiController extends Controller
         $this->em->flush();
 
         $this->eventDispatcher->dispatch('app.server.bump', new BumpEvent($server, $request));
+        $this->eventDispatcher->dispatch(
+            'app.server.action',
+            new ServerActionEvent($server, $user, 'Bumped server.')
+        );
 
         return new JsonResponse([
             'message'    => 'ok',

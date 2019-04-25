@@ -10,6 +10,9 @@ use App\Event\ViewEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
+/**
+ * Class ServerStatsListener
+ */
 class ServerStatsListener
 {
     /**

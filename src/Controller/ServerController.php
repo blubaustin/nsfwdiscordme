@@ -11,6 +11,7 @@ use App\Entity\ServerFollow;
 use App\Entity\ServerTeamMember;
 use App\Entity\ServerViewEvent;
 use App\Entity\User;
+use App\Event\ServerActionEvent;
 use App\Event\ViewEvent;
 use App\Form\Model\ServerTeamMemberModel;
 use App\Form\Type\ServerTeamMemberType;
@@ -282,6 +283,11 @@ class ServerController extends Controller
                     $this->em->flush();
                     $this->addFlash('success', 'The user has been added to the server team');
 
+                    $this->eventDispatcher->dispatch(
+                        'app.server.action',
+                        new ServerActionEvent($server, $user, 'Added team member.')
+                    );
+
                     return new RedirectResponse(
                         $this->generateUrl('server_team', ['slug' => $slug])
                     );
@@ -334,6 +340,11 @@ class ServerController extends Controller
                 $this->em->flush();
                 $this->addFlash('success', 'The server has been updated.');
 
+                $this->eventDispatcher->dispatch(
+                    'app.server.action',
+                    new ServerActionEvent($server, $user, 'Changed settings.')
+                );
+
                 return new RedirectResponse($this->generateUrl('profile_index'));
             } else {
                 $this->addFlash('danger', 'Please fix the errors below.');
@@ -384,6 +395,11 @@ class ServerController extends Controller
                 $this->em->persist($teamMember);
                 $this->em->flush();
                 $this->addFlash('success', 'The server has been added.');
+
+                $this->eventDispatcher->dispatch(
+                    'app.server.action',
+                    new ServerActionEvent($server, $user, 'Created server.')
+                );
 
                 return new RedirectResponse($this->generateUrl('profile_index'));
             } else {

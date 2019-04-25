@@ -68,7 +68,7 @@
                 </td>
                 <td>
                   {% if teamMember.dateLastAction %}
-                    {{ teamMember.dateLastAction|date('Y-m-d H:i:s') }}
+                    {{ teamMember.dateLastAction|time_diff }}
                   {% else %}
                     Never
                   {% endif %}
