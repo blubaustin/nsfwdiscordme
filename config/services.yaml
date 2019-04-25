@@ -34,6 +34,11 @@ services:
             - '@Redis'
             - { prefix: 'session_', database: 0 }
 
+    App\Storage\Doctrine\RedisCacheHandler:
+        arguments:
+            - '@Redis'
+            - { prefix: '', database: 2 }
+
     App\Discord\Discord:
         class: App\Discord\Discord
         arguments:

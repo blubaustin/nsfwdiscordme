@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class HomeController extends Controller
 {
+    const CACHE_LIFETIME = 1800; // 30 minutes
+
     /**
      * @Route("/", name="index")
      *
@@ -38,7 +40,9 @@ class HomeController extends Controller
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('s.bumpPoints', 'desc');
+            ->orderBy('s.bumpPoints', 'desc')
+            ->getQuery()
+            ->useResultCache(true, self::CACHE_LIFETIME);
 
         return $this->render('home/index.html.twig', [
             'sort'         => 'most-bumped',
@@ -86,7 +90,9 @@ class HomeController extends Controller
             ->leftJoin(ServerBumpEvent::class, 'b', Join::WITH, 'b.server = s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('b.id', 'desc');
+            ->orderBy('b.id', 'desc')
+            ->getQuery()
+            ->useResultCache(true, self::CACHE_LIFETIME);
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'recently-bumped',
@@ -109,7 +115,9 @@ class HomeController extends Controller
             ->andWhere('s.isPublic = 1')
             ->andWhere('j.dateCreated > :then')
             ->setParameter(':then', new DateTime('24 hours ago'))
-            ->orderBy('j.id', 'desc');
+            ->orderBy('j.id', 'desc')
+            ->getQuery()
+            ->useResultCache(true, self::CACHE_LIFETIME);
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'trending',
@@ -128,7 +136,9 @@ class HomeController extends Controller
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('s.membersOnline', 'desc');
+            ->orderBy('s.membersOnline', 'desc')
+            ->getQuery()
+            ->useResultCache(true, self::CACHE_LIFETIME);
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'most-online',
