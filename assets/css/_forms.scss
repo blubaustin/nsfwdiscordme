@@ -53,6 +53,15 @@
 }
 
 /**
+ * Buttons
+ */
+.btn-primary {
+  &:hover {
+    border-color: darken($color-info, 10%);
+  }
+}
+
+/**
  * Bootstrap file input
  */
 .kv-file-zoom,

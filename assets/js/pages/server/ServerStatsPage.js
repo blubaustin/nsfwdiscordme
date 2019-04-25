@@ -83,7 +83,6 @@ class ServerStatsPage extends Page {
             yAxes: [{
               ticks: {
                 fontColor:   '#FFF',
-                stepSize:    1,
                 beginAtZero: true
               }
             }],
