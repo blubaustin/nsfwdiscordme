@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\AccessToken;
 use App\Entity\BannedUser;
+use App\Entity\ServerTeamMember;
 use App\Entity\User;
 use FOS\UserBundle\Model\UserManagerInterface;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -21,6 +22,9 @@ use DateTime;
  */
 class DiscordController extends Controller
 {
+    const OAUTH2_STATE_KEY = 'oauth2state';
+    const OAUTH2_BACK_KEY  = 'oauth2back';
+
     /**
      * @Route("/oauth2", name="oauth2")
      *
@@ -34,9 +38,9 @@ class DiscordController extends Controller
         $url = $provider->getAuthorizationUrl();
 
         $session = $request->getSession();
-        $session->set('oauth2state', $url);
+        $session->set(self::OAUTH2_STATE_KEY, $url);
         if ($back = $request->query->get('back')) {
-            $session->set('oauth2back', $back);
+            $session->set(self::OAUTH2_BACK_KEY, $back);
         }
 
         return new RedirectResponse($url);
@@ -52,7 +56,9 @@ class DiscordController extends Controller
     public function oauth2LogoutAction(Request $request, TokenStorageInterface $tokenStorage)
     {
         $tokenStorage->setToken(null);
-        $request->getSession()->invalidate();
+        $session = $request->getSession();
+        $session->invalidate();
+        $session->remove(self::OAUTH2_STATE_KEY);
 
         return new RedirectResponse('/');
     }
@@ -75,30 +81,33 @@ class DiscordController extends Controller
         TokenStorageInterface $tokenStorage
     ) {
         $session = $request->getSession();
-        if (!$session->get('oauth2state')) {
+        if (!$session->get(self::OAUTH2_STATE_KEY)) {
             throw $this->createAccessDeniedException();
         }
-        $session->remove('oauth2state');
+        $session->remove(self::OAUTH2_STATE_KEY);
 
         $code = $request->query->get('code');
         if (!$code) {
-            if ($back = $session->get('oauth2back')) {
-                return new RedirectResponse($back);
-            }
-
-            return new RedirectResponse('/');
+            return $this->getRedirectResponse();
         }
 
         $token = $provider->getAccessToken('authorization_code', [
             'code' => $code
         ]);
-        $owner = $provider->getResourceOwner($token)->toArray();
+        if (!$token) {
+            return $this->getRedirectResponse();
+        }
+        $owner = $provider->getResourceOwner($token);
+        if (!$owner) {
+            return $this->getRedirectResponse();
+        }
+        $owner = $owner->toArray();
 
         $bannedUserRepo = $this->em->getRepository(BannedUser::class);
         if ($bannedUserRepo->isBanned($owner['username'], $owner['discriminator'])) {
             $this->addFlash('danger', 'You are banned from the site.');
 
-            return new RedirectResponse('/');
+            return $this->getRedirectResponse();
         }
 
         $em       = $this->getDoctrine()->getManager();
@@ -121,6 +130,12 @@ class DiscordController extends Controller
             $userManager->updateUser($user);
             $accessToken = new AccessToken();
         } else {
+            if (!$user->isEnabled()) {
+                $this->addFlash('danger', 'Your account has been disabled.');
+
+                return $this->getRedirectResponse();
+            }
+
             $accessToken = $user->getDiscordAccessToken();
             if (!$accessToken) {
                 $accessToken = new AccessToken();
@@ -139,6 +154,23 @@ class DiscordController extends Controller
         $em->persist($accessToken);
         $em->flush();
 
+        $teamMember = $this->em->getRepository(ServerTeamMember::class)->findByDiscordUsernameAndDiscriminator(
+            $user->getDiscordUsername(),
+            $user->getDiscordDiscriminator()
+        );
+        if ($teamMember) {
+            if (!$teamMember->getDiscordID()) {
+                $teamMember->setDiscordID($user->getDiscordID());
+            }
+            if (!$teamMember->getDiscordAvatar()) {
+                $teamMember->setDiscordAvatar($user->getDiscordAvatar());
+            }
+            if (!$teamMember->getUser()) {
+                $teamMember->setUser($user);
+            }
+            $this->em->flush();
+        }
+
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $tokenStorage->setToken($token);
         $request->getSession()->set('_security_main', serialize($token));
@@ -147,10 +179,21 @@ class DiscordController extends Controller
             new InteractiveLoginEvent($request, $token)
         );
 
-        if ($back = $session->get('oauth2back')) {
+        return $this->getRedirectResponse();
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    private function getRedirectResponse()
+    {
+        $session = $this->get('session');
+        if ($back = $session->get(self::OAUTH2_BACK_KEY)) {
             return new RedirectResponse($back);
         }
 
-        return new RedirectResponse('/');
+        return new RedirectResponse(
+            $this->generateUrl('home_index')
+        );
     }
 }

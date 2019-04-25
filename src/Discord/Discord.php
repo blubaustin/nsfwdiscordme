@@ -3,6 +3,7 @@ namespace App\Discord;
 
 use App\Entity\AccessToken;
 use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use GuzzleHttp\Client as Guzzle;
@@ -64,6 +65,17 @@ class Discord
     public function fetchWidget($serverID)
     {
         return $this->doRequest('GET', "guilds/${serverID}/widget.json");
+    }
+
+    /**
+     * @param string|int $userID
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function fetchUser($userID)
+    {
+        return $this->doRequest('GET', "users/${userID}", null, true);
     }
 
     /**
@@ -131,6 +143,36 @@ class Discord
         file_put_contents($tmp, $data);
 
         return $tmp;
+    }
+
+    /**
+     * Given a username#discriminator combination, returns an array with separate username and discriminator
+     *
+     * Throws an InvalidArgumentException when the given username is not valid.
+     *
+     * @see https://discordapp.com/developers/docs/resources/user#usernames-and-nicknames
+     *
+     * @param string $username
+     *
+     * @return array
+     */
+    public function extractUsernameAndDiscriminator($username)
+    {
+        if (preg_match('/^([^@#:]{2,32})#([\d]{4})$/i', $username, $matches) && strpos($username, '```') === false) {
+            $username      = $matches[1];
+            $discriminator = (int)$matches[2];
+            if (in_array(strtolower($username), ['discordtag', 'everyone', 'here'])) {
+                throw new InvalidArgumentException(
+                    "Invalid username ${username}."
+                );
+            }
+
+            return [$username, $discriminator];
+        }
+
+        throw new InvalidArgumentException(
+            "Invalid username ${username}."
+        );
     }
 
     /**

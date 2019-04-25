@@ -2,10 +2,13 @@
 namespace App\Twig;
 
 use App\Entity\Server;
+use App\Entity\User;
+use App\Security\ServerAccessInterface;
 use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 use Twig\TwigFilter;
 use DateTime;
 
@@ -20,13 +23,20 @@ class ServerExtension extends AbstractExtension
     protected $router;
 
     /**
+     * @var ServerAccessInterface
+     */
+    protected $serverAccess;
+
+    /**
      * Constructor
      *
-     * @param RouterInterface $router
+     * @param RouterInterface       $router
+     * @param ServerAccessInterface $serverAccess
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router, ServerAccessInterface $serverAccess)
     {
-        $this->router = $router;
+        $this->router       = $router;
+        $this->serverAccess = $serverAccess;
     }
 
     /**
@@ -37,6 +47,16 @@ class ServerExtension extends AbstractExtension
         return [
             new TwigFilter('serverURL', [$this, 'serverURL']),
             new TwigFilter('serverNextBump', [$this, 'serverNextBump'])
+        ];
+    }
+
+    /**
+     * @return TwigFunction[]
+     */
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('hasServerAccess', [$this, 'hasServerAccess'])
         ];
     }
 
@@ -72,5 +92,17 @@ class ServerExtension extends AbstractExtension
         }
 
         return $interval->format("%im %ss");
+    }
+
+    /**
+     * @param Server $server
+     * @param string $role
+     * @param User   $user
+     *
+     * @return bool
+     */
+    public function hasServerAccess(Server $server, $role, User $user = null)
+    {
+        return $this->serverAccess->can($server, $role, $user);
     }
 }

@@ -30,7 +30,7 @@
         <div class="card card-primary card-server-about">
           <div class="card-body">
             <div class="server-buttons float-md-right">
-              {% if isOwner %}
+              {% if hasServerAccess(server, 'manager') %}
                 <a
                   href="{{ path('server_settings', { slug: server.slug }) }}"
                   class="btn btn-lg btn-info"

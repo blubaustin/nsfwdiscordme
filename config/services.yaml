@@ -80,6 +80,9 @@ services:
         arguments:
             - '@session'
 
+    App\Security\ServerAccessInterface:
+        class: App\Security\ServerAccess
+
     twig.extension.date:
         class: Twig_Extensions_Extension_Date
         arguments: ["@translator"]

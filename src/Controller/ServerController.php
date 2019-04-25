@@ -8,8 +8,12 @@ use App\Entity\ServerJoinEvent;
 use App\Entity\Media;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
+use App\Entity\ServerTeamMember;
 use App\Entity\ServerViewEvent;
+use App\Entity\User;
 use App\Event\ViewEvent;
+use App\Form\Model\ServerTeamMemberModel;
+use App\Form\Type\ServerTeamMemberType;
 use App\Http\Request;
 use App\Form\Type\ServerType;
 use App\Media\Adapter\Exception\FileExistsException;
@@ -20,6 +24,7 @@ use App\Media\WebHandlerInterface;
 use DateTime;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -68,7 +73,6 @@ class ServerController extends Controller
 
         return $this->render('server/index.html.twig', [
             'server'      => $server,
-            'isOwner'     => $this->canManageServer($server),
             'isFollowing' => $isFollowing
         ]);
     }
@@ -139,7 +143,7 @@ class ServerController extends Controller
     public function upgradeAction($slug)
     {
         $server = $this->fetchServerOrThrow($slug);
-        if (!$this->canManageServer($server, 'settings')) {
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -159,7 +163,7 @@ class ServerController extends Controller
     public function statsAction($slug)
     {
         $server = $this->fetchServerOrThrow($slug);
-        if (!$this->canManageServer($server, 'stats')) {
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -200,6 +204,101 @@ class ServerController extends Controller
     }
 
     /**
+     * @Route("/server/team/{slug}", name="team")
+     *
+     * @param string  $slug
+     *
+     * @param Request $request
+     *
+     * @return Response
+     * @throws GuzzleException
+     */
+    public function teamAction($slug, Request $request)
+    {
+        $server = $this->fetchServerOrThrow($slug);
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $model = new ServerTeamMemberModel();
+        $form  = $this->createForm(ServerTeamMemberType::class, $model);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $discordID     = null;
+            $username      = '';
+            $discriminator = 0;
+            $avatarHash    = '';
+            $modelUsername = $model->getUsername();
+
+            if (is_numeric($modelUsername)) {
+                try {
+                    $user = $this->discord->fetchUser($modelUsername);
+                    if (!$user) {
+                        throw new Exception();
+                    }
+                    $discordID     = $user['id'];
+                    $username      = $user['username'];
+                    $avatarHash    = $user['avatar'];
+                    $discriminator = (int)$user['discriminator'];
+                } catch (Exception $e) {
+                    $form
+                        ->get('username')
+                        ->addError(new FormError('User not found on Discord.'));
+                }
+            } else {
+                try {
+                    list($username, $discriminator) = $this->discord->extractUsernameAndDiscriminator($modelUsername);
+                } catch (InvalidArgumentException $e) {
+                    $form
+                        ->get('username')
+                        ->addError(new FormError('Invalid format. Must be username#discriminator.'));
+                }
+            }
+
+            if ($username && $discriminator) {
+                $user = $this->getUser();
+                $teamMemberRepo = $this->em->getRepository(ServerTeamMember::class);
+                if ($username === $user->getDiscordUsername() && $discriminator == $user->getDiscordDiscriminator()) {
+                    $this->addFlash('danger', 'You cannot add yourself.');
+                } else if ($teamMemberRepo->findByDiscordUsernameAndDiscriminator($username, $discriminator)) {
+                    $this->addFlash('danger', 'User is already a member of the team.');
+                } else {
+                    $teamMember = (new ServerTeamMember())
+                        ->setServer($server)
+                        ->setRole($model->getRole())
+                        ->setDiscordAvatar($avatarHash)
+                        ->setDiscordUsername($username)
+                        ->setDiscordDiscriminator($discriminator);
+                    if ($discordID) {
+                        $teamMember->setDiscordID($discordID);
+                    }
+                    $user = $this->em->getRepository(User::class)
+                        ->findByDiscordUsernameAndDiscriminator($username, $discriminator);
+                    if ($user) {
+                        $teamMember->setUser($user);
+                    }
+
+                    $this->em->persist($teamMember);
+                    $this->em->flush();
+                    $this->addFlash('success', 'The user has been added to the server team');
+
+                    return new RedirectResponse(
+                        $this->generateUrl('server_team', ['slug' => $slug])
+                    );
+                }
+            }
+        }
+
+        $teamMembers = $this->em->getRepository(ServerTeamMember::class)->findByServer($server);
+
+        return $this->render('server/team.html.twig', [
+            'server'      => $server,
+            'form'        => $form->createView(),
+            'teamMembers' => $teamMembers
+        ]);
+    }
+
+    /**
      * @Route("/server/settings/{slug}", name="settings")
      *
      * @param string  $slug
@@ -212,7 +311,7 @@ class ServerController extends Controller
     public function settingsAction($slug, Request $request)
     {
         $server = $this->fetchServerOrThrow($slug);
-        if (!$this->canManageServer($server, 'settings')) {
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -274,6 +373,15 @@ class ServerController extends Controller
 
             if ($this->processForm($form, false)) {
                 $this->em->persist($server);
+                $this->em->flush();
+
+                $teamMember = (new ServerTeamMember())
+                    ->setUser($user)
+                    ->setServer($server)
+                    ->setRole(ServerTeamMember::ROLE_OWNER)
+                    ->setDiscordUsername($user->getDiscordUsername())
+                    ->setDiscordDiscriminator($user->getDiscordDiscriminator());
+                $this->em->persist($teamMember);
                 $this->em->flush();
                 $this->addFlash('success', 'The server has been added.');
 

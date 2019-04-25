@@ -7,7 +7,7 @@ profile:
     resource: ../../src/Controller/ProfileController.php
     type: annotation
 discord:
-    resource: ../../src/Controller/DiscordOAuthController.php
+    resource: ../../src/Controller/DiscordController.php
     type: annotation
 search:
     resource: ../../src/Controller/SearchController.php

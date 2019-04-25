@@ -39,4 +39,18 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['discordID' => $discordID]);
     }
+
+    /**
+     * @param string $discordUsername
+     * @param int $discordDiscriminator
+     *
+     * @return object|User
+     */
+    public function findByDiscordUsernameAndDiscriminator($discordUsername, $discordDiscriminator)
+    {
+        return $this->findOneBy([
+            'discordUsername' => $discordUsername,
+            'discordDiscriminator' => $discordDiscriminator
+        ]);
+    }
 }
