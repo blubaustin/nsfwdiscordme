@@ -121,12 +121,20 @@ class ProfilePage
     }).done((resp) => {
       if (resp.message && resp.message === 'ok') {
         this.$activeCard.find('.server-bump-points:first').text(resp.bumpPoints);
+        this.$activeCard.find('.server-bump-user:first').text(resp.bumpUser);
+        this.$activeCard.find('.server-bump-date:first').text('Just now');
+
+        this.$modal.modal('hide');
+        this.$recaptcha.hide();
+
+        this.$activeCard.addClass('card-server-admin-flash-success');
+        setTimeout(() => {
+          this.$activeCard.removeClass('card-server-admin-flash-success');
+        }, 2000);
+        this.$activeCard.addClass('card-server-flash-success');
       } else {
         console.error(resp);
       }
-
-      this.$modal.modal('hide');
-      this.$recaptcha.hide();
     });
   };
 }

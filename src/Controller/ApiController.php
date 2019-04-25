@@ -154,9 +154,10 @@ class ApiController extends Controller
             ], 403);
         }
 
+        $user       = $this->getUser();
         $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
         $bumpPeriodVote = (new BumpPeriodVote())
-            ->setUser($this->getUser())
+            ->setUser($user)
             ->setBumpPeriod($bumpPeriod)
             ->setServer($server);
         $server->incrementBumpPoints();
@@ -167,7 +168,9 @@ class ApiController extends Controller
 
         return new JsonResponse([
             'message'    => 'ok',
-            'bumpPoints' => $server->getBumpPoints()
+            'bumpPoints' => $server->getBumpPoints(),
+            'bumpUser'   => $user->getDiscordUsername() . '#' . $user->getDiscordDiscriminator(),
+            'bumpDate'   => $bumpPeriodVote->getDateCreated()->format('Y-m-d H:i:s')
         ]);
     }
 

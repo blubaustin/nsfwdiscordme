@@ -16,24 +16,28 @@
         <li>
           <span>Bump Points</span>
           <i class="server-bump-points">
-          {{ server.bumpPoints }}
+            {{ server.bumpPoints }}
           </i>
         </li>
         <li>
           <span>Bumped Last</span>
-          {% if server.lastBump %}
-            {{ server.lastBump.dateCreated|time_diff }}
-          {% else %}
-            Never
-          {% endif %}
+          <i class="server-bump-date">
+            {% if server.lastBump %}
+              {{ server.lastBump.dateCreated|time_diff }}
+            {% else %}
+              Never
+            {% endif %}
+          </i>
         </li>
         <li>
           <span>Bumped By</span>
-          {% if server.lastBump %}
-            {{ server.lastBump.user|displayUsername }}
-          {% else %}
-            N/A
-          {% endif %}
+          <i class="server-bump-user">
+            {% if server.lastBump %}
+              {{ server.lastBump.user|displayUsername }}
+            {% else %}
+              N/A
+            {% endif %}
+          </i>
         </li>
       </ul>
     </div>
