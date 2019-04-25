@@ -383,15 +383,13 @@ class ServerController extends Controller
             $server->setUser($user);
 
             if ($this->processForm($form, false)) {
-                $this->em->persist($server);
-                $this->em->flush();
-
                 $teamMember = (new ServerTeamMember())
                     ->setUser($user)
                     ->setServer($server)
                     ->setRole(ServerTeamMember::ROLE_OWNER)
                     ->setDiscordUsername($user->getDiscordUsername())
                     ->setDiscordDiscriminator($user->getDiscordDiscriminator());
+                $this->em->persist($server);
                 $this->em->persist($teamMember);
                 $this->em->flush();
                 $this->addFlash('success', 'The server has been added.');

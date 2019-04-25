@@ -5,6 +5,7 @@ use App\Component\NonceComponentInterface;
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
+use App\Entity\ServerTeamMember;
 use App\Event\BumpEvent;
 use App\Event\JoinEvent;
 use App\Event\ServerActionEvent;
@@ -310,16 +311,24 @@ class ApiController extends Controller
 
         $iconMedia   = $server->getIconMedia();
         $bannerMedia = $server->getBannerMedia();
+        $teamMembers = $this->em->getRepository(ServerTeamMember::class)->findByServer($server);
+        foreach($teamMembers as $teamMember) {
+            $this->em->remove($teamMember);
+        }
+
         $this->em->remove($server);
         $this->em->flush();
 
         try {
             if ($iconMedia) {
                 $webHandler->getAdapter()->remove($iconMedia->getPath());
+                $this->em->remove($iconMedia);
             }
             if ($bannerMedia) {
                 $webHandler->getAdapter()->remove($bannerMedia->getPath());
+                $this->em->remove($bannerMedia);
             }
+            $this->em->flush();
         } catch (Exception $e) {
             $this->logger->error($e->getMessage(), ['serverID' => $serverID]);
         }
