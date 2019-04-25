@@ -2,6 +2,7 @@
 namespace App\Discord;
 
 use App\Entity\AccessToken;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareTrait;
@@ -109,6 +110,43 @@ class Discord
     public function fetchGuildChannels($serverID)
     {
         return $this->doRequest('GET', "guilds/${serverID}/channels", null, true);
+    }
+
+    /**
+     * @param string $serverID
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function fetchGuildMembers($serverID)
+    {
+        return $this->doRequest('GET', "guilds/${serverID}/members", null, true);
+    }
+
+    /**
+     * @param string $serverID
+     *
+     * @return int
+     * @throws Exception
+     * @throws GuzzleException
+     */
+    public function fetchOnlineCount($serverID)
+    {
+        try {
+            $widget = $this->fetchWidget($serverID);
+            if (is_array($widget) && isset($widget['members'])) {
+                return count($widget['members']);
+            }
+        } catch (Exception $e) {}
+
+        try {
+            $members = $this->fetchGuildMembers($serverID);
+            if (is_array($members)) {
+                return count($members);
+            }
+        } catch (Exception $e) {}
+
+        throw new Exception("Unable to fetch online count for ${serverID}.");
     }
 
     /**

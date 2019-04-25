@@ -57,12 +57,9 @@ class ServerOnlineCommand extends Command
         $serverRepository = $this->em->getRepository(Server::class);
         foreach ($serverRepository->findAll() as $server) {
             try {
-                $widget = $this->discord->fetchWidget($server->getDiscordID());
-                if ($widget['members']) {
-                    $count = count($widget['members']);
-                    $server->setMembersOnline($count);
-                    $output->writeln(sprintf('Updating %s to %d members online.', $server->getDiscordID(), $count));
-                }
+                $online = $this->discord->fetchOnlineCount($server->getDiscordID());
+                $server->setMembersOnline($online);
+                $output->writeln(sprintf('Updating %s to %d members online.', $server->getDiscordID(), $online));
             } catch (Exception $e) {
                 $output->writeln('Error: ' . $e->getMessage());
             }
