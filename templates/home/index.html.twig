@@ -53,6 +53,15 @@
             </span>
           </a>
           <a
+            href="{{ path('home_recently_added') }}"
+            class="btn btn-primary{% if sort == 'recently-added' %} btn-info{% endif %}"
+          >
+            {{ icon('plus-circle') }}
+            <span class="d-none d-lg-inline">
+              Recently Added
+            </span>
+          </a>
+          <a
             href="{{ path('home_random') }}"
             class="btn btn-primary{% if sort == 'random' %} btn-info{% endif %}"
           >

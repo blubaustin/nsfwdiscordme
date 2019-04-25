@@ -1,6 +1,14 @@
 @import "vars";
 
 .home-page-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  .btn {
+    flex: 1;
+  }
+
   .btn-primary {
     background-color: #2a2d3a;
   }
