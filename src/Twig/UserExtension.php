@@ -3,6 +3,7 @@ namespace App\Twig;
 
 use App\Entity\User;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 use Twig\TwigFilter;
 
 /**
@@ -24,6 +25,16 @@ class UserExtension extends AbstractExtension
     }
 
     /**
+     * @return TwigFunction[]
+     */
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('avatarHash', [$this, 'avatarHash'])
+        ];
+    }
+
+    /**
      * @param User   $user
      * @param string $ext
      *
@@ -34,10 +45,22 @@ class UserExtension extends AbstractExtension
         $avatarHash = $user->getDiscordAvatar();
         $discordID  = $user->getDiscordID();
         if ($avatarHash && $discordID) {
-            return sprintf('%s/avatars/%d/%s.%s', self::DISCORD_CDN_URL, $discordID, $avatarHash, $ext);
+            return $this->avatarHash($discordID, $avatarHash, $ext);
         }
 
         return '';
+    }
+
+    /**
+     * @param string $discordID
+     * @param string $avatarHash
+     * @param string $ext
+     *
+     * @return string
+     */
+    public function avatarHash($discordID, $avatarHash, $ext = 'png')
+    {
+        return sprintf('%s/avatars/%d/%s.%s', self::DISCORD_CDN_URL, $discordID, $avatarHash, $ext);
     }
 
     /**

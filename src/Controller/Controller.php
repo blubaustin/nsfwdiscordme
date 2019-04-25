@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Discord\Discord;
 use App\Entity\Server;
 use App\Entity\User;
+use App\Security\ServerAccessInterface;
 use App\Storage\Snowflake\SnowflakeGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -18,6 +19,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class Controller extends AbstractController
 {
     const LIMIT = 20;
+
+    const SERVER_ROLE_OWNER   = 'owner';
+    const SERVER_ROLE_MANAGER = 'manager';
+    const SERVER_ROLE_EDITOR  = 'editor';
+    const SERVER_ROLE_NONE    = 'none';
 
     /**
      * @var EntityManagerInterface
@@ -50,6 +56,11 @@ class Controller extends AbstractController
     protected $discord;
 
     /**
+     * @var ServerAccessInterface
+     */
+    protected $serverAccess;
+
+    /**
      * Constructor
      *
      * @param Discord                     $discord
@@ -58,6 +69,7 @@ class Controller extends AbstractController
      * @param EventDispatcherInterface    $eventDispatcher
      * @param SnowflakeGeneratorInterface $snowflakeGenerator
      * @param PaginatorInterface          $paginator
+     * @param ServerAccessInterface       $serverAccess
      */
     public function __construct(
         Discord $discord,
@@ -65,7 +77,8 @@ class Controller extends AbstractController
         EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,
         SnowflakeGeneratorInterface $snowflakeGenerator,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        ServerAccessInterface $serverAccess
     )
     {
         $this->discord            = $discord;
@@ -74,6 +87,7 @@ class Controller extends AbstractController
         $this->eventDispatcher    = $eventDispatcher;
         $this->snowflakeGenerator = $snowflakeGenerator;
         $this->paginator          = $paginator;
+        $this->serverAccess       = $serverAccess;
     }
 
     /**
@@ -101,17 +115,13 @@ class Controller extends AbstractController
 
     /**
      * @param Server $server
-     * @param string $action
+     * @param string $role
+     * @param User   $user
      *
      * @return bool
      */
-    public function canManageServer(Server $server, $action = 'any')
+    public function hasServerAccess(Server $server, $role = self::SERVER_ROLE_NONE, User $user = null)
     {
-        $user = $this->getUser();
-        if (!$user) {
-            return false;
-        }
-
-        return $server->getUser()->getId() === $user->getId();
+        return $this->serverAccess->can($server, $role, $user);
     }
 }

@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\AccessToken;
 use App\Entity\BannedUser;
+use App\Entity\ServerTeamMember;
 use App\Entity\User;
 use FOS\UserBundle\Model\UserManagerInterface;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -129,6 +130,12 @@ class DiscordController extends Controller
             $userManager->updateUser($user);
             $accessToken = new AccessToken();
         } else {
+            if (!$user->isEnabled()) {
+                $this->addFlash('danger', 'Your account has been disabled.');
+
+                return $this->getRedirectResponse();
+            }
+
             $accessToken = $user->getDiscordAccessToken();
             if (!$accessToken) {
                 $accessToken = new AccessToken();
@@ -146,6 +153,23 @@ class DiscordController extends Controller
             ->setType($values['token_type']);
         $em->persist($accessToken);
         $em->flush();
+
+        $teamMember = $this->em->getRepository(ServerTeamMember::class)->findByDiscordUsernameAndDiscriminator(
+            $user->getDiscordUsername(),
+            $user->getDiscordDiscriminator()
+        );
+        if ($teamMember) {
+            if (!$teamMember->getDiscordID()) {
+                $teamMember->setDiscordID($user->getDiscordID());
+            }
+            if (!$teamMember->getDiscordAvatar()) {
+                $teamMember->setDiscordAvatar($user->getDiscordAvatar());
+            }
+            if (!$teamMember->getUser()) {
+                $teamMember->setUser($user);
+            }
+            $this->em->flush();
+        }
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $tokenStorage->setToken($token);

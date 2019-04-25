@@ -138,7 +138,7 @@ class ApiController extends Controller
         if (!$server) {
             throw $this->createNotFoundException();
         }
-        if (!$this->canManageServer($server, 'bump')) {
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -186,7 +186,7 @@ class ApiController extends Controller
         if (!$server) {
             throw $this->createNotFoundException();
         }
-        if (!$this->canManageServer($server, 'bump')) {
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -296,7 +296,7 @@ class ApiController extends Controller
     public function deleteServerAction($serverID, WebHandlerInterface $webHandler)
     {
         $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
-        if (!$server || !$this->canManageServer($server, 'delete')) {
+        if (!$server || !$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
             throw $this->createAccessDeniedException();
         }
 
@@ -332,7 +332,7 @@ class ApiController extends Controller
     public function statsJoinsAction($serverID)
     {
         $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
-        if (!$server || !$this->canManageServer($server, 'stats')) {
+        if (!$server || !$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
             throw $this->createAccessDeniedException();
         }
 

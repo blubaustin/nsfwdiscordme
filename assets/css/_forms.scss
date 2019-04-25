@@ -48,16 +48,6 @@
   font-size: 1rem;
 }
 
-.btn {
-  .icon {
-    margin-right: 0.25rem;
-
-    @include media-xs {
-      margin-right: 0;
-    }
-  }
-}
-
 .file-caption-icon,
 .file-caption .file-caption-name {
   padding-top: 5px;

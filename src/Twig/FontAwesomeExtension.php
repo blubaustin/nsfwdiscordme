@@ -20,6 +20,7 @@ class FontAwesomeExtension extends AbstractExtension
         'app-upgrade'         => 'gem far',
         'app-stats'           => 'chart-bar',
         'app-settings'        => 'cog',
+        'app-team'            => 'users',
         'app-trending'        => 'chart-line',
         'app-online'          => 'circle fa server-icon-online',
         'app-most-online'     => 'user',

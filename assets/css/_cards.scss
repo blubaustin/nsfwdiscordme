@@ -16,6 +16,10 @@
   hr {
     border-color: #ababab;
   }
+
+  table {
+    color: #FFF;
+  }
 }
 
 .card-header {
@@ -316,7 +320,7 @@
   span {
     cursor: pointer;
     color: #ffffffc7;
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 4px $gutter-size 0 $gutter-size;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
     transition: padding-bottom 0.15s, padding-top 0.15s;
@@ -366,12 +370,6 @@
   border-radius: 50%;
   height: 50px;
   margin-right: 1rem;
-}
-
-.card-server-stats-bump-log {
-  table {
-    color: #FFF;
-  }
 }
 
 .card-server-stats-list {

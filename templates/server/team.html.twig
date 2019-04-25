@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+  <div id="page-server-team" class="row">
+    <div class="col col-md-8 offset-md-2 col-sm-12">
+      <div class="card card-primary">
+        <div class="card-header">
+          Add Team Member
+        </div>
+        <div class="card-body">
+          {{ form_start(form) }}
+          <div class="row">
+            <div class="col col-sm-6">
+              {{ form_row(form.username) }}
+            </div>
+            <div class="col col-sm-6">
+              {{ form_row(form.role) }}
+            </div>
+          </div>
+          <div class="row gutter-bottom">
+            <div class="col form-help">
+              Editor: Can bump the server and view stats.<br />
+              Manager: Everything an editor can do, but can also change the server settings and manage team members.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success btn-block">
+            Add Team Member
+          </button>
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col col-md-8 offset-md-2 col-sm-12">
+      <div class="card card-primary">
+        <div class="card-header">
+          Team Members
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th></th>
+                <th>Access</th>
+                <th>Last Action</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for teamMember in teamMembers %}
+              <tr>
+                <td>
+                  {% if teamMember.user %}
+                    <img src="{{ teamMember.user|avatar }}" alt="Avatar" class="server-team-member-avatar" />
+                  {% elseif teamMember.discordID and teamMember.discordAvatar %}
+                    <img src="{{ avatarHash(teamMember.discordID, teamMember.discordAvatar) }}" alt="Avatar" class="server-team-member-avatar" />
+                  {% else %}
+                    <img src="{{ asset('images/default-avatar.png') }}" alt="Avatar" class="server-team-member-avatar" />
+                  {% endif %}
+                </td>
+                <td>
+                  {{ teamMember.discordUsername }}#{{ teamMember.discordDiscriminator }}
+                </td>
+                <td>
+                  {{ teamMember.role|ucwords }}
+                </td>
+                <td>
+                  {% if teamMember.dateLastAction %}
+                    {{ teamMember.dateLastAction|date('Y-m-d H:i:s') }}
+                  {% else %}
+                    Never
+                  {% endif %}
+                </td>
+                <td class="text-right">
+                  {% if teamMember.user and hasServerAccess(server, 'owner', teamMember.user) %}
+                    <button type="button" class="btn btn-info" title="Transfer Ownership" data-toggle="tooltip">
+                      {{ icon('exchange-alt') }}
+                    </button>
+                  {% else %}
+                    <button type="button" class="btn btn-info" title="Remove Team Member" data-toggle="tooltip">
+                      {{ icon('app-delete') }}
+                    </button>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
