@@ -92,10 +92,6 @@ class ServerAccess implements ServerAccessInterface
             return false;
         }
 
-        if ($server->getUser()->getId() === $user->getId()) {
-            return true;
-        }
-
         $teamMember = $this->repo->findByServerAndUser($server, $user);
         if (!$teamMember) {
             return false;
@@ -109,6 +105,6 @@ class ServerAccess implements ServerAccessInterface
      */
     public function containsRole($isRole, $canRole)
     {
-        return in_array($canRole, self::ROLES[$isRole]);
+        return in_array($isRole, self::ROLES[$canRole]);
     }
 }
