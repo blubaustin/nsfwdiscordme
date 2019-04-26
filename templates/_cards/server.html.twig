@@ -1,17 +1,5 @@
 <div class="card card-server card-server-status-{{ server.premiumStatusString }}">
-  {% if server.premiumStatusString == 'gold' %}
-    <div class="card-server-tag-wrap">
-      <div class="card-server-tag card-server-tag-gold">
-        {{ icon('app-gold') }}
-      </div>
-    </div>
-  {% elseif server.premiumStatusString == 'platinum' %}
-    <div class="card-server-tag-wrap">
-      <div class="card-server-tag card-server-tag-platinum">
-        {{ icon('app-platinum') }}
-      </div>
-    </div>
-  {% endif %}
+  {% include "_cards/blocks/premium-tag.html.twig" %}
   <a href="{{ path('server_index', { slug: server.slug }) }}" class="card-server-link">
     <div class="card-server-info-wrap">
       <div class="card-server-info">

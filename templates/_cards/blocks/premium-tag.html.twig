@@ -1,0 +1,7 @@
+{% if server.premiumStatusString != 'standard' %}
+  <div class="card-premium-tag-wrap">
+    <div class="card-premium-tag card-premium-tag-{{ server.premiumStatusString }}">
+      {{ icon('app-' ~ server.premiumStatusString) }}
+    </div>
+  </div>
+{% endif %}

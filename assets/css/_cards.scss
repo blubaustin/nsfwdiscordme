@@ -213,44 +213,6 @@
   transition: opacity 0.5s;
 }
 
-.card-server-tag-wrap {
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  overflow: hidden;
-  width: 100px;
-  height: 100px;
-  z-index: 7;
-}
-
-.card-server-tag {
-  position: absolute;
-  top: -42px;
-  left: -20px;
-  transform: rotate(45deg);
-  box-shadow: 0 4px 7px rgba(0,0,0,.4);
-  line-height: 0;
-  padding: 40px 5px 40px 30px;
-
-  .icon {
-    transform: rotate(-45deg);
-  }
-}
-
-.card-server-tag-gold {
-  background: $color-status-gold;
-  color: #F9EB7F;
-  font-size: 30px;
-  text-shadow: 0 1px 1px #fff;
-}
-
-.card-server-tag-platinum {
-  background: $color-status-platinum;
-  color: #000;
-  font-size: 30px;
-  text-shadow: 0 1px 1px #fff;
-}
-
 /**
  * Master server
  */
@@ -358,8 +320,12 @@
 
   h2 {
     color: #FFF;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 0;
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .card-server-admin-header-meta {
@@ -587,4 +553,45 @@
       }
     }
   }
+}
+
+/**
+ * Premium tags
+ */
+.card-premium-tag-wrap {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  z-index: 7;
+}
+
+.card-premium-tag {
+  position: absolute;
+  top: -42px;
+  left: -20px;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 7px rgba(0,0,0,.4);
+  line-height: 0;
+  padding: 40px 5px 40px 30px;
+
+  .icon {
+    transform: rotate(-45deg);
+  }
+}
+
+.card-premium-tag-gold {
+  background: $color-status-gold;
+  color: #F9EB7F;
+  font-size: 30px;
+  text-shadow: 0 1px 1px #fff;
+}
+
+.card-premium-tag-platinum {
+  background: $color-status-platinum;
+  color: #000;
+  font-size: 30px;
+  text-shadow: 0 1px 1px #fff;
 }
