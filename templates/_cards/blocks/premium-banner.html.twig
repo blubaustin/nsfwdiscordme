@@ -1,0 +1,8 @@
+<div
+  class="server-premium-banner server-premium-banner-{{ server.premiumStatusString }}"
+  title="{{ server.premiumStatusString|ucwords }}"
+  data-toggle="tooltip"
+>
+  {{ icon('app-' ~ server.premiumStatusString) }}
+  {{ server.premiumStatusString|ucwords }}
+</div>

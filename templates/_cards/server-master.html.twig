@@ -1,4 +1,5 @@
-<div class="card card-server-master card-server-status-master">
+<div class="card card-server-master card-server-border-premium-master">
+  {% include "_cards/blocks/premium-banner.html.twig" %}
   <a href="{{ path('server_index', { slug: server.slug }) }}" class="card-server-link">
     <div class="card-server-master-info">
       <img class="card-server-master-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
@@ -21,6 +22,8 @@
         {{ server.summary }}
       </div>
     </div>
-    <img class="card-server-master-bg" src="{{ server.bannerMedia|webPath }}" alt="Background" />
+    <div class="card-server-bg-wrap">
+      <img class="card-server-master-bg" src="{{ server.bannerMedia|webPath }}" alt="Background" />
+    </div>
   </a>
 </div>

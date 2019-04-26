@@ -1,4 +1,4 @@
-<div class="card card-server card-server-status-{{ server.premiumStatusString }}">
+<div class="card card-server card-server-border-premium-{{ server.premiumStatusString }}">
   {% include "_cards/blocks/premium-tag.html.twig" %}
   <a href="{{ path('server_index', { slug: server.slug }) }}" class="card-server-link">
     <div class="card-server-info-wrap">
