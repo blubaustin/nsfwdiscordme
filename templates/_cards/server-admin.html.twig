@@ -1,7 +1,9 @@
 <div class="card card-primary card-server-admin" data-server-id="{{ server.discordID }}">
   <div class="card-header card-server-admin-header">
     <div class="card-server-admin-header-meta">
-      <img class="card-server-admin-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
+      <a href="{{ path('server_index', { slug: server.slug }) }}">
+        <img class="card-server-admin-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
+      </a>
       <h2>
         <a href="{{ path('server_index', { slug: server.slug }) }}">
           {{ server.name }}
