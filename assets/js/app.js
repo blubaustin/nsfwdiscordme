@@ -15,4 +15,15 @@ for(const selector in pages) {
 
 $(() => {
   $('[data-toggle="tooltip"]').tooltip();
+
+  $('.btn-anchor[data-href]').on('click', (e) => {
+    const $btn = $(e.target);
+    const href = $btn.data('href');
+
+    if ($btn.data('target') === '_blank') {
+      window.open(href);
+    } else {
+      document.location = href;
+    }
+  });
 });

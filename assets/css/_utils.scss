@@ -16,6 +16,10 @@
   padding-bottom: $gutter-size-lg;
 }
 
+.gutter-margin-bottom {
+  margin-bottom: $gutter-size !important;
+}
+
 .gutter-bottom-sm {
   padding-bottom: $gutter-size-sm;
 }

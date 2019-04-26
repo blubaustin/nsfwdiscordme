@@ -1,5 +1,5 @@
 {{ form_start(form, { attr: { 'id': 'server-add-form' }}) }}
-  <div class="card card-primary">
+  <div id="form-step-1" class="card card-primary">
     <div class="card-header">
       Add Discord Server
     </div>
@@ -10,58 +10,63 @@
     </div>
   </div>
 
-  <div class="card card-primary">
+  <div id="form-step-2" class="card card-primary card-disabled">
     <div class="card-header">
       Invites
     </div>
     <div class="card-body">
       <p>
-        In order to create invites for people to join the server, the server widget with <b>instant invite</b>
-        needs to be enabled <b>or</b> our bot needs to be added to the server.
+        In order to create invites to join your server, the server widget with <b>instant invite</b>
+        needs to be enabled <b>or</b> our bot needs to be invited to your server welcome channel.
       </p>
-      <p>
-        To use instant invites, open your <b>"Server Settings"</b> on <b>Discord</b> and go to
-        the <b>Widget Tab (Does not show up on mobile).</b> Make sure the checkbox for <b>"Enable Widget"</b> is
-        checked and an <b>"Instant Invite Channel"</b> is selected.
-      </p>
-      <div class="gutter-bottom">
-        <button id="server-verify-widget-btn" class="btn btn-success" type="button" style="width: 200px;">
-          Verify Widget Settings
-        </button>
+
+      <div id="server-verify-widget-container">
+        <p>
+          To use instant invites, open your <b>"Server Settings"</b> on <b>Discord</b> and go to
+          the <b>Widget Tab (Does not show up on mobile).</b> Make sure the checkbox for <b>"Enable Widget"</b> is
+          checked and an <b>"Instant Invite Channel"</b> is selected.
+        </p>
+        <div class="gutter-bottom">
+          <button id="server-verify-widget-btn" class="btn btn-success" type="button" style="width: 200px;">
+            Use Widget Invites
+          </button>
+        </div>
+        <p id="server-verify-widget-danger" class="bg-danger gutter gutter-margin-bottom hidden">
+          The server widget is <b>not</b> configured correctly. Enable widget invites now, and then click
+          the button again, or invite our bot to your welcome channel.
+        </p>
       </div>
-      <p id="server-verify-widget-success" class="hidden">
-        The server widget is configured correctly! You do not need to add our bot to your welcome channel.
-      </p>
-      <p id="server-verify-widget-danger" class="bg-danger gutter hidden">
-        The server widget is <b>not</b> configured correctly. Either enable the widget with instant invites
-        or add our bot to your welcome channel.
-      </p>
-      <hr />
-      <p>
-        Otherwise add our bot to your welcome channel, and the bot will create invites for people to join.
-      </p>
-      <div class="gutter-bottom">
-        <a
-          href="https://discordapp.com/api/oauth2/authorize?client_id={{ discordClientID }}&scope=bot&permissions=0"
-          target="_blank"
-          id="server-add-bot-btn"
-          class="btn btn-success"
-          style="width: 200px;"
-        >
-          Add Our Discord Bot
-        </a>
-      </div>
-      {{ form_row(form.botInviteChannelID) }}
-      <div class="text-right">
-        <button id="server-refresh-btn" type="button" class="btn btn-link">
-          {{ icon('sync') }}
-          Refresh
-        </button>
+
+      <div id="server-verify-bot-container">
+        <p>
+          To have our bot invited to your welcome channel the click "Add Our Discord Bot" button, and select
+          the welcome channel in the Discord window that opens. After closing the window click "Refresh" and
+          select the channel.
+        </p>
+        <div class="gutter-bottom">
+          <button
+            data-href="https://discordapp.com/api/oauth2/authorize?client_id={{ discordClientID }}&scope=bot&permissions=0"
+            data-target="_blank"
+            id="server-add-bot-btn"
+            class="btn btn-success btn-anchor"
+            style="width: 200px;"
+            type="button"
+          >
+            Invite Our Bot
+          </button>
+        </div>
+        {{ form_row(form.botInviteChannelID) }}
+        <div class="text-right">
+          <button id="server-refresh-btn" type="button" class="btn btn-link">
+            {{ icon('sync') }}
+            Refresh
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="card card-primary">
+  <div id="form-step-3" class="card card-primary card-disabled">
     <div class="card-header">
       Details
     </div>
@@ -75,7 +80,7 @@
     </div>
   </div>
 
-  <div class="card card-primary">
+  <div id="form-step-4" class="card card-primary card-disabled">
     <div class="card-header">
       Human Verification
     </div>
@@ -86,17 +91,17 @@
     </div>
   </div>
 
-  <div class="card card-primary">
+  <div id="form-step-5" class="card card-primary card-disabled">
     <div class="card-header">
       Media
     </div>
-    <div class="card-body">
+    <div class="card-body form-group-upload-body card-disabled">
       {{ form_row(form.bannerFile) }}
       {{ form_row(form.bannerCropData) }}
     </div>
   </div>
 
-  <div class="card card-primary">
+  <div id="form-step-6" class="card card-primary card-disabled">
     <div class="card-body">
       <button class="btn btn-info btn-lg btn-block" type="submit">
         {% if isEditing %}

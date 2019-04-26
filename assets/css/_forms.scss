@@ -22,6 +22,12 @@
   font-size: 0.9rem;
 }
 
+.form-group {
+  label.required::after {
+    content: " *";
+  }
+}
+
 .form-section {
   margin-bottom: $gutter-size-lg;
 }
@@ -43,6 +49,10 @@
   }
 }
 
+.custom-file-input {
+  position: absolute;
+}
+
 .invalid-feedback {
   color: #f14d4d;
   font-size: 1rem;
@@ -50,6 +60,12 @@
 
 .file-drop-zone.clickable:hover {
   border: 1px dashed #999;
+}
+
+.form-group-upload-body {
+  & > .form-group {
+    margin-bottom: 0;
+  }
 }
 
 /**
@@ -94,4 +110,15 @@
 .krajee-default .file-footer-caption {
   color: #FFF;
   margin-bottom: 0;
+}
+
+.krajee-default.file-preview-frame .kv-file-content {
+  height: auto;
+  max-height: 130px;
+  overflow: hidden;
+}
+
+.file-drop-zone {
+  display: flex;
+  justify-content: center;
 }

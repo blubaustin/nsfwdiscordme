@@ -17,6 +17,7 @@ class ServerAddPage
     this.$errorMessage  = $('.server-join-error-message');
     this.$deleteModal   = $('#modal-server-delete');
     this.$deleteButton  = $('#server-delete-btn');
+    this.$refreshButton = $('#server-refresh-btn');
 
     this.$errorModal.on('hidden.bs.modal', this.handleErrorModalHidden);
     this.$deleteButton.on('click', this.handleDeleteClick);
@@ -27,6 +28,12 @@ class ServerAddPage
     this.setupFormSlug();
     this.setupFormBot();
     this.setupFormUploads();
+
+    this.$step2 = this.disableFormInputs($('#form-step-2'));
+    this.$step3 = this.disableFormInputs($('#form-step-3'));
+    this.$step4 = this.disableFormInputs($('#form-step-4'));
+    this.$step5 = this.disableFormInputs($('#form-step-5'));
+    this.$step6 = this.disableFormInputs($('#form-step-6'));
   };
 
   /**
@@ -36,12 +43,14 @@ class ServerAddPage
     const $serverID   = $('#server_discordID');
     const $serverName = $('#server_name');
     this.serverID     = $serverID.val();
+
     if (this.serverID !== '0') {
       this.handleRefreshClick();
     }
 
     $serverID.on('input', () => {
       this.serverID = $serverID.val();
+
       if (Discord.isSnowflake(this.serverID)) {
         Discord.fetchWidget(this.serverID)
           .then(({ name }) => {
@@ -49,6 +58,8 @@ class ServerAddPage
               $serverName.val(name);
               $serverName.trigger('input');
             }
+
+            this.enableFormInputs(this.$step2);
             this.handleRefreshClick();
           })
           .catch(() => {
@@ -118,7 +129,9 @@ class ServerAddPage
     }).appendTo($select);
     $input.replaceWith($select);
 
-    $('#server-refresh-btn').on('click', this.handleRefreshClick);
+    $select.on('change', this.handleInviteChannelChange);
+
+    this.$refreshButton.on('click', this.handleRefreshClick);
 
     if (this.serverID !== '0') {
       this.handleRefreshClick();
@@ -183,23 +196,46 @@ class ServerAddPage
   handleVerifyWidgetClick = () => {
     const { serverID } = this;
 
-    const $danger  = $('#server-verify-widget-danger');
-    const $success = $('#server-verify-widget-success');
+    const $danger = $('#server-verify-widget-danger');
 
     Discord.fetchWidget(serverID)
       .then((widget) => {
         if (widget.instant_invite) {
           $danger.hide();
-          $success.show();
+          this.enableFormInputs(this.$step3);
+          this.enableFormInputs(this.$step4);
+          this.enableFormInputs(this.$step5);
+          this.enableFormInputs(this.$step6);
+
+          $('#server-verify-bot-container').slideUp();
         } else {
           $danger.show();
-          $success.hide();
         }
       })
       .catch(() => {
         $danger.show();
-        $success.hide();
       });
+  };
+
+  /**
+   *
+   */
+  handleInviteChannelChange = () => {
+    const $input = $('#server_botInviteChannelID');
+
+    if ($input.val() === '0') {
+      this.disableFormInputs(this.$step3);
+      this.disableFormInputs(this.$step4);
+      this.disableFormInputs(this.$step5);
+      this.disableFormInputs(this.$step6);
+      $('#server-verify-widget-container').slideDown();
+    } else {
+      this.enableFormInputs(this.$step3);
+      this.enableFormInputs(this.$step4);
+      this.enableFormInputs(this.$step5);
+      this.enableFormInputs(this.$step6);
+      $('#server-verify-widget-container').slideUp();
+    }
   };
 
   /**
@@ -209,6 +245,7 @@ class ServerAddPage
     const { serverID } = this;
 
     const $input = $('#server_botInviteChannelID');
+    this.$refreshButton.find('.icon').addClass('fa-spin');
 
     $.ajax({
       url: router.generate('api_guild_channels', { serverID })
@@ -237,6 +274,8 @@ class ServerAddPage
       } else {
         // @todo
       }
+    }).always(() => {
+      this.$refreshButton.find('.icon').removeClass('fa-spin');
     });
   };
 
@@ -268,6 +307,28 @@ class ServerAddPage
         });
       }
     });
+  };
+
+  /**
+   * @param {jQuery} $container
+   * @returns {jQuery}
+   */
+  disableFormInputs = ($container) => {
+    $container.find('input,button,textarea,select').prop('disabled', true);
+    $container.addClass('card-disabled');
+
+    return $container;
+  };
+
+  /**
+   * @param {jQuery} $container
+   * @returns {jQuery}
+   */
+  enableFormInputs = ($container) => {
+    $container.find('input,button,textarea,select').prop('disabled', false);
+    $container.removeClass('card-disabled');
+
+    return $container;
   };
 }
 

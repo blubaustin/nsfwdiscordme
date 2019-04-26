@@ -1,18 +1,15 @@
 {% extends "bootstrap_4_layout.html.twig" %}
 {% block form_help %}
-  <div class="form-text form-help">
-    {{ form.vars.help|raw }}
-  </div>
+  {% if form.vars.help|default %}
+    <div class="form-text form-help">
+      {{ form.vars.help|raw }}
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block file_widget -%}
   <{{ element|default('div') }}>
   {%- set type = type|default('file') -%}
   {{- block('form_widget_simple') -}}
-  <label for="{{ form.vars.id }}">
-    {%- if attr.placeholder is defined -%}
-      {{- translation_domain is same as(false) ? attr.placeholder : attr.placeholder|trans({}, translation_domain) -}}
-    {%- endif -%}
-  </label>
   </{{ element|default('div') }}>
 {% endblock %}
