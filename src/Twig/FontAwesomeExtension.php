@@ -27,7 +27,10 @@ class FontAwesomeExtension extends AbstractExtension
         'app-random'          => 'random',
         'app-follow'          => 'heart',
         'app-delete'          => 'trash-alt',
-        'app-join'            => 'sign-in-alt'
+        'app-join'            => 'sign-in-alt',
+        'app-gold'            => 'star',
+        'app-platinum'        => 'shield-alt',
+        'app-master'          => 'crown'
     ];
 
     /**
