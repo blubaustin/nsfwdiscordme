@@ -454,6 +454,10 @@
   .btn {
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25);
   }
+
+  .server-premium-banner {
+    top: 8px;
+  }
 }
 
 .card-upgrade-top {
@@ -494,7 +498,7 @@
     box-shadow: 0 0 5px 1px rgba($color, 0.5);
 
     .card-header {
-      background-color: $color;
+      background-color: darken($color, 5%);
     }
 
     .card-upgrade-list {

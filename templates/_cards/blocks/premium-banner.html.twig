@@ -1,8 +1,13 @@
-<div
-  class="server-premium-banner server-premium-banner-{{ server.premiumStatusString }}"
-  title="{{ server.premiumStatusString|ucwords }}"
-  data-toggle="tooltip"
->
-  {{ icon('app-' ~ server.premiumStatusString) }}
-  {{ server.premiumStatusString|ucwords }}
-</div>
+{% if not status|default %}
+  {% set status = server.premiumStatusString %}
+{% endif %}
+{% if status != 'standard' %}
+  <div
+    class="server-premium-banner server-premium-banner-{{ status }}"
+    title="{{ status|ucwords }}"
+    data-toggle="tooltip"
+  >
+    {{ icon('app-' ~ status) }}
+    {{ status|ucwords }}
+  </div>
+{% endif %}
