@@ -114,6 +114,21 @@ class Controller extends AbstractController
     }
 
     /**
+     * @param string $slug
+     *
+     * @return Server
+     */
+    public function fetchServerOrThrow($slug)
+    {
+        $server = $this->em->getRepository(Server::class)->findBySlug($slug);
+        if (!$server || !$server->isEnabled()) {
+            throw $this->createNotFoundException();
+        }
+
+        return $server;
+    }
+
+    /**
      * @param Server $server
      * @param string $role
      * @param User   $user

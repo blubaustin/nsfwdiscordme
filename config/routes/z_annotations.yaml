@@ -12,6 +12,9 @@ discord:
 search:
     resource: ../../src/Controller/SearchController.php
     type: annotation
+upgrade:
+    resource: ../../src/Controller/UpgradeController.php
+    type: annotation
 category:
     resource: ../../src/Controller/CategoryController.php
     type: annotation

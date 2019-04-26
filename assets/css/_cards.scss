@@ -392,3 +392,122 @@
     margin-right: 0.5rem;
   }
 }
+
+/**
+ * Upgrade
+ */
+$color-gold: #A18800;
+$color-platinum: #E7E7E7;
+$color-master: #854c87;
+$upgrade-name-colors-list: gold platinum master;
+$upgrade-colors-list: $color-gold $color-platinum $color-master;
+
+.card-upgrade {
+  .card-header {
+    font-size: 1.5rem;
+
+    .icon {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .card-body {
+    padding: 2px;
+  }
+}
+
+.card-upgrade-top {
+  min-height: 500px;
+}
+
+.card-upgrade-description {
+  padding: $gutter-size;
+}
+
+.card-upgrade-list {
+  margin-bottom: 0;
+  background-color: darken($color-primary, 10%);
+
+  li {
+    padding: 5px $gutter-size;
+
+    &:nth-child(even) {
+      background-color: darken($color-primary, 5%);
+    }
+  }
+}
+
+.card-upgrade-price {
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: $gutter-size;
+  text-align: center;
+}
+
+.card-upgrade-gold {
+  background-color: $color-gold;
+  box-shadow: 0 0 5px 1px rgba($color-gold, 0.5);
+
+  .card-header {
+    background-color: $color-gold;
+  }
+
+  .card-upgrade-list {
+    margin-bottom: 0;
+    background-color: darken($color-gold, 10%);
+
+    li {
+      padding: 5px $gutter-size;
+
+      &:nth-child(even) {
+        background-color: darken($color-gold, 5%);
+      }
+    }
+  }
+}
+
+.card-upgrade-platinum {
+  color: #000;
+  background-color: $color-platinum;
+  box-shadow: 0 0 5px 1px rgba($color-platinum, 0.5);
+
+  .card-header {
+    background-color: $color-platinum;
+  }
+
+  .card-upgrade-list {
+    margin-bottom: 0;
+    background-color: darken($color-platinum, 10%);
+
+    li {
+      padding: 5px $gutter-size;
+
+      &:nth-child(even) {
+        background-color: darken($color-platinum, 5%);
+      }
+    }
+  }
+}
+
+.card-upgrade-master {
+  background-color: $color-master;
+  box-shadow: 0 0 5px 1px rgba($color-master, 0.5);
+
+  .card-header {
+    background-color: $color-master;
+  }
+
+  .card-upgrade-list {
+    margin-bottom: 0;
+    background-color: darken($color-master, 10%);
+
+    li {
+      padding: 5px $gutter-size;
+
+      &:nth-child(even) {
+        background-color: darken($color-master, 5%);
+      }
+    }
+  }
+}

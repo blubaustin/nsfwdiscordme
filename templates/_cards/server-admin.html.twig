@@ -49,7 +49,7 @@
       </span>
     {% endif %}
     {% if hasServerAccess(server, 'owner') %}
-      <a href="{{ path('server_upgrade', { slug: server.slug }) }}" title="Upgrade" data-toggle="tooltip">
+      <a href="{{ path('upgrade_index', { slug: server.slug }) }}" title="Upgrade" data-toggle="tooltip">
         {{ icon('app-upgrade') }}
       </a>
     {% endif %}

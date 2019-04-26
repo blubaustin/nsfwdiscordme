@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+  <div class="row">
+    <div class="col">
+      <h1 class="layout-page-title gutter-bottom">
+        Rank Better With A Premium Server
+      </h1>
+    </div>
+  </div>
+  <div class="row">
+    {# Standard #}
+    <div class="col col-md-4 col-sm-12 col-12">
+      <div class="card card-primary card-upgrade card-upgrade-top">
+        <div class="card-header">
+          {{ icon('app-upgrade') }}
+          Standard
+        </div>
+        <div class="card-upgrade-description">
+          Standard servers get basic treatment and visibility throughout the site.
+        </div>
+        <div class="card-body">
+          <ul class="card-upgrade-list">
+            <li>Blue Banner Highlight</li>
+            <li>Standard Server Icon Size</li>
+            <li>1 Bump Point</li>
+            <li>Basic Rank on Support Server *</li>
+          </ul>
+        </div>
+        <div class="card-upgrade-price">
+          Free
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-info btn-block" disabled>
+            Default
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {# Gold #}
+    <div class="col col-md-4 col-sm-12 col-12">
+      <div class="card card-upgrade card-upgrade-gold card-upgrade-top">
+        <div class="card-header">
+          {{ icon('app-upgrade') }}
+          Gold
+        </div>
+        <div class="card-upgrade-description">
+          Diamond servers are standard servers, but with a few extra perks.
+        </div>
+        <div class="card-body">
+          <ul class="card-upgrade-list">
+            <li>Blue Banner Highlight</li>
+            <li>Larger Server Icon than Normal Servers</li>
+            <li>2 Bump Points instead of 1</li>
+            <li>Enables Multi-bump for All Servers</li>
+            <li>Premium Rank on Support Server *</li>
+            <li>You can sleep knowing you are awesome!</li>
+          </ul>
+        </div>
+        <div class="card-upgrade-price">
+          $12.50 USD / 30 Days
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-success btn-block">
+            Upgrade
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {# Platinum #}
+    <div class="col col-md-4 col-sm-12 col-12">
+      <div class="card card-upgrade card-upgrade-platinum card-upgrade-top">
+        <div class="card-header">
+          {{ icon('app-upgrade') }}
+          Platinum
+        </div>
+        <div class="card-upgrade-description">
+          Platinum servers show us that you love us. We love you back, and you get more perks. :)
+        </div>
+        <div class="card-body">
+          <ul class="card-upgrade-list">
+            <li>White Banner Highlight</li>
+            <li>Platinum Servers Rotation **</li>
+            <li>Larger Server Icon than Normal Servers</li>
+            <li>3 Bump Points Instead of 1</li>
+            <li>Enables Multi-bump for All Servers</li>
+            <li>Premium Rank on Support Server *</li>
+            <li>You can sleep knowing you are awesome!</li>
+          </ul>
+        </div>
+        <div class="card-upgrade-price">
+          $45.00 USD / 30 Days
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-success btn-block">
+            Upgrade
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Master #}
+  <div class="row">
+    <div class="col">
+      <div class="card card-upgrade-master card-upgrade">
+        <div class="card-header">
+          {{ icon('app-upgrade') }}
+          Master
+        </div>
+        <div class="card-upgrade-description">
+          The master server is awarded once a month to the winner of an auction open
+          to members that have purchased premium in the past past.
+        </div>
+        <div class="card-body">
+          <ul class="card-upgrade-list">
+            <li>Blue Banner Highlight</li>
+            <li>First Slot On The Website</li>
+            <li>No Bumping Required</li>
+            <li>Larger Server Icon than Normal Servers</li>
+            <li>Enables Multi-bump for All Servers</li>
+            <li>Premium Rank on Support Server*</li>
+            <li>You can sleep knowing you are awesome!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="card card-primary">
+        <div class="card-header text-center">
+          WE USE STRIPE FOR PAYMENT PROCESSING AND DO NO STORE YOUR CREDIT CARD INFORMATION.
+        </div>
+        <div class="card-body">
+          <div class="text-center">
+            * You will need to be part of the nsfwdiscordme server to get Premium Rank. Please request
+            this rank from staff while on the server.
+          </div>
+          <div class="text-center">
+            ** These are the servers on the left side of the server list (interspersed on mobile). Your
+            server may not show up on ever page, but it will be randomly selected from only Platinum
+            Servers to appear.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

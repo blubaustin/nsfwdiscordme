@@ -136,25 +136,6 @@ class ServerController extends Controller
     }
 
     /**
-     * @Route("/server/upgrade/{slug}", name="upgrade")
-     *
-     * @param string $slug
-     *
-     * @return Response
-     */
-    public function upgradeAction($slug)
-    {
-        $server = $this->fetchServerOrThrow($slug);
-        if (!$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
-            throw $this->createAccessDeniedException();
-        }
-
-        return $this->render('server/upgrade.html.twig', [
-            'server' => $server
-        ]);
-    }
-
-    /**
      * @Route("/server/stats/{slug}", name="stats")
      *
      * @param string $slug
@@ -557,21 +538,6 @@ class ServerController extends Controller
         }
 
         return $isValid;
-    }
-
-    /**
-     * @param string $slug
-     *
-     * @return Server
-     */
-    private function fetchServerOrThrow($slug)
-    {
-        $server = $this->em->getRepository(Server::class)->findBySlug($slug);
-        if (!$server || !$server->isEnabled()) {
-            throw $this->createNotFoundException();
-        }
-
-        return $server;
     }
 
     /**
