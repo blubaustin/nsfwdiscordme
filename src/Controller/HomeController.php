@@ -33,14 +33,18 @@ class HomeController extends Controller
     {
         $masterServer = null;
         if ($request->query->get('page', 1) == 1) {
-            $masterServer = $this->em->getRepository(Server::class)->findByID(1);
+            $masterServer = $this->em->getRepository(Server::class)
+                ->findOneBy(['premiumStatus' => Server::STATUS_MASTER]);
         }
 
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('s.bumpPoints', 'desc')
+            ->andWhere('s.premiumStatus != :status')
+            ->setParameter(':status', Server::STATUS_MASTER)
+            ->orderBy('s.premiumStatus', 'desc')
+            ->addOrderBy('s.bumpPoints', 'desc')
             ->getQuery()
             ->useResultCache(true, self::CACHE_LIFETIME);
 
@@ -90,7 +94,8 @@ class HomeController extends Controller
             ->leftJoin(ServerBumpEvent::class, 'b', Join::WITH, 'b.server = s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('b.id', 'desc')
+            ->orderBy('s.premiumStatus', 'desc')
+            ->addOrderBy('b.id', 'desc')
             ->getQuery()
             ->useResultCache(true, self::CACHE_LIFETIME);
 
@@ -111,7 +116,8 @@ class HomeController extends Controller
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('s.id', 'desc')
+            ->orderBy('s.premiumStatus', 'desc')
+            ->addOrderBy('s.id', 'desc')
             ->getQuery();
 
         return $this->render('home/index.html.twig', [
@@ -156,7 +162,8 @@ class HomeController extends Controller
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('s.membersOnline', 'desc')
+            ->orderBy('s.premiumStatus', 'desc')
+            ->addOrderBy('s.membersOnline', 'desc')
             ->getQuery()
             ->useResultCache(true, self::CACHE_LIFETIME);
 
@@ -176,7 +183,9 @@ class HomeController extends Controller
     public function randomAction()
     {
         // ORDER BY RAND() is bad, m'kay. This does the trick.
-        $stmt = $this->em->getConnection()->prepare('SELECT MAX(`id`) FROM `server` WHERE `is_enabled` = 1 AND `is_active` = 1 LIMIT 1');
+        $stmt = $this->em->getConnection()->prepare('
+            SELECT MAX(`id`) FROM `server` WHERE `is_enabled` = 1 AND `is_active` = 1 LIMIT 1
+        ');
         $stmt->execute();
         $randID = rand(1, $stmt->fetchColumn(0));
 

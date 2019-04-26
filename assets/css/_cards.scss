@@ -43,14 +43,10 @@
  */
 .card-server {
   height: 240px;
-  overflow: hidden;
   position: relative;
-  border: 1px solid #ababab;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  border: 0;
 
   &:hover {
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-
     .card-server-bg {
       transform: scale(1.1);
     }
@@ -67,6 +63,46 @@
       background-color: rgba(0, 0, 0, 0.85);
     }
   }
+}
+
+.card {
+  &:hover {
+    &.card-server-status-gold {
+      box-shadow: 0 0 8px rgba($color-status-gold, 0.5);
+    }
+
+    &.card-server-status-platinum {
+      box-shadow: 0 0 8px rgba($color-status-platinum, 0.5);
+    }
+
+    &.card-server-status-master {
+      box-shadow: 0 0 8px rgba($color-status-master, 0.5);
+    }
+  }
+
+  &.card-server-status-gold {
+    border: 1px solid $color-status-gold;
+    box-shadow: 0 0 5px 1px rgba($color-status-gold, 0.5);
+  }
+
+  &.card-server-status-platinum {
+    border: 1px solid $color-status-platinum;
+    box-shadow: 0 0 5px 1px rgba($color-status-platinum, 0.5);
+  }
+
+  &.card-server-status-master {
+    border: 1px solid $color-status-master;
+    box-shadow: 0 0 5px 1px rgba($color-status-master, 0.5);
+  }
+}
+
+.card-server-bg-wrap {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .card-server-bg {
@@ -86,6 +122,15 @@
   display: block;
   height: 100%;
   z-index: 2;
+}
+
+.card-server-info-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 .card-server-info {
@@ -168,6 +213,44 @@
   transition: opacity 0.5s;
 }
 
+.card-server-tag-wrap {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  z-index: 7;
+}
+
+.card-server-tag {
+  position: absolute;
+  top: -42px;
+  left: -20px;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 7px rgba(0,0,0,.4);
+  line-height: 0;
+  padding: 40px 5px 40px 30px;
+
+  .icon {
+    transform: rotate(-45deg);
+  }
+}
+
+.card-server-tag-gold {
+  background: $color-status-gold;
+  color: #F9EB7F;
+  font-size: 30px;
+  text-shadow: 0 1px 1px #fff;
+}
+
+.card-server-tag-platinum {
+  background: $color-status-platinum;
+  color: #000;
+  font-size: 30px;
+  text-shadow: 0 1px 1px #fff;
+}
+
 /**
  * Master server
  */
@@ -175,12 +258,8 @@
   height: 265px;
   overflow: hidden;
   position: relative;
-  border-color: $color-success;
-  box-shadow: 0 0 5px rgba($color-success, 0.5);
 
   &:hover {
-    box-shadow: 0 0 8px rgba($color-success, 0.5);
-
     .card-server-master-bg {
       transform: scale(1.05);
     }
@@ -396,12 +475,6 @@
 /**
  * Upgrade
  */
-$color-gold: #A18800;
-$color-platinum: #E7E7E7;
-$color-master: #854c87;
-$upgrade-name-colors-list: gold platinum master;
-$upgrade-colors-list: $color-gold $color-platinum $color-master;
-
 .card-upgrade {
   .card-header {
     font-size: 1.5rem;
@@ -446,22 +519,22 @@ $upgrade-colors-list: $color-gold $color-platinum $color-master;
 }
 
 .card-upgrade-gold {
-  background-color: $color-gold;
-  box-shadow: 0 0 5px 1px rgba($color-gold, 0.5);
+  background-color: $color-status-gold;
+  box-shadow: 0 0 5px 1px rgba($color-status-gold, 0.5);
 
   .card-header {
-    background-color: $color-gold;
+    background-color: $color-status-gold;
   }
 
   .card-upgrade-list {
     margin-bottom: 0;
-    background-color: darken($color-gold, 10%);
+    background-color: darken($color-status-gold, 10%);
 
     li {
       padding: 5px $gutter-size;
 
       &:nth-child(even) {
-        background-color: darken($color-gold, 5%);
+        background-color: darken($color-status-gold, 5%);
       }
     }
   }
@@ -469,44 +542,44 @@ $upgrade-colors-list: $color-gold $color-platinum $color-master;
 
 .card-upgrade-platinum {
   color: #000;
-  background-color: $color-platinum;
-  box-shadow: 0 0 5px 1px rgba($color-platinum, 0.5);
+  background-color: $color-status-platinum;
+  box-shadow: 0 0 5px 1px rgba($color-status-platinum, 0.5);
 
   .card-header {
-    background-color: $color-platinum;
+    background-color: $color-status-platinum;
   }
 
   .card-upgrade-list {
     margin-bottom: 0;
-    background-color: darken($color-platinum, 10%);
+    background-color: darken($color-status-platinum, 10%);
 
     li {
       padding: 5px $gutter-size;
 
       &:nth-child(even) {
-        background-color: darken($color-platinum, 5%);
+        background-color: darken($color-status-platinum, 5%);
       }
     }
   }
 }
 
 .card-upgrade-master {
-  background-color: $color-master;
-  box-shadow: 0 0 5px 1px rgba($color-master, 0.5);
+  background-color: $color-status-master;
+  box-shadow: 0 0 5px 1px rgba($color-status-master, 0.5);
 
   .card-header {
-    background-color: $color-master;
+    background-color: $color-status-master;
   }
 
   .card-upgrade-list {
     margin-bottom: 0;
-    background-color: darken($color-master, 10%);
+    background-color: darken($color-status-master, 10%);
 
     li {
       padding: 5px $gutter-size;
 
       &:nth-child(even) {
-        background-color: darken($color-master, 5%);
+        background-color: darken($color-status-master, 5%);
       }
     }
   }

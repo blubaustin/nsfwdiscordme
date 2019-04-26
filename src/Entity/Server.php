@@ -6,17 +6,30 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * @ORM\Table(name="server", indexes={
- *     @ORM\Index(name="enabled_public_idx", columns={"is_enabled", "is_public"}),
- *     @ORM\Index(name="enabled_public_bump_points_idx", columns={"is_enabled", "is_public", "bump_points"}),
- *     @ORM\Index(name="enabled_public_members_online_idx", columns={"is_enabled", "is_public", "members_online"})
+ *     @ORM\Index(name="enabled_public_idx", columns={"is_enabled", "is_public", "premium_status"}),
+ *     @ORM\Index(name="enabled_public_bump_points_idx", columns={"is_enabled", "is_public", "bump_points", "premium_status"}),
+ *     @ORM\Index(name="enabled_public_members_online_idx", columns={"is_enabled", "is_public", "members_online", "premium_status"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ServerRepository")
  */
 class Server
 {
+    const STATUS_STANDARD = 0;
+    const STATUS_GOLD     = 1;
+    const STATUS_PLATINUM = 2;
+    const STATUS_MASTER   = 3;
+
+    const STATUSES = [
+        self::STATUS_STANDARD,
+        self::STATUS_GOLD,
+        self::STATUS_PLATINUM,
+        self::STATUS_MASTER
+    ];
+
     /**
      * @ORM\Id
      * @ORM\Column(type="bigint", options={"unsigned"=true})
@@ -104,6 +117,12 @@ class Server
     protected $membersOnline = 0;
 
     /**
+     * @var int
+     * @ORM\Column(type="smallint")
+     */
+    protected $premiumStatus;
+
+    /**
      * @var Collection
      * @ORM\ManyToMany(targetEntity="Category", cascade={"persist"})
      * @ORM\JoinTable(
@@ -186,10 +205,11 @@ class Server
      */
     public function __construct()
     {
-        $this->dateCreated = new DateTime();
-        $this->dateUpdated = new DateTime();
-        $this->tags        = new ArrayCollection();
-        $this->categories  = new ArrayCollection();
+        $this->dateCreated   = new DateTime();
+        $this->dateUpdated   = new DateTime();
+        $this->tags          = new ArrayCollection();
+        $this->categories    = new ArrayCollection();
+        $this->premiumStatus = self::STATUS_STANDARD;
     }
 
     /**
@@ -416,6 +436,48 @@ class Server
     public function setDescription(string $description): Server
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPremiumStatus(): int
+    {
+        return $this->premiumStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPremiumStatusString(): string
+    {
+        switch($this->getPremiumStatus()) {
+            case self::STATUS_GOLD:
+                return 'gold';
+            case self::STATUS_PLATINUM:
+                return 'platinum';
+            case self::STATUS_MASTER:
+                return 'master';
+            default:
+                return 'standard';
+        }
+    }
+
+    /**
+     * @param int $premiumStatus
+     *
+     * @return Server
+     */
+    public function setPremiumStatus(int $premiumStatus): Server
+    {
+        if (!in_array($premiumStatus, self::STATUSES)) {
+            throw new InvalidArgumentException(
+                "Invalid premium status ${premiumStatus}."
+            );
+        }
+        $this->premiumStatus = $premiumStatus;
 
         return $this;
     }

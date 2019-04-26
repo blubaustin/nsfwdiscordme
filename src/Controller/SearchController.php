@@ -47,6 +47,10 @@ class SearchController extends Controller
 
         $query = new Query();
         $query->addSort([
+            'premiumStatus' => [
+                'order'         => 'desc',
+                'unmapped_type' => 'long'
+            ],
             $orderField => [
                 'order'         => 'desc',
                 'unmapped_type' => 'long'
