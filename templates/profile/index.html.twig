@@ -13,14 +13,23 @@
 
     <div class="row">
       <div class="col col-md-8 col-sm-12 col-12">
-        {# Servers #}
-        <div class="row">
-          {% for server in servers %}
-            <div class="col col-md-6 col-sm-12 col-12">
-              {% include "_cards/server-admin.html.twig" %}
+        {% if servers|length == 0 %}
+          <div class="card card-primary">
+            <div class="card-body">
+              You don't have any servers!
+              Click the "Add Server" button above to get started.
             </div>
-          {% endfor %}
-        </div>
+          </div>
+        {% else %}
+          {# Servers #}
+          <div class="row">
+            {% for server in servers %}
+              <div class="col col-md-6 col-sm-12 col-12">
+                {% include "_cards/server-admin.html.twig" %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
       <div class="col col-md-4 col-sm-12 col-12">
         {# FAQs #}
