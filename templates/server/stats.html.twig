@@ -10,7 +10,7 @@
       <div class="card card-primary card-server-stats">
         {% include "_cards/blocks/premium-tag.html.twig" %}
         <div class="card-header card-server-summary-header">
-          <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
+          {% include "_media/server-icon.html.twig" %}
           <div>
             <h4>
               <a href="{{ path('server_index', { slug: server.slug }) }}">

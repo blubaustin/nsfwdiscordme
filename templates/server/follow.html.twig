@@ -4,7 +4,7 @@
     <div class="col col-md-8 offset-md-2 col-sm-12">
       <div class="card card-primary">
         <div class="card-header card-server-summary-header">
-          <img src="{{ server.iconMedia|webPath }}" alt="Icon" class="card-server-stats-icon" />
+          {% include "_media/server-icon.html.twig" %}
           <div>
             <h4>{{ server.name }}</h4>
             <span class="card-server-stats-summary">{{ server.summary }}</span>

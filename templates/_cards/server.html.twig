@@ -3,7 +3,7 @@
   <a href="{{ path('server_index', { slug: server.slug }) }}" class="card-server-link">
     <div class="card-server-info-wrap">
       <div class="card-server-info">
-        <img class="card-server-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
+        {% include "_media/server-icon.html.twig" %}
         <h2 class="card-server-name">
           {{ server.name }}
         </h2>

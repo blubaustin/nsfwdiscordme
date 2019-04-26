@@ -134,18 +134,17 @@
   z-index: 2;
   transition: height 0.25s;
   background-color: rgba(0, 0, 0, 0.5);
-}
 
-.card-server-icon {
-  position: absolute;
-  border-radius: 50%;
-  top: -40px;
-  left: 0;
-  right: 0;
-  height: 80px;
-  border: 2px solid #FFF;
-  margin-left: auto;
-  margin-right: auto;
+  .server-icon {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 80px;
+    border: 2px solid #FFF;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .card-server-name {
@@ -231,10 +230,17 @@
   @extend .card-server-info;
   height: 150px;
   bottom: 48px;
-}
 
-.card-server-master-icon {
-  @extend .card-server-icon;
+  .server-icon {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 80px;
+    border: 2px solid #FFF;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .card-server-master-name {
@@ -292,7 +298,6 @@
 .card-server-admin-icon {
   height: 40px;
   margin-right: $gutter-size;
-  border-radius: 50%;
   border: 2px solid #FFF;
 }
 
@@ -315,6 +320,11 @@
     display: flex;
     flex-grow: 2;
     align-items: center;
+
+    .server-icon {
+      height: 50px;
+      margin-right: 1rem;
+    }
   }
 
   .icon {
@@ -394,12 +404,6 @@
   font-size: 0.9rem;
 }
 
-.card-server-stats-icon {
-  border-radius: 50%;
-  height: 50px;
-  margin-right: 1rem;
-}
-
 .card-server-stats-list {
   li span {
     display: inline-block;
@@ -418,6 +422,11 @@
   .icon {
     font-size: 1.5rem;
     margin-right: 0.5rem;
+  }
+
+  .server-icon {
+    height: 50px;
+    margin-right: 1rem;
   }
 }
 
@@ -501,6 +510,18 @@
 
 .card-upgrade-platinum {
   color: #000;
+}
+
+/**
+ * Team
+ */
+.card-team-header {
+  font-size: 1.2rem;
+
+  .server-icon {
+    height: 30px;
+    margin-right: 0.5rem;
+  }
 }
 
 /**

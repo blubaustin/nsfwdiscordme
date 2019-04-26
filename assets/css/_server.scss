@@ -30,12 +30,10 @@
   @include media-xs {
     font-size: 2.5rem;
   }
-}
 
-.server-jumbotron-icon {
-  border-radius: 50%;
-  height: 80px;
-  border: 2px solid #FFF;
+  .server-icon {
+    height: 80px;
+  }
 }
 
 .server-buttons {
@@ -54,5 +52,9 @@
 
 .server-team-member-avatar {
   height: 1.6rem;
+}
+
+.server-icon {
   border-radius: 50%;
+  border: 2px solid #FFF;
 }

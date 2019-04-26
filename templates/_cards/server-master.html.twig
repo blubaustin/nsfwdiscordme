@@ -2,7 +2,7 @@
   {% include "_cards/blocks/premium-banner.html.twig" %}
   <a href="{{ path('server_index', { slug: server.slug }) }}" class="card-server-link">
     <div class="card-server-master-info">
-      <img class="card-server-master-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
+      {% include "_media/server-icon.html.twig" %}
       <h2 class="card-server-master-name">
         {{ server.name }}
       </h2>

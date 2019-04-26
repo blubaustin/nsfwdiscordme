@@ -3,7 +3,7 @@
   <div class="card-header card-server-admin-header">
     <div class="card-server-admin-header-meta">
       <a href="{{ path('server_index', { slug: server.slug }) }}">
-        <img class="card-server-admin-icon" src="{{ server.iconMedia|webPath }}" alt="server Icon" />
+        {% include "_media/server-icon.html.twig" %}
       </a>
       <h2>
         <a href="{{ path('server_index', { slug: server.slug }) }}">
