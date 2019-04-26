@@ -116,8 +116,7 @@ class HomeController extends Controller
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('s.premiumStatus', 'desc')
-            ->addOrderBy('s.id', 'desc')
+            ->orderBy('s.id', 'desc')
             ->getQuery();
 
         return $this->render('home/index.html.twig', [
