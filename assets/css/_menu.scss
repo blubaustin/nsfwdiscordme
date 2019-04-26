@@ -1,5 +1,15 @@
 @import "vars";
 
 .menu-buttons {
+  display: flex;
   margin-bottom: $gutter-size;
+  justify-content: start;
+
+  .btn {
+    margin-right: 0.25rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }

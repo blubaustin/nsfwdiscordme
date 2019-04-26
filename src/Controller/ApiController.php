@@ -125,6 +125,41 @@ class ApiController extends Controller
     }
 
     /**
+     * @Route("/bump/multi", name="bump_multi", methods={"POST"})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws DBALException
+     * @throws NonUniqueResultException
+     */
+    public function bumpMultiAction(Request $request)
+    {
+        if ($this->nonce->get(self::NONCE_RECAPTCHA) !== 'bump-ready') {
+            throw $this->createAccessDeniedException();
+        }
+        $this->nonce->remove(self::NONCE_RECAPTCHA);
+
+        $bumped = [];
+        $user   = $this->getUser();
+        $repo   = $this->em->getRepository(Server::class);
+        foreach($request->request->get('servers') as $serverID) {
+            $server = $repo->findByDiscordID($serverID);
+            if ($server
+                && $this->hasServerAccess($server, self::SERVER_ROLE_EDITOR, $user)
+                && !$this->hasVotedCurrentBumpPeriod($server)) {
+
+                $bumped[$serverID] = $this->bumpServer($server, $request);
+            }
+        }
+
+        return new JsonResponse([
+            'message' => 'ok',
+            'bumped'  => $bumped
+        ]);
+    }
+
+    /**
      * @Route("/bump/{serverID}", name="bump", methods={"POST"})
      *
      * @param Request $request
@@ -136,6 +171,11 @@ class ApiController extends Controller
      */
     public function bumpAction(Request $request, $serverID)
     {
+        if ($this->nonce->get(self::NONCE_RECAPTCHA) != $serverID) {
+            throw $this->createAccessDeniedException();
+        }
+        $this->nonce->remove(self::NONCE_RECAPTCHA);
+
         $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
         if (!$server) {
             throw $this->createNotFoundException();
@@ -143,41 +183,17 @@ class ApiController extends Controller
         if (!$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
             throw $this->createAccessDeniedException();
         }
-
-        // Was saved in recaptchaVerifyAction() when verifying the recaptcha.
-        if ($this->nonce->get(self::NONCE_RECAPTCHA) != $serverID) {
-            throw $this->createAccessDeniedException();
-        }
-        $this->nonce->remove(self::NONCE_RECAPTCHA);
-
         if ($this->hasVotedCurrentBumpPeriod($server)) {
             return new JsonResponse([
                 'message' => 'Already voted for this bump period.'
             ], 403);
         }
 
-        $user       = $this->getUser();
-        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
-        $bumpPeriodVote = (new BumpPeriodVote())
-            ->setUser($user)
-            ->setBumpPeriod($bumpPeriod)
-            ->setServer($server);
-        $server->incrementBumpPoints();
-        $this->em->persist($bumpPeriodVote);
-        $this->em->flush();
+        $result = array_merge([
+            'message' => 'ok'
+        ], $this->bumpServer($server, $request));
 
-        $this->eventDispatcher->dispatch('app.server.bump', new BumpEvent($server, $request));
-        $this->eventDispatcher->dispatch(
-            'app.server.action',
-            new ServerActionEvent($server, $user, 'Bumped server.')
-        );
-
-        return new JsonResponse([
-            'message'    => 'ok',
-            'bumpPoints' => $server->getBumpPoints(),
-            'bumpUser'   => $user->getDiscordUsername() . '#' . $user->getDiscordDiscriminator(),
-            'bumpDate'   => $bumpPeriodVote->getDateCreated()->format('Y-m-d H:i:s')
-        ]);
+        return new JsonResponse($result);
     }
 
     /**
@@ -202,6 +218,29 @@ class ApiController extends Controller
         return new JsonResponse([
             'message' => 'ok',
             'voted'   => $this->hasVotedCurrentBumpPeriod($server)
+        ]);
+    }
+
+    /**
+     * @Route("/bump/ready", name="bump_ready")
+     *
+     * @return JsonResponse
+     * @throws DBALException
+     * @throws NonUniqueResultException
+     */
+    public function bumpReadyAction()
+    {
+        $ready = [];
+        foreach($this->getUser()->getServers() as $server) {
+            if ($this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)
+                && !$this->hasVotedCurrentBumpPeriod($server)) {
+                $ready[] = $server->getDiscordID();
+            }
+        }
+
+        return new JsonResponse([
+            'message' => 'ok',
+            'ready'   => $ready
         ]);
     }
 
@@ -416,6 +455,39 @@ class ApiController extends Controller
         return new JsonResponse([
             'message' => 'ok'
         ]);
+    }
+
+    /**
+     * @param Server  $server
+     * @param Request $request
+     *
+     * @return array
+     * @throws DBALException
+     * @throws NonUniqueResultException
+     */
+    private function bumpServer(Server $server, Request $request)
+    {
+        $user       = $this->getUser();
+        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
+        $bumpPeriodVote = (new BumpPeriodVote())
+            ->setUser($user)
+            ->setBumpPeriod($bumpPeriod)
+            ->setServer($server);
+        $server->incrementBumpPoints();
+        $this->em->persist($bumpPeriodVote);
+        $this->em->flush();
+
+        $this->eventDispatcher->dispatch('app.server.bump', new BumpEvent($server, $request));
+        $this->eventDispatcher->dispatch(
+            'app.server.action',
+            new ServerActionEvent($server, $user, 'Bumped server.')
+        );
+
+        return [
+            'bumpPoints' => $server->getBumpPoints(),
+            'bumpUser'   => $user->getDiscordUsername() . '#' . $user->getDiscordDiscriminator(),
+            'bumpDate'   => $bumpPeriodVote->getDateCreated()->format('Y-m-d H:i:s')
+        ];
     }
 
     /**

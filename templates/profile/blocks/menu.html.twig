@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col">
+  <div class="col col-md-8 col-sm-12 col-12">
     <div class="menu-buttons">
       <a href="{{ path('server_add') }}" class="btn btn-info btn-icon">
         {{ icon('plus') }}
@@ -9,6 +9,12 @@
         {{ icon('app-settings') }}
         Settings
       </a>
+      {% if premiumStatus != 'standard' %}
+        <button id="profile-bump-all-btn" class="btn btn-success btn-icon" style="margin-left: auto">
+          {{ icon('app-bump') }}
+          Bump All Servers
+        </button>
+      {% endif %}
     </div>
   </div>
 </div>

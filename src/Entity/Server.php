@@ -23,11 +23,23 @@ class Server
     const STATUS_PLATINUM = 2;
     const STATUS_MASTER   = 3;
 
+    const STATUS_STR_STANDARD = 'standard';
+    const STATUS_STR_GOLD     = 'gold';
+    const STATUS_STR_PLATINUM = 'platinum';
+    const STATUS_STR_MASTER   = 'master';
+
     const STATUSES = [
         self::STATUS_STANDARD,
         self::STATUS_GOLD,
         self::STATUS_PLATINUM,
         self::STATUS_MASTER
+    ];
+
+    const STATUSES_STR = [
+        self::STATUS_STANDARD => self::STATUS_STR_STANDARD,
+        self::STATUS_GOLD     => self::STATUS_STR_GOLD,
+        self::STATUS_PLATINUM => self::STATUS_STR_PLATINUM,
+        self::STATUS_MASTER   => self::STATUS_STR_MASTER
     ];
 
     /**
@@ -453,16 +465,7 @@ class Server
      */
     public function getPremiumStatusString(): string
     {
-        switch($this->getPremiumStatus()) {
-            case self::STATUS_GOLD:
-                return 'gold';
-            case self::STATUS_PLATINUM:
-                return 'platinum';
-            case self::STATUS_MASTER:
-                return 'master';
-            default:
-                return 'standard';
-        }
+        return self::STATUSES_STR[$this->getPremiumStatus()];
     }
 
     /**

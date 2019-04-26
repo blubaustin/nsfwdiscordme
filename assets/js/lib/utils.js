@@ -12,3 +12,14 @@ export function generateSlug(name) {
     .replace(/^-+/, '')             // Trim - from start of text
     .replace(/-+$/, '');            // Trim - from end of text
 }
+
+/**
+ * Returns a random number between min and max
+ *
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
+export function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min) ) + min;
+}

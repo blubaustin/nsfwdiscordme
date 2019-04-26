@@ -191,7 +191,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @return Collection|Server[]
      */
     public function getServers(): Collection
     {

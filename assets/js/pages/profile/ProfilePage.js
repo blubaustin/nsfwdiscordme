@@ -1,4 +1,5 @@
 import router from 'lib/router';
+import { randomNumber } from 'lib/utils';
 import { recaptchaShow, recaptchaVerify } from 'lib/recaptcha';
 
 /**
@@ -18,9 +19,11 @@ class ProfilePage
     this.$recaptcha     = this.$modal.find('.recaptcha-container');
     this.bumpPeriodNext = new Date($page.data('bump-period-next')).getTime();
     this.$activeCard    = null;
+    this.bumpingAll     = false;
 
     this.$modalBumpBtn.on('click', this.handleModalBumpButtonClick);
     $('.card-server-admin-bump-btn').on('click', this.handleBumpButtonClick);
+    $('#profile-bump-all-btn').on('click', this.handleBumpAllClick);
 
     this.runBumpCountdown();
   };
@@ -105,37 +108,131 @@ class ProfilePage
   };
 
   /**
+   * Called when the bump all button is clicked
+   */
+  handleBumpAllClick = () => {
+    const recaptchaID = `recaptcha-container-${randomNumber(0, 10000)}`;
+
+    $.ajax({
+      url: router.generate('api_bump_ready')
+    }).done((resp) => {
+      this.$modal.modal('show');
+
+      if (resp.ready.length === 0) {
+        // All of the servers have been bumped already. Nothing to do but show them the already
+        // bumped message.
+        this.$modalVoted.show();
+        this.$recaptcha.hide();
+      } else {
+        // Recaptcha complains if you reuse an element, but the user
+        // may want to bump several servers. So we create a unique
+        // element in the model for each recaptcha.
+        const $container = $('<div />', {
+          'id': recaptchaID
+        });
+        this.$recaptcha.html('').append($container).show();
+
+        recaptchaShow(recaptchaID)
+          .then((token) => {
+            // Send the token and nonce to the backend. The backend verifies
+            // the token with google and saves the nonce to the session.
+            return recaptchaVerify(token, 'bump-ready');
+          })
+          .then((resp) => {
+            if (resp.success) {
+              // The token was valid. Now the user can click the big bump button.
+              this.bumpingAll = true;
+              this.$modalBumpBtn.prop('disabled', false);
+            } else {
+              // We shouldn't reach this point unless the user is a bot or they're
+              // doing something suspicious.
+              console.error(resp);
+            }
+          });
+      }
+    });
+  }
+
+  /**
    * Called when the modal bump button is clicked
    *
    * Sends the bump command to the backend and then updates the card with
    * the current bump count.
    */
   handleModalBumpButtonClick = () => {
-    const serverID = this.$activeCard.data('server-id');
-
     this.$modalBumpBtn.prop('disabled', true);
+
+    if (this.bumpingAll) {
+      this.bumpAll();
+    } else {
+      this.bumpServer();
+    }
+  };
+
+  /**
+   * Bumps the server for the active card
+   */
+  bumpServer = () => {
+    const serverID = this.$activeCard.data('server-id');
 
     $.ajax({
       url:  router.generate('api_bump', { serverID }),
       type: 'post'
     }).done((resp) => {
       if (resp.message && resp.message === 'ok') {
-        this.$activeCard.find('.server-bump-points:first').text(resp.bumpPoints);
-        this.$activeCard.find('.server-bump-user:first').text(resp.bumpUser);
-        this.$activeCard.find('.server-bump-date:first').text('Just now');
+        this.updateCardInfo(this.$activeCard, resp);
 
         this.$modal.modal('hide');
         this.$recaptcha.hide();
-
-        this.$activeCard.addClass('card-server-admin-flash-success');
-        setTimeout(() => {
-          this.$activeCard.removeClass('card-server-admin-flash-success');
-        }, 2000);
-        this.$activeCard.addClass('card-server-flash-success');
       } else {
         console.error(resp);
       }
     });
+  };
+
+  /**
+   * Bumps all of the servers
+   */
+  bumpAll = () => {
+    let serverIDs = [];
+    $('.card-server-admin').each((i, item) => {
+      serverIDs.push($(item).data('server-id'));
+    });
+
+    $.ajax({
+      url:  router.generate('api_bump_multi'),
+      type: 'post',
+      data: {
+        servers: serverIDs
+      }
+    }).done((resp) => {
+      if (resp.message && resp.message === 'ok') {
+        for(const serverID in resp.bumped) {
+          const $card = $(`.card-server-admin[data-server-id="${serverID}"]:first`);
+          this.updateCardInfo($card, resp.bumped[serverID]);
+        }
+
+        this.$modal.modal('hide');
+        this.$recaptcha.hide();
+      } else {
+        console.error(resp);
+      }
+    });
+  };
+
+  /**
+   * @param {jQuery} $card
+   * @param {{ bumpPoints: {number}, bumpUser: {string} }} info
+   */
+  updateCardInfo = ($card, info) => {
+    $card.find('.server-bump-points:first').text(info.bumpPoints);
+    $card.find('.server-bump-user:first').text(info.bumpUser);
+    $card.find('.server-bump-date:first').text('Just now');
+    $card.addClass('card-server-admin-flash-success');
+
+    setTimeout(() => {
+      $card.removeClass('card-server-admin-flash-success');
+    }, 2000);
   };
 }
 
