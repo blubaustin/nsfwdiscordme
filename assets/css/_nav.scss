@@ -1,6 +1,7 @@
 @import "vars";
 
 .navbar {
+  padding: 0.25rem 1rem;
   margin-bottom: $gutter-size;
   background-color: $color-primary;
   box-shadow: 1px 0 2px rgba(0, 0, 0, 0.5);
@@ -25,7 +26,11 @@
 }
 
 .nav-image {
-  height: 30px;
+  height: 36px;
+
+  @include media-xs {
+    height: 30px;
+  }
 }
 
 .nav-avatar {
@@ -46,4 +51,8 @@
 
 .dropdown-divider {
   border-top: 1px solid lighten($color-primary, 15%);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  font-size: 1.4rem;
 }
