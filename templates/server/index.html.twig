@@ -33,6 +33,16 @@
             <div class="server-buttons float-md-right">
               {% if hasServerAccess(server, 'manager') %}
                 <a
+                  href="{{ path('upgrade_index', { slug: server.slug }) }}"
+                  class="btn btn-lg btn-info"
+                  title="Upgrade Server"
+                  data-toggle="tooltip"
+                >
+                  {{ icon('app-upgrade') }}
+                </a>
+              {% endif %}
+              {% if hasServerAccess(server, 'manager') %}
+                <a
                   href="{{ path('server_settings', { slug: server.slug }) }}"
                   class="btn btn-lg btn-info"
                   title="Server Settings"
