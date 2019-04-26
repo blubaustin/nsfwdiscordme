@@ -31,7 +31,8 @@ class CategoryController extends Controller
             ->where('s.isEnabled = 1')
             ->andWhere('category = :category')
             ->setParameter(':category', $category)
-            ->orderBy('s.bumpPoints', 'desc');
+            ->orderBy('s.premiumStatus', 'desc')
+            ->addOrderBy('s.bumpPoints', 'desc');
 
         return $this->render('category/index.html.twig', [
             'servers'  => $this->paginate($query),
