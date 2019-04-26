@@ -16,6 +16,14 @@
   padding-bottom: 0;
 }
 
+@media (min-width: 768px) {
+  .navbar-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .nav-image {
   height: 30px;
 }
