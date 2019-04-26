@@ -67,32 +67,24 @@
 
 .card {
   &:hover {
-    &.card-server-border-premium-gold {
-      box-shadow: 0 0 8px rgba($color-status-gold, 0.5);
-    }
+    @each $name in $color-premium-names-list {
+      $i: index($color-premium-names-list, $name);
+      $color: nth($color-premium-list, $i);
 
-    &.card-server-border-premium-platinum {
-      box-shadow: 0 0 8px rgba($color-status-platinum, 0.5);
-    }
-
-    &.card-server-border-premium-master {
-      box-shadow: 0 0 10px 2px rgba($color-status-master, 0.5);
+      &.card-server-border-premium-#{$name} {
+        box-shadow: 0 0 8px rgba($color, 0.5);
+      }
     }
   }
 
-  &.card-server-border-premium-gold {
-    border: 1px solid $color-status-gold;
-    box-shadow: 0 0 5px 1px rgba($color-status-gold, 0.5);
-  }
+  @each $name in $color-premium-names-list {
+    $i: index($color-premium-names-list, $name);
+    $color: nth($color-premium-list, $i);
 
-  &.card-server-border-premium-platinum {
-    border: 1px solid $color-status-platinum;
-    box-shadow: 0 0 5px 1px rgba($color-status-platinum, 0.5);
-  }
-
-  &.card-server-border-premium-master {
-    border: 1px solid $color-status-master;
-    box-shadow: 0 0 8px 2px rgba($color-status-master, 0.5);
+    &.card-server-border-premium-#{$name} {
+      border: 1px solid $color;
+      box-shadow: 0 0 5px 1px rgba($color, 0.5);
+    }
   }
 }
 
@@ -223,14 +215,6 @@
   &:hover {
     .card-server-master-bg {
       transform: scale(1.05);
-    }
-
-    .card-server-info {
-      // height: 195px;
-    }
-
-    .card-server-description {
-      // opacity: 1;
     }
 
     .card-server-master-info {
@@ -487,23 +471,29 @@
   text-align: center;
 }
 
-.card-upgrade-gold {
-  background-color: $color-status-gold;
-  box-shadow: 0 0 5px 1px rgba($color-status-gold, 0.5);
+@each $name in $color-premium-names-list {
+  $i: index($color-premium-names-list, $name);
+  $color: nth($color-premium-list, $i);
 
-  .card-header {
-    background-color: $color-status-gold;
-  }
+  .card-upgrade-#{$name} {
+    color: #FFF;
+    background-color: $color;
+    box-shadow: 0 0 5px 1px rgba($color, 0.5);
 
-  .card-upgrade-list {
-    margin-bottom: 0;
-    background-color: darken($color-status-gold, 10%);
+    .card-header {
+      background-color: $color;
+    }
 
-    li {
-      padding: 5px $gutter-size;
+    .card-upgrade-list {
+      margin-bottom: 0;
+      background-color: darken($color, 10%);
 
-      &:nth-child(even) {
-        background-color: darken($color-status-gold, 5%);
+      li {
+        padding: 5px $gutter-size;
+
+        &:nth-child(even) {
+          background-color: darken($color, 5%);
+        }
       }
     }
   }
@@ -511,47 +501,6 @@
 
 .card-upgrade-platinum {
   color: #000;
-  background-color: $color-status-platinum;
-  box-shadow: 0 0 5px 1px rgba($color-status-platinum, 0.5);
-
-  .card-header {
-    background-color: $color-status-platinum;
-  }
-
-  .card-upgrade-list {
-    margin-bottom: 0;
-    background-color: darken($color-status-platinum, 10%);
-
-    li {
-      padding: 5px $gutter-size;
-
-      &:nth-child(even) {
-        background-color: darken($color-status-platinum, 5%);
-      }
-    }
-  }
-}
-
-.card-upgrade-master {
-  background-color: $color-status-master;
-  box-shadow: 0 0 5px 1px rgba($color-status-master, 0.5);
-
-  .card-header {
-    background-color: $color-status-master;
-  }
-
-  .card-upgrade-list {
-    margin-bottom: 0;
-    background-color: darken($color-status-master, 10%);
-
-    li {
-      padding: 5px $gutter-size;
-
-      &:nth-child(even) {
-        background-color: darken($color-status-master, 5%);
-      }
-    }
-  }
 }
 
 /**
@@ -581,18 +530,24 @@
   }
 }
 
-.card-premium-tag-gold {
-  background: $color-status-gold;
-  color: #F9EB7F;
-  font-size: 30px;
-  text-shadow: 0 1px 1px #fff;
+@each $name in $color-premium-names-list {
+  $i: index($color-premium-names-list, $name);
+  $color: nth($color-premium-list, $i);
+
+  .card-premium-tag-#{$name} {
+    color: #F9EB7F;
+    background: $color;
+    font-size: 26px;
+    text-shadow: 0 1px 1px #fff;
+  }
 }
 
 .card-premium-tag-platinum {
-  background: $color-status-platinum;
   color: #000;
-  font-size: 30px;
-  text-shadow: 0 1px 1px #fff;
+}
+
+.card-premium-tag-master {
+  color: #FFF;
 }
 
 .server-premium-banner {
@@ -626,7 +581,7 @@
 }
 
 .server-premium-banner-gold {
-  background: $color-status-gold;
+  background: $color-premium-gold;
 
   &::after {
     content: "";
@@ -635,14 +590,14 @@
     left: 100%;
     width: 0;
     height: 0;
-    border: 22px solid $color-status-gold;
+    border: 22px solid $color-premium-gold;
     border-right: 22px solid transparent;
   }
 }
 
 .server-premium-banner-platinum {
   color: #000;
-  background: $color-status-platinum;
+  background: $color-premium-platinum;
 
   &::after {
     content: "";
@@ -651,13 +606,13 @@
     left: 100%;
     width: 0;
     height: 0;
-    border: 22px solid $color-status-platinum;
+    border: 22px solid $color-premium-platinum;
     border-right: 22px solid transparent;
   }
 }
 
 .server-premium-banner-master {
-  background: $color-status-master;
+  background: $color-premium-master;
 
   &::after {
     content: "";
@@ -666,7 +621,7 @@
     left: 100%;
     width: 0;
     height: 0;
-    border: 22px solid $color-status-master;
+    border: 22px solid $color-premium-master;
     border-right: 22px solid transparent;
   }
 }
