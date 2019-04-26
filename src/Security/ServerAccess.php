@@ -88,7 +88,7 @@ class ServerAccess implements ServerAccessInterface
             }
             $user = $token->getUser();
         }
-        if (!$user) {
+        if (!$user || !is_object($user)) {
             return false;
         }
 
