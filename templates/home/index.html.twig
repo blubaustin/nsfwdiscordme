@@ -7,7 +7,7 @@
         <div class="col home-page-buttons">
           <a
             href="{{ path('home_index') }}"
-            class="btn btn-primary{% if sort == 'most-bumped' %} btn-info{% endif %}"
+            class="btn btn-primary btn-icon{% if sort == 'most-bumped' %} btn-info{% endif %}"
           >
             {{ icon('app-bump') }}
             <span class="d-none d-lg-inline">
@@ -27,7 +27,7 @@
           #}
           <a
             href="{{ path('home_recently_bumped') }}"
-            class="btn btn-primary{% if sort == 'recently-bumped' %} btn-info{% endif %}"
+            class="btn btn-primary btn-icon{% if sort == 'recently-bumped' %} btn-info{% endif %}"
           >
             {{ icon('app-recently-bumped') }}
             <span class="d-none d-lg-inline">
@@ -36,7 +36,7 @@
           </a>
           <a
             href="{{ path('home_trending') }}"
-            class="btn btn-primary{% if sort == 'trending' %} btn-info{% endif %}"
+            class="btn btn-primary btn-icon{% if sort == 'trending' %} btn-info{% endif %}"
           >
             {{ icon('app-trending') }}
             <span class="d-none d-lg-inline">
@@ -45,7 +45,7 @@
           </a>
           <a
             href="{{ path('home_most_online') }}"
-            class="btn btn-primary{% if sort == 'most-online' %} btn-info{% endif %}"
+            class="btn btn-primary btn-icon{% if sort == 'most-online' %} btn-info{% endif %}"
           >
             {{ icon('app-most-online') }}
             <span class="d-none d-lg-inline">
@@ -54,7 +54,7 @@
           </a>
           <a
             href="{{ path('home_recently_added') }}"
-            class="btn btn-primary{% if sort == 'recently-added' %} btn-info{% endif %}"
+            class="btn btn-primary btn-icon{% if sort == 'recently-added' %} btn-info{% endif %}"
           >
             {{ icon('plus-circle') }}
             <span class="d-none d-lg-inline">
@@ -63,7 +63,7 @@
           </a>
           <a
             href="{{ path('home_random') }}"
-            class="btn btn-primary{% if sort == 'random' %} btn-info{% endif %}"
+            class="btn btn-primary btn-icon{% if sort == 'random' %} btn-info{% endif %}"
           >
             {{ icon('app-random') }}
             <span class="d-none d-lg-inline">
