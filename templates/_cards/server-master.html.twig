@@ -21,6 +21,12 @@
       <div class="card-server-master-description">
         {{ server.summary }}
       </div>
+      <a
+        href="{{ path('server_index', { slug: server.slug }) }}"
+        class="btn btn-success btn-xs card-server-join-btn"
+      >
+        Join
+      </a>
     </div>
     <div class="card-server-bg-wrap">
       <img class="card-server-master-bg" src="{{ server.bannerMedia|webPath }}" alt="Background" />
