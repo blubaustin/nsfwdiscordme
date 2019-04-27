@@ -6,6 +6,12 @@ import isEqual from 'lodash.isequal';
 class Page
 {
   /**
+   * Dump debug values
+   * @type {boolean}
+   */
+  debug = false;
+
+  /**
    * The page state values
    * @type {*}
    */
@@ -18,8 +24,11 @@ class Page
    */
   setState = (values) => {
     const newState = Object.assign({}, this.state, values);
-    if (!isEqual(this.state, newState) && this.render !== undefined) {
+    if (!isEqual(this.state, newState)) {
       this.state = newState;
+      if (this.debug) {
+        console.log('Rendering with new state.', this.state);
+      }
       this.render();
     }
   };

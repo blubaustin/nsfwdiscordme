@@ -163,6 +163,12 @@ class Server
     protected $teamMembers;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", length=20)
+     */
+    protected $inviteType;
+
+    /**
      * @var int
      * @ORM\Column(type="bigint", options={"unsigned"=true}, nullable=true)
      */
@@ -598,6 +604,26 @@ class Server
     public function setMembersOnline(int $membersOnline): Server
     {
         $this->membersOnline = $membersOnline;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInviteType(): ?string
+    {
+        return $this->inviteType;
+    }
+
+    /**
+     * @param string $inviteType
+     *
+     * @return Server
+     */
+    public function setInviteType(string $inviteType): Server
+    {
+        $this->inviteType = $inviteType;
 
         return $this;
     }

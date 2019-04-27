@@ -62,3 +62,16 @@
   border-radius: 50%;
   border: 2px solid #FFF;
 }
+
+.server-invite-list {
+  margin-left: 1rem;
+  list-style: disc;
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

@@ -120,6 +120,18 @@ class ServerType extends AbstractType
                 ]
             )
             ->add(
+                'inviteType',
+                ChoiceType::class,
+                [
+                    'choices' => [
+                        'Select...' => '',
+                        'Widget with Instant Invite' => 'widget',
+                        'Our Bot Creates the Invites' => 'bot'
+                    ],
+                    'empty_data' => ''
+                ]
+            )
+            ->add(
                 'botInviteChannelID',
                 TextType::class,
                 [
@@ -228,7 +240,7 @@ class ServerType extends AbstractType
         // Adds the user's servers to the drop down list.
         if ($options['user'] && ($accessToken = $options['user']->getDiscordAccessToken())) {
             $servers = [
-                'Select...' => 0
+                'Select...' => ''
             ];
             foreach($this->discord->fetchMeGuilds($accessToken) as $server) {
                 $servers[$server['name']] = $server['id'];

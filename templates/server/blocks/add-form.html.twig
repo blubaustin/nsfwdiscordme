@@ -20,33 +20,19 @@
     </div>
     <div class="card-body">
       <p>
-        In order to create invites to join your server, the server widget with <b>instant invite</b>
-        needs to be enabled <b>or</b> our bot needs to be invited to your server welcome channel.
+        Our users will need an invite to your server in order to join. In order to create invites
+        to join your server, the server widget with <b>"Instant Invite Channel"</b> needs to be
+        enabled <b>or</b> you can invite our bot to your welcome channel and it will create invites.
       </p>
 
-      <div id="server-verify-widget-container">
-        <p>
-          To use instant invites, open your <b>"Server Settings"</b> on <b>Discord</b> and go to
-          the <b>Widget Tab (Does not show up on mobile).</b> Make sure the checkbox for <b>"Enable Widget"</b> is
-          checked and an <b>"Instant Invite Channel"</b> is selected.
-        </p>
-        <div class="gutter-bottom">
-          <button id="server-verify-widget-btn" class="btn btn-success" type="button" style="width: 200px;">
-            Use Widget Invites
-          </button>
-        </div>
-        <p id="server-verify-widget-danger" class="bg-danger gutter gutter-margin-bottom hidden">
-          The server widget is <b>not</b> configured correctly. Enable widget invites now, and then click
-          the button again, or invite our bot to your welcome channel.
-        </p>
-      </div>
+      <p id="server-verify-widget-danger" class="bg-danger gutter gutter-margin-bottom hidden">
+        Your server widget is <b>not</b> configured correctly. Enable widget invites on your server, and
+        select the <b>"Widget with Instant Invite"</b> again.
+      </p>
 
-      <div id="server-verify-bot-container">
-        <p>
-          To have our bot invited to your welcome channel the click "Add Our Discord Bot" button, and select
-          the welcome channel in the Discord window that opens. After closing the window click "Refresh" and
-          select the channel.
-        </p>
+      {{ form_row(form.inviteType) }}
+
+      <div id="server-invite-bot-container" class="hidden">
         <div class="gutter-bottom">
           <button
             data-href="https://discordapp.com/api/oauth2/authorize?client_id={{ discordClientID }}&scope=bot&permissions=0"
@@ -60,13 +46,27 @@
           </button>
         </div>
         {{ form_row(form.botInviteChannelID) }}
-        <div class="text-right">
+        <div class="text-right gutter-bottom">
           <button id="server-refresh-btn" type="button" class="btn btn-link">
             {{ icon('sync') }}
             Refresh
           </button>
         </div>
       </div>
+      <ul class="server-invite-list">
+        <li>
+          <b>"Widget with Instant Invite"</b>
+          To use instant invites, open your <b>"Server Settings"</b> on <b>Discord</b> and go to
+          the <b>Widget Tab (Does not show up on mobile).</b> Make sure the checkbox for <b>"Enable Widget"</b> is
+          checked and an <b>"Instant Invite Channel"</b> is selected.
+        </li>
+        <li>
+          <b>"Our Bot Creates the Invites"</b>
+          To use our bot, click "Invite Our Discord Bot" button, and select your welcome channel in the
+          Discord window that opens. After closing the window click "Refresh" and select the channel from
+          the list.
+        </li>
+      </ul>
     </div>
   </div>
 
@@ -123,5 +123,4 @@
   </div>
   {{ form_rest(form) }}
 {{ form_end(form) }}
-{% include "server/blocks/error-modal.html.twig" %}
 {% include "server/blocks/cropper-modal.html.twig" %}

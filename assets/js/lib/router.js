@@ -3,4 +3,7 @@ import Routing from '../../../vendor/friendsofsymfony/jsrouting-bundle/Resources
 
 Routing.setRoutingData(routes);
 
+/**
+ * @property {Function} generate
+ */
 export default Routing;
