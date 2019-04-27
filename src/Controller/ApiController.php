@@ -269,10 +269,12 @@ class ApiController extends Controller
         }
 
         try {
-            if ($inviteChannel = $server->getBotInviteChannelID()) {
+            if ($server->getInviteType() === Server::INVITE_TYPE_BOT && $inviteChannel = $server->getBotInviteChannelID()) {
                 $redirect = $this->discord->createBotInviteURL($inviteChannel);
-            } else {
+            } else if ($server->getInviteType() === Server::INVITE_TYPE_WIDGET) {
                 $redirect = $this->discord->createWidgetInviteURL($server->getDiscordID());
+            } else {
+                throw new Exception('Invalid invite type.');
             }
         } catch (Exception $e) {
             return new JsonResponse([

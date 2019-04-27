@@ -42,6 +42,14 @@ class Server
         self::STATUS_MASTER   => self::STATUS_STR_MASTER
     ];
 
+    const INVITE_TYPE_BOT    = 'bot';
+    const INVITE_TYPE_WIDGET = 'widget';
+
+    const INVITE_TYPES = [
+        self::INVITE_TYPE_BOT,
+        self::INVITE_TYPE_WIDGET
+    ];
+
     /**
      * @ORM\Id
      * @ORM\Column(type="bigint", options={"unsigned"=true})
@@ -623,6 +631,11 @@ class Server
      */
     public function setInviteType(string $inviteType): Server
     {
+        if (!in_array($inviteType, self::INVITE_TYPES)) {
+            throw new InvalidArgumentException(
+                "Invalid invite type ${inviteType}."
+            );
+        }
         $this->inviteType = $inviteType;
 
         return $this;
