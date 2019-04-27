@@ -95,19 +95,32 @@ class ServerType extends AbstractType
                 TextareaType::class,
                 [
                     'required' => false,
-                    'help'     => "Optional. If set, this will show on your server's individual page instead of the regular description. Markdown is supported with links and images disabled.",
+                    'help'     => "This will show on your server's individual page. Markdown is supported with links and images disabled.",
                     'attr'     => [
                         'class' => 'form-control-description'
                     ]
                 ]
             )
             ->add(
-                'categories',
+                'category1',
                 EntityType::class,
                 [
                     'class'        => Category::class,
+                    'label'        => 'First Category',
                     'choice_label' => 'name',
-                    'multiple'     => true
+                    'placeholder'  => 'Select...',
+                    'empty_data'   => ''
+                ]
+            )
+            ->add(
+                'category2',
+                EntityType::class,
+                [
+                    'class'        => Category::class,
+                    'label'        => 'Second Category',
+                    'choice_label' => 'name',
+                    'placeholder'  => 'Select...',
+                    'empty_data'   => ''
                 ]
             )
             ->add(
@@ -115,17 +128,17 @@ class ServerType extends AbstractType
                 TextType::class,
                 [
                     'required' => false,
-                    'label' => 'Tags',
-                    'help' => 'Comma separated list of tags describing the server.'
+                    'label'    => 'Tags',
+                    'help'     => 'Comma separated list of tags describing the server.'
                 ]
             )
             ->add(
                 'inviteType',
                 ChoiceType::class,
                 [
-                    'choices' => [
-                        'Select...' => '',
-                        'Widget with Instant Invite' => 'widget',
+                    'choices'    => [
+                        'Select...'                   => '',
+                        'Widget with Instant Invite'  => 'widget',
                         'Our Bot Creates the Invites' => 'bot'
                     ],
                     'empty_data' => ''
@@ -143,7 +156,7 @@ class ServerType extends AbstractType
                 'bannerFile',
                 FileType::class,
                 [
-                    'mapped' => false,
+                    'mapped'   => false,
                     'required' => false,
                     'label'    => 'Banner Image'
                 ]
@@ -171,10 +184,10 @@ class ServerType extends AbstractType
                 'serverPassword',
                 PasswordType::class,
                 [
-                    'required' => false,
+                    'required'   => false,
                     'empty_data' => '',
-                    'label'    => 'Server Join Password',
-                    'attr'     => [
+                    'label'      => 'Server Join Password',
+                    'attr'       => [
                         // Prevents the browser from auto completing the password field.
                         // Using the "autocomplete" attribute does not work in every browser.
                         'readonly' => 'readonly',
@@ -218,31 +231,33 @@ class ServerType extends AbstractType
                     ],
                     'help'       => 'If this is unchecked your Discord URL will not accept new people.'
                 ]
-            )
-        ;
+            );
 
         $builder->get('tags')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($tagsCollection) {
-                    $tags = [];
-                    foreach($tagsCollection as $tag) {
-                        $tags[] = $tag->getName();
+            ->addModelTransformer(
+                new CallbackTransformer(
+                    function ($tagsCollection) {
+                        $tags = [];
+                        foreach ($tagsCollection as $tag) {
+                            $tags[] = $tag->getName();
+                        }
+
+                        return implode(', ', $tags);
+                    },
+                    function ($tagsAsString) {
+                        $tags = array_filter(array_map('trim', explode(',', $tagsAsString)));
+
+                        return $this->tagRepository->stringsToTags($tags);
                     }
-                    return implode(', ', $tags);
-                },
-                function ($tagsAsString) {
-                    $tags = array_filter(array_map('trim', explode(',', $tagsAsString)));
-                    return $this->tagRepository->stringsToTags($tags);
-                }
-            ))
-        ;
+                )
+            );
 
         // Adds the user's servers to the drop down list.
         if ($options['user'] && ($accessToken = $options['user']->getDiscordAccessToken())) {
             $servers = [
                 'Select...' => ''
             ];
-            foreach($this->discord->fetchMeGuilds($accessToken) as $server) {
+            foreach ($this->discord->fetchMeGuilds($accessToken) as $server) {
                 $servers[$server['name']] = $server['id'];
             }
 

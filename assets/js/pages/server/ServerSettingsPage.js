@@ -52,6 +52,14 @@ class ServerSettingsPage extends Page {
       isEditing:       !!$page.data('is-editing')
     };
 
+    this.$form.find(':input').each((i, item) => {
+      const $item = $(item);
+      if ($item.attr('name')) {
+        const name            = this.sanitizeInputName($item.attr('name'));
+        this.state.vals[name] = $item.val();
+      }
+    });
+
     this.setupUploads();
     this.$inputDiscordID.focus();
 
@@ -104,13 +112,21 @@ class ServerSettingsPage extends Page {
   };
 
   /**
+   * @param {string} name
+   * @returns {string}
+   */
+  sanitizeInputName = (name) => {
+    return name.replace('server[', '').replace(']', '').replace('[]', '');
+  };
+
+  /**
    * @param {Event} e
    */
   handleFormChange = (e) => {
     const { vals } = this.state;
 
     const $input  = $(e.target);
-    const name    = $input.attr('name').replace('server[', '').replace(']', '').replace('[]', '');
+    const name    = this.sanitizeInputName($input.attr('name'));
     const newVals = Object.assign({}, vals);
     newVals[name] = $input.val();
 
@@ -315,13 +331,13 @@ class ServerSettingsPage extends Page {
    */
   render = () => {
     const { vals, widgetError, isEditing, showDeleteModal } = this.state;
-    const { discordID, name, slug, botInviteChannelID, summary, categories, inviteType } = vals;
+    const { discordID, name, slug, botInviteChannelID, summary, category1, category2, inviteType } = vals;
 
     this.toggleFormInputs(this.$step2, (isEditing || (discordID && name && slug)));
     this.toggleFormInputs(this.$step3, ((inviteType === 'widget' && !widgetError) || botInviteChannelID));
-    this.toggleFormInputs(this.$step4, (summary && categories));
-    this.toggleFormInputs(this.$step5, (summary && categories));
-    this.toggleFormInputs(this.$step6, (summary && categories));
+    this.toggleFormInputs(this.$step4, (summary && category1 && category2));
+    this.toggleFormInputs(this.$step5, (summary && category1 && category2));
+    this.toggleFormInputs(this.$step6, (summary && category1 && category2));
 
     this.$verifyWidgetDanger.toggle(widgetError && !botInviteChannelID && inviteType !== 'bot');
     if (inviteType === 'bot') {

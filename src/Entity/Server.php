@@ -840,4 +840,58 @@ class Server
 
         return $this;
     }
+
+    /**
+     * @return Category
+     */
+    public function getCategory1(): ?Category
+    {
+        $categories = $this->getCategories();
+        if (isset($categories[0])) {
+            return $categories[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category $category1
+     *
+     * @return Server
+     */
+    public function setCategory1(Category $category1): Server
+    {
+        $categories = $this->getCategories();
+        $categories[0] = $category1;
+        $this->setCategories($categories);
+
+        return $this;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getCategory2(): ?Category
+    {
+        $categories = $this->getCategories();
+        if (isset($categories[1])) {
+            return $categories[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category $category2
+     *
+     * @return Server
+     */
+    public function setCategory2(Category $category2): Server
+    {
+        $categories = $this->getCategories();
+        $categories[1] = $category2;
+        $this->setCategories($categories);
+
+        return $this;
+    }
 }
