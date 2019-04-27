@@ -17,6 +17,7 @@ class ServerSettingsPage extends Page {
     this.$deleteModal        = $('#modal-server-delete');
     this.$deleteButton       = $('#server-delete-btn');
     this.$modalDeleteButton  = $('#modal-server-delete-btn');
+    this.$modalDeleteConfirm = $('#modal-server-delete-confirm');
     this.$refreshButton      = $('#server-refresh-btn');
     this.$verifyWidgetDanger = $('#server-verify-widget-danger');
     this.$inviteContainer    = $('#server-invite-bot-container');
@@ -37,12 +38,14 @@ class ServerSettingsPage extends Page {
     this.$refreshButton.on('click', this.handleRefreshClick);
     this.$deleteButton.on('click', this.handleDeleteClick);
     this.$modalDeleteButton.on('click', this.handleModalDeleteClick);
+    this.$modalDeleteConfirm.on('input', this.handleModalDeleteConfirmChange);
     this.$deleteModal.on('hidden.bs.modal', this.handleDeleteModalHidden);
 
     this.state = {
       vals: {
         inviteType: this.$inputInviteType.val()
       },
+      serverName:      $page.data('server-name'),
       deleteServerID:  this.$deleteButton.data('server-id'),
       widgetError:     false,
       showDeleteModal: false,
@@ -251,6 +254,19 @@ class ServerSettingsPage extends Page {
         });
       }
     });
+  };
+
+  /**
+   *
+   */
+  handleModalDeleteConfirmChange = () => {
+    const { serverName } = this.state;
+
+    if (this.$modalDeleteConfirm.val().toLowerCase() === serverName.toLowerCase()) {
+      this.$modalDeleteButton.prop('disabled', false);
+    } else {
+      this.$modalDeleteButton.prop('disabled', true);
+    }
   };
 
   /**

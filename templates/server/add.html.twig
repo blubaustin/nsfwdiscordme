@@ -8,7 +8,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.1/cropper.min.js"></script>
 {% endblock %}
 {% block body %}
-  <div id="page-server-settings" data-is-editing="{{ isEditing }}">
+  <div
+    id="page-server-settings"
+    data-is-editing="{{ isEditing }}"
+    data-server-name="{% if server|default %}{{ server.name }}{% endif %}">
     <div class="row">
       <div class="col col-md-8 offset-md-2 col-sm-12 col-12">
         {% include "server/blocks/add-form.html.twig" %}
