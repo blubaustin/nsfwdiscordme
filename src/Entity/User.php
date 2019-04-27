@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -62,12 +63,27 @@ class User extends BaseUser
     protected $servers;
 
     /**
+     * @var DateTime
+     * @ORM\Column(type="datetime")
+     */
+    protected $dateCreated;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         parent::__construct();
-        $this->servers = new ArrayCollection();
+        $this->dateCreated = new DateTime();
+        $this->servers     = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getDiscordUsername() . '#' . $this->getDiscordDiscriminator();
     }
 
     /**
@@ -206,6 +222,26 @@ class User extends BaseUser
     public function setServers(Collection $servers): User
     {
         $this->servers = $servers;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateCreated(): DateTime
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * @param DateTime $dateCreated
+     *
+     * @return User
+     */
+    public function setDateCreated(DateTime $dateCreated): User
+    {
+        $this->dateCreated = $dateCreated;
 
         return $this;
     }

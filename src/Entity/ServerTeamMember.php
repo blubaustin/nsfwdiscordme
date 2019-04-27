@@ -36,7 +36,7 @@ class ServerTeamMember
 
     /**
      * @var Server
-     * @ORM\ManyToOne(targetEntity="Server")
+     * @ORM\ManyToOne(targetEntity="Server", inversedBy="teamMembers")
      * @ORM\JoinColumn(name="server_id", onDelete="CASCADE", referencedColumnName="id")
      */
     protected $server;
@@ -98,6 +98,14 @@ class ServerTeamMember
     public function __construct()
     {
         $this->dateCreated = new DateTime();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getDiscordID() ?? '';
     }
 
     /**

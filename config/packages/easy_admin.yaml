@@ -10,6 +10,7 @@ easy_admin:
                 - 'build/js/admin.js'
     entities:
         Server:
+            label: Servers
             class: App\Entity\Server
             list:
                 fields:
@@ -19,29 +20,29 @@ easy_admin:
                     - name
                     - { property: 'slug', label: 'Slug', template: 'admin/fields/slug.html.twig' }
                     - { property: 'discordID', label: 'Discord ID', type: 'string' }
-                    - summary
+                    - dateCreated
             form:
                 fields:
                     - name
                     - slug
                     - { property: 'discordID', label: 'Discord ID', type: 'text' }
                     - user
+                    - bumpPoints
+                    - { property: 'premiumStatus', type: 'choice', type_options: { choices: { Standard: 0, Gold: 1, Platinum: 2, Master: 3 }}}
                     - summary
                     - description
                     - { property: 'categories', type: 'entity' }
                     - { property: 'iconMedia', type: 'file', type_options: { data_class: null, mapped: false } }
+                    - { property: 'bannerMedia', type: 'file', type_options: { data_class: null, mapped: false } }
                     - { property: 'botInviteChannelID', label: 'Bot invite channel ID' }
-                    - bumpPoints
-                    - dateNextBump
-                    - dateCreated
-                    - dateUpdated
                     - botHumanCheck
                     - isEnabled
                     - isPublic
                     - isActive
-
+                    - teamMembers
 
         User:
+            label: Users
             class: App\Entity\User
             list:
                 fields:
@@ -50,18 +51,44 @@ easy_admin:
                     - discordEmail
                     - discordUsername
                     - discordDiscriminator
+                    - dateCreated
+            form:
+                fields:
+                    - { property: 'discordID', label: 'Discord ID', type: 'text' }
+                    - discordUsername
+                    - discordDiscriminator
+                    - discordEmail
+                    - discordAvatar
+                    - roles
+
+        ServerTeamMember:
+            label: Team Members
+            class: App\Entity\ServerTeamMember
+            list:
+                fields:
+                    - id
+                    - { property: 'discordID', label: 'Discord ID', type: 'string' }
+                    - discordUsername
+                    - discordDiscriminator
+                    - role
 
         Media:
             class: App\Entity\Media
             list:
                 fields:
                     - id
-                    - path
+                    - { property: 'path', template: 'admin/fields/media.html.twig' }
                     - name
                     - adapter
                     - dateCreated
+            form:
+                fields:
+                    - path
+                    - name
+                    - adapter
 
         Category:
+            label: Categories
             class: App\Entity\Category
             list:
                 fields:
@@ -73,10 +100,13 @@ easy_admin:
                     - slug
 
         BannedServer:
+            label: Banned Servers
             class: App\Entity\BannedServer
 
         BannedUser:
+            label: Banned Users
             class: App\Entity\BannedUser
 
         BannedWord:
+            label: Banned Words
             class: App\Entity\BannedWord

@@ -157,6 +157,12 @@ class Server
     protected $tags;
 
     /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="ServerTeamMember", mappedBy="server")
+     */
+    protected $teamMembers;
+
+    /**
      * @var int
      * @ORM\Column(type="bigint", options={"unsigned"=true}, nullable=true)
      */
@@ -194,12 +200,6 @@ class Server
 
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $dateNextBump;
-
-    /**
-     * @var DateTime
      * @ORM\Column(type="datetime")
      */
     protected $dateCreated;
@@ -221,7 +221,16 @@ class Server
         $this->dateUpdated   = new DateTime();
         $this->tags          = new ArrayCollection();
         $this->categories    = new ArrayCollection();
+        $this->teamMembers   = new ArrayCollection();
         $this->premiumStatus = self::STATUS_STANDARD;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->discordID ?? '';
     }
 
     /**
@@ -486,6 +495,19 @@ class Server
     }
 
     /**
+     * @param string $status
+     *
+     * @return $this
+     */
+    public function setPremiumStatusString($status): Server
+    {
+        $index = array_search($status, self::STATUSES_STR);
+        $this->setPremiumStatus($index);
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Category[]
      */
     public function getCategories(): Collection
@@ -694,21 +716,21 @@ class Server
     }
 
     /**
-     * @return DateTime
+     * @return Collection|ServerTeamMember[]
      */
-    public function getDateNextBump(): ?DateTime
+    public function getTeamMembers(): Collection
     {
-        return $this->dateNextBump;
+        return $this->teamMembers;
     }
 
     /**
-     * @param DateTime $dateNextBump
+     * @param Collection $teamMembers
      *
      * @return Server
      */
-    public function setDateNextBump(DateTime $dateNextBump = null): Server
+    public function setTeamMembers(Collection $teamMembers): Server
     {
-        $this->dateNextBump = $dateNextBump;
+        $this->teamMembers = $teamMembers;
 
         return $this;
     }

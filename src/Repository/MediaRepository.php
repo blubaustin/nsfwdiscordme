@@ -29,4 +29,14 @@ class MediaRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['id' => $id]);
     }
+
+    /**
+     * @param $path
+     *
+     * @return object|Media
+     */
+    public function findByPath($path)
+    {
+        return $this->findOneBy(['path' => $path]);
+    }
 }

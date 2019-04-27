@@ -4,6 +4,7 @@ namespace App\Twig;
 use App\Entity\Media;
 use App\Media\Exception\AdapterNotFoundException;
 use App\Media\WebHandlerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -18,13 +19,20 @@ class WebHandlerExtension extends AbstractExtension
     protected $webHandler;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    /**
      * Constructor
      *
-     * @param WebHandlerInterface $webHandler
+     * @param WebHandlerInterface    $webHandler
+     * @param EntityManagerInterface $em
      */
-    public function __construct(WebHandlerInterface $webHandler)
+    public function __construct(WebHandlerInterface $webHandler, EntityManagerInterface $em)
     {
         $this->webHandler = $webHandler;
+        $this->em         = $em;
     }
 
     /**
@@ -38,13 +46,18 @@ class WebHandlerExtension extends AbstractExtension
     }
 
     /**
-     * @param Media $media
+     * @param Media|string $media
      *
      * @return string
      * @throws AdapterNotFoundException
      */
-    public function webPath(Media $media)
+    public function webPath($media)
     {
-        return $this->webHandler->getWebURL($media);
+        if ($media instanceof Media) {
+            return $this->webHandler->getWebURL($media);
+        } else {
+            $media = $this->em->getRepository(Media::class)->findByPath($media);
+            return $this->webHandler->getWebURL($media);
+        }
     }
 }
