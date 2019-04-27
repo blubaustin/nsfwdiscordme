@@ -9,10 +9,13 @@ class ServerAddPage
 {
   /**
    * Initializes the page
+   *
+   * @param {jQuery} $page
    */
-  setup = () => {
+  setup = ($page) => {
     this.serverID       = null;
     this.deleteServerID = null;
+    this.isEditing      = $page.data('is-editing');
     this.$errorModal    = $('#modal-server-join-error');
     this.$errorMessage  = $('.server-join-error-message');
     this.$deleteModal   = $('#modal-server-delete');
@@ -30,11 +33,19 @@ class ServerAddPage
     this.setupFormBot();
     this.setupFormUploads();
 
-    this.$step2 = this.disableFormInputs($('#form-step-2'));
-    this.$step3 = this.disableFormInputs($('#form-step-3'));
-    this.$step4 = this.disableFormInputs($('#form-step-4'));
-    this.$step5 = this.disableFormInputs($('#form-step-5'));
-    this.$step6 = this.disableFormInputs($('#form-step-6'));
+    if (!this.isEditing) {
+      this.$step2 = this.disableFormInputs($('#form-step-2'));
+      this.$step3 = this.disableFormInputs($('#form-step-3'));
+      this.$step4 = this.disableFormInputs($('#form-step-4'));
+      this.$step5 = this.disableFormInputs($('#form-step-5'));
+      this.$step6 = this.disableFormInputs($('#form-step-6'));
+    } else {
+      this.$step2 = this.enableFormInputs($('#form-step-2'));
+      this.$step3 = this.enableFormInputs($('#form-step-3'));
+      this.$step4 = this.enableFormInputs($('#form-step-4'));
+      this.$step5 = this.enableFormInputs($('#form-step-5'));
+      this.$step6 = this.enableFormInputs($('#form-step-6'));
+    }
   };
 
   /**

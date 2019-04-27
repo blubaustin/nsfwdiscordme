@@ -4,9 +4,13 @@
       Add Discord Server
     </div>
     <div class="card-body">
-      {{ form_row(form.discordID, { attr: { readonly: isEditing }}) }}
+      <div class="{% if isEditing %}hidden{% endif %}">
+        {{ form_row(form.discordID, { attr: { readonly: isEditing }}) }}
+      </div>
       {{ form_row(form.name) }}
-      {{ form_row(form.slug, { attr: { readonly: isEditing }}) }}
+      <div class="{% if isEditing %}hidden{% endif %}">
+        {{ form_row(form.slug, { attr: { readonly: isEditing }}) }}
+      </div>
     </div>
   </div>
 
@@ -98,6 +102,11 @@
     <div class="card-body form-group-upload-body card-disabled">
       {{ form_row(form.bannerFile) }}
       {{ form_row(form.bannerCropData) }}
+      {% if isEditing %}
+        <p class="form-help" style="padding-top: 8px;">
+          Leave blank to keep your existing banner.
+        </p>
+      {% endif %}
     </div>
   </div>
 
