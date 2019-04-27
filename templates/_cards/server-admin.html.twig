@@ -1,5 +1,5 @@
 <div class="card card-primary card-server-admin" data-server-id="{{ server.discordID }}">
-  {% include "_cards/blocks/premium-tag.html.twig" %}
+  {% include "_cards/blocks/premium-tag.html.twig" with { sm: true } %}
   <div class="card-header card-server-admin-header">
     <div class="card-server-admin-header-meta">
       <a href="{{ path('server_index', { slug: server.slug }) }}">

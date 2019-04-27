@@ -2,8 +2,8 @@
   {% set status = server.premiumStatusString %}
 {% endif %}
 {% if status != 'standard' %}
-  <div class="card-premium-tag-wrap" title="{{ status|ucwords }}" data-toggle="tooltip">
-    <div class="card-premium-tag card-premium-tag-{{ status }}">
+  <div class="card-premium-tag-wrap{% if sm|default %} card-premium-tag-wrap-sm{% endif %}" title="{{ status|ucwords }}" data-toggle="tooltip">
+    <div class="card-premium-tag{% if sm|default %} card-premium-tag-sm{% endif %} card-premium-tag-{{ status }}">
       {{ icon('app-' ~ status) }}
     </div>
   </div>

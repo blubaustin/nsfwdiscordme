@@ -545,6 +545,11 @@
   z-index: 7;
 }
 
+.card-premium-tag-wrap-sm {
+  width: 45px;
+  height: 45px;
+}
+
 .card-premium-tag {
   position: absolute;
   top: -42px;
@@ -577,6 +582,10 @@
 
 .card-premium-tag-master {
   color: #FFF;
+}
+
+.card-premium-tag-sm {
+  font-size: 12px;
 }
 
 .server-premium-banner {
