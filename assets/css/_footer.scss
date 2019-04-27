@@ -4,6 +4,6 @@
   flex-shrink: 0;
   text-align: center;
   padding: $gutter-size;
-  border-top: 1px solid #49558a;
-  background-color: $color-primary;
+  border-top: 1px solid #333a58;
+  background-color: darken($color-primary, 10%);
 }
