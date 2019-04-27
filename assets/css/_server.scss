@@ -40,6 +40,12 @@
   background-color: darken($color-primary, 5%);
 }
 
+.card-server-about-description {
+  em {
+    font-style: italic;
+  }
+}
+
 .server-buttons {
   margin-bottom: $gutter-size;
 }

@@ -105,7 +105,7 @@
             </div>
             <div class="card-server-about-description gutter-top">
               {% if server.description %}
-                {{ server.description|nl2br }}
+                {{ server.description|markdown }}
               {% else %}
                 Click 'Join Server' above to join this community.
               {% endif %}

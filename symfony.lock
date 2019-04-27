@@ -118,6 +118,9 @@
     "elasticsearch/elasticsearch": {
         "version": "v6.1.0"
     },
+    "erusev/parsedown": {
+        "version": "1.7.3"
+    },
     "evenement/evenement": {
         "version": "v3.0.1"
     },
