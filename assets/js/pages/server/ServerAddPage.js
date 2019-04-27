@@ -23,6 +23,7 @@ class ServerAddPage
     this.$deleteButton.on('click', this.handleDeleteClick);
     $('#modal-server-delete-btn').on('click', this.handleModalDeleteClick);
     $('#server-verify-widget-btn').on('click', this.handleVerifyWidgetClick);
+    $('#server_categories, #server_summary').on('change', this.handleStep3Change);
 
     this.setupFormServerID();
     this.setupFormSlug();
@@ -203,10 +204,6 @@ class ServerAddPage
         if (widget.instant_invite) {
           $danger.hide();
           this.enableFormInputs(this.$step3);
-          this.enableFormInputs(this.$step4);
-          this.enableFormInputs(this.$step5);
-          this.enableFormInputs(this.$step6);
-
           $('#server-verify-bot-container').slideUp();
         } else {
           $danger.show();
@@ -225,16 +222,28 @@ class ServerAddPage
 
     if ($input.val() === '0') {
       this.disableFormInputs(this.$step3);
-      this.disableFormInputs(this.$step4);
-      this.disableFormInputs(this.$step5);
-      this.disableFormInputs(this.$step6);
       $('#server-verify-widget-container').slideDown();
     } else {
       this.enableFormInputs(this.$step3);
+      $('#server-verify-widget-container').slideUp();
+    }
+  };
+
+  /**
+   *
+   */
+  handleStep3Change = () => {
+    const summary = $('#server_summary').val();
+    const cats    = $('#server_categories').val();
+
+    if (summary && cats.length) {
       this.enableFormInputs(this.$step4);
       this.enableFormInputs(this.$step5);
       this.enableFormInputs(this.$step6);
-      $('#server-verify-widget-container').slideUp();
+    } else {
+      this.disableFormInputs(this.$step4);
+      this.disableFormInputs(this.$step5);
+      this.disableFormInputs(this.$step6);
     }
   };
 
