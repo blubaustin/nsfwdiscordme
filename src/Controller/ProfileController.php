@@ -4,10 +4,8 @@ namespace App\Controller;
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
-use App\Entity\ServerTeamMember;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,29 +24,26 @@ class ProfileController extends Controller
     public function indexAction()
     {
         /** @var Server $premiumServer */
-        $premiumServer  = null;
         $voteRepo       = $this->em->getRepository(BumpPeriodVote::class);
         $bumpPeriodNext = $this->em->getRepository(BumpPeriod::class)->findNextPeriod();
 
-        /** @var Server[] $servers */
         $servers = $this->em->getRepository(Server::class)
-            ->createQueryBuilder('s')
-            ->leftJoin(ServerTeamMember::class, 't', Join::WITH, 't.server = s')
-            ->where('t.user = :user')
-            ->setParameter(':user', $this->getUser())
-            ->getQuery()
-            ->execute();
+            ->findByTeamMemberUser($this->getUser());
 
+        // Set the server with the greatest premium status, which is used
+        // to display the "Bump all servers" button if applicable.
+        $premiumServer = null;
+        $premiumStatus = Server::STATUS_STR_STANDARD;
         foreach($servers as $server) {
-            $server->lastBump = $voteRepo->findLastBump($server);
+            $server->setLastBumpPeriodVote(
+                $voteRepo->findLastBump($server)
+            );
             if (!$premiumServer) {
                 $premiumServer = $server;
             } else if ($server->getPremiumStatus() > $premiumServer->getPremiumStatus()) {
                 $premiumServer = $server;
             }
         }
-
-        $premiumStatus = Server::STATUS_STR_STANDARD;
         if ($premiumServer) {
             $premiumStatus = $premiumServer->getPremiumStatusString();
         }

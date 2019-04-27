@@ -80,8 +80,8 @@ services:
         arguments:
             - '%env(RECAPTCHA_SECRET_KEY)%'
 
-    App\Component\NonceComponentInterface:
-        class: App\Component\NonceComponent
+    App\Component\NonceStorageInterface:
+        class: App\Security\NonceStorage
         arguments:
             - '@session'
 
@@ -103,7 +103,7 @@ services:
             - [setWebHandler, ['@App\Media\WebHandlerInterface']]
     App\Controller\ApiController:
         calls:
-            - [setNonceComponent, ['@App\Component\NonceComponentInterface']]
+            - [setNonceStorage, ['@App\Security\NonceStorageInterface']]
 
     # Event Listeners
     App\Event\Listener\ServerStatsListener:

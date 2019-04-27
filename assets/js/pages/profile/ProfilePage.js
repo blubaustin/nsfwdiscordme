@@ -69,7 +69,7 @@ class ProfilePage
 
     // Determine if the user has already bumped during this period.
     $.ajax({
-      url: router.generate('api_bump_me', { serverID })
+      url: router.generate('api_bump_server_ready', { serverID })
     }).done((resp) => {
       this.$modal.modal('show');
 

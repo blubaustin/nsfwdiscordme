@@ -1,16 +1,15 @@
 <?php
 namespace App\Controller;
 
-use App\Component\NonceComponentInterface;
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
-use App\Entity\ServerTeamMember;
 use App\Event\BumpEvent;
 use App\Event\JoinEvent;
 use App\Event\ServerActionEvent;
 use App\Http\Request;
 use App\Media\WebHandlerInterface;
+use App\Security\NonceStorageInterface;
 use App\Services\RecaptchaService;
 use DateInterval;
 use DateTime;
@@ -23,6 +22,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
+ * These routes are all called from javascript.
+ *
+ * The script bin/routes.sh must be run when making any changes/additions to the routes
+ * in this controller. The script generates the routes.json needed by javascript.
+ *
  * @Route("/api/v1", name="api_", options={"expose"=true}, requirements={"serverID"="\d+"})
  */
 class ApiController extends Controller
@@ -30,23 +34,25 @@ class ApiController extends Controller
     const NONCE_RECAPTCHA = 'recaptcha';
 
     /**
-     * @var NonceComponentInterface
+     * @var NonceStorageInterface
      */
-    protected $nonce;
+    protected $nonceStorage;
 
     /**
-     * @param NonceComponentInterface $nonce
+     * @param NonceStorageInterface $nonceStorage
      *
      * @return $this
      */
-    public function setNonceComponent(NonceComponentInterface $nonce)
+    public function setNonceStorage(NonceStorageInterface $nonceStorage)
     {
-        $this->nonce = $nonce;
+        $this->nonceStorage = $nonceStorage;
 
         return $this;
     }
 
     /**
+     * Returns the widget for the given server
+     *
      * @Route("/widget/{serverID}", name="widget")
      *
      * @param string $serverID
@@ -66,34 +72,8 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/guilds", name="guilds")
+     * Returns a list of channels for the given server
      *
-     * @return JsonResponse
-     * @throws GuzzleException
-     */
-    public function meGuildsAction()
-    {
-        $resp = $this->discord->fetchMeGuilds($this->getUser()->getDiscordAccessToken());
-
-        return new JsonResponse($resp);
-    }
-
-    /**
-     * @Route("/guild/{serverID}", name="guild")
-     *
-     * @param string $serverID
-     *
-     * @return JsonResponse
-     * @throws GuzzleException
-     */
-    public function guildAction($serverID)
-    {
-        $resp = $this->discord->fetchGuild($serverID);
-
-        return new JsonResponse($resp);
-    }
-
-    /**
      * @Route("/guilds/{serverID}/channels", name="guild_channels")
      *
      * @param string $serverID
@@ -110,21 +90,11 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/bump/period", name="bump_period")
+     * Bumps multiple servers
      *
-     * @throws Exception
-     */
-    public function bumpPeriod()
-    {
-        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
-
-        return new JsonResponse([
-            'message' => 'ok',
-            'period'  => $bumpPeriod->getFormattedDate()
-        ]);
-    }
-
-    /**
+     * The POST data contains an array of server IDs to bump. Returns information
+     * on which servers were bumped.
+     *
      * @Route("/bump/multi", name="bump_multi", methods={"POST"})
      *
      * @param Request $request
@@ -135,18 +105,14 @@ class ApiController extends Controller
      */
     public function bumpMultiAction(Request $request)
     {
-        if ($this->nonce->get(self::NONCE_RECAPTCHA) !== 'bump-ready') {
-            throw $this->createAccessDeniedException();
-        }
-        $this->nonce->remove(self::NONCE_RECAPTCHA);
+        $this->validNonceOrThrow(self::NONCE_RECAPTCHA, 'bump-ready');
 
         $bumped = [];
-        $user   = $this->getUser();
         $repo   = $this->em->getRepository(Server::class);
         foreach($request->request->get('servers') as $serverID) {
             $server = $repo->findByDiscordID($serverID);
             if ($server
-                && $this->hasServerAccess($server, self::SERVER_ROLE_EDITOR, $user)
+                && $this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)
                 && !$this->hasVotedCurrentBumpPeriod($server)) {
 
                 $bumped[$serverID] = $this->bumpServer($server, $request);
@@ -160,6 +126,8 @@ class ApiController extends Controller
     }
 
     /**
+     * Bumps a single server and returns information on the bump
+     *
      * @Route("/bump/{serverID}", name="bump", methods={"POST"})
      *
      * @param Request $request
@@ -171,18 +139,9 @@ class ApiController extends Controller
      */
     public function bumpAction(Request $request, $serverID)
     {
-        if ($this->nonce->get(self::NONCE_RECAPTCHA) != $serverID) {
-            throw $this->createAccessDeniedException();
-        }
-        $this->nonce->remove(self::NONCE_RECAPTCHA);
+        $this->validNonceOrThrow(self::NONCE_RECAPTCHA, $serverID);
 
-        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
-        if (!$server) {
-            throw $this->createNotFoundException();
-        }
-        if (!$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
-            throw $this->createAccessDeniedException();
-        }
+        $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_EDITOR);
         if ($this->hasVotedCurrentBumpPeriod($server)) {
             return new JsonResponse([
                 'message' => 'Already voted for this bump period.'
@@ -197,23 +156,19 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/bump/{serverID}/me", name="bump_me")
+     * Returns whether the server is ready for a bump
      *
-     * @param int $serverID
+     * @Route("/bump/ready/{serverID}", name="bump_server_ready")
+     *
+     * @param string $serverID
      *
      * @return JsonResponse
      * @throws NonUniqueResultException
      * @throws DBALException
      */
-    public function bumpMeAction($serverID)
+    public function bumpServerReadyAction($serverID)
     {
-        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
-        if (!$server) {
-            throw $this->createNotFoundException();
-        }
-        if (!$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
-            throw $this->createAccessDeniedException();
-        }
+        $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_EDITOR);
 
         return new JsonResponse([
             'message' => 'ok',
@@ -222,6 +177,8 @@ class ApiController extends Controller
     }
 
     /**
+     * Returns a list of servers for which the authenticated user is a team member which are ready to bump
+     *
      * @Route("/bump/ready", name="bump_ready")
      *
      * @return JsonResponse
@@ -230,8 +187,11 @@ class ApiController extends Controller
      */
     public function bumpReadyAction()
     {
+        $servers = $this->em->getRepository(Server::class)
+            ->findByTeamMemberUser($this->getUser());
+
         $ready = [];
-        foreach($this->getUser()->getServers() as $server) {
+        foreach($servers as $server) {
             if ($this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)
                 && !$this->hasVotedCurrentBumpPeriod($server)) {
                 $ready[] = $server->getDiscordID();
@@ -245,6 +205,8 @@ class ApiController extends Controller
     }
 
     /**
+     * Verifies a recaptcha token with google
+     *
      * @Route("/recaptcha-verify", name="recaptcha_verify", methods={"POST"})
      *
      * @param Request          $request
@@ -262,13 +224,13 @@ class ApiController extends Controller
         }
 
         if ($recaptchaService->verify($token)) {
-            $this->nonce->set(self::NONCE_RECAPTCHA, $nonce);
+            $this->nonceStorage->set(self::NONCE_RECAPTCHA, $nonce);
 
             return new JsonResponse([
                 'success' => true
             ]);
         } else {
-            $this->nonce->remove(self::NONCE_RECAPTCHA);
+            $this->nonceStorage->remove(self::NONCE_RECAPTCHA);
         }
 
         return new JsonResponse([
@@ -277,6 +239,8 @@ class ApiController extends Controller
     }
 
     /**
+     * Joins a server
+     *
      * @Route("/join/{serverID}", name="join", methods={"POST"})
      *
      * @param string  $serverID
@@ -288,52 +252,45 @@ class ApiController extends Controller
     public function joinAction($serverID, Request $request)
     {
         $password = trim($request->request->get('password'));
-        $server   = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
-        if (!$server) {
-            throw $this->createNotFoundException();
-        }
+        $server   = $this->findServerOrThrow($serverID);
 
-        if ($server->isBotHumanCheck() && $this->nonce->get(self::NONCE_RECAPTCHA) !== "join-${serverID}") {
+        // Ensures the user did the recaptcha if it's required.
+        if ($server->isBotHumanCheck() && !$this->nonceStorage->valid(self::NONCE_RECAPTCHA, "join-${serverID}")) {
             return new JsonResponse([
                 'message' => 'recaptcha'
             ]);
         }
+
+        // Ensures the password is correct if passwords are enabled.
         if ($server->getServerPassword() && !password_verify($password, $server->getServerPassword())) {
             return new JsonResponse([
                 'message' => 'password'
             ]);
         }
 
-        $this->nonce->remove(self::NONCE_RECAPTCHA);
-
-        $inviteChannel = $server->getBotInviteChannelID();
-        if ($inviteChannel) {
-            $invite = $this->discord->createInvite($inviteChannel);
-            if (!$invite || !isset($invite['code'])) {
-                return new JsonResponse([
-                    'message' => 'error'
-                ], 500);
+        try {
+            if ($inviteChannel = $server->getBotInviteChannelID()) {
+                $redirect = $this->discord->createBotInviteURL($inviteChannel);
+            } else {
+                $redirect = $this->discord->createWidgetInviteURL($server->getDiscordID());
             }
-            $inviteURL = "https://discordapp.com/invite/${invite['code']}";
-        } else {
-            $widget = $this->discord->fetchWidget($server->getDiscordID());
-            if (!$widget || !isset($widget['instant_invite'])) {
-                return new JsonResponse([
-                    'message' => 'error'
-                ], 500);
-            }
-            $inviteURL = $widget['instant_invite'];
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'message' => 'error'
+            ], 500);
         }
 
         $this->eventDispatcher->dispatch('app.server.join', new JoinEvent($server, $request));
 
         return new JsonResponse([
             'message'  => 'ok',
-            'redirect' => $inviteURL
+            'redirect' => $redirect
         ]);
     }
 
     /**
+     * Deletes a server
+     *
      * @Route("/delete-server/{serverID}", name="delete_server", methods={"POST"})
      *
      * @param string              $serverID
@@ -343,31 +300,29 @@ class ApiController extends Controller
      */
     public function deleteServerAction($serverID, WebHandlerInterface $webHandler)
     {
-        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
-        if (!$server || !$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $iconMedia   = $server->getIconMedia();
-        $bannerMedia = $server->getBannerMedia();
-        $teamMembers = $this->em->getRepository(ServerTeamMember::class)->findByServer($server);
-        foreach($teamMembers as $teamMember) {
+        $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_MANAGER);
+        foreach($server->getTeamMembers() as $teamMember) {
             $this->em->remove($teamMember);
         }
-
         $this->em->remove($server);
+
+        // Flush now because we don't care if there's a problem later deleting the
+        // media. Better to delete the server even if deleting the media fails.
         $this->em->flush();
 
         try {
+            $iconMedia   = $server->getIconMedia();
+            $bannerMedia = $server->getBannerMedia();
             if ($iconMedia) {
                 $webHandler->getAdapter()->remove($iconMedia->getPath());
                 $this->em->remove($iconMedia);
+                $this->em->flush();
             }
             if ($bannerMedia) {
                 $webHandler->getAdapter()->remove($bannerMedia->getPath());
                 $this->em->remove($bannerMedia);
+                $this->em->flush();
             }
-            $this->em->flush();
         } catch (Exception $e) {
             $this->logger->error($e->getMessage(), ['serverID' => $serverID]);
         }
@@ -378,6 +333,8 @@ class ApiController extends Controller
     }
 
     /**
+     * Returns the views & joins stats for a server
+     *
      * @Route("/stats/joins/{serverID}", name="stats_joins")
      *
      * @param string $serverID
@@ -387,10 +344,7 @@ class ApiController extends Controller
      */
     public function statsJoinsAction($serverID)
     {
-        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
-        if (!$server || !$this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
-            throw $this->createAccessDeniedException();
-        }
+        $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_EDITOR);
 
         $stmtJoin = $this->em->getConnection()->prepare('
             SELECT COUNT(*) as `count`
@@ -436,6 +390,8 @@ class ApiController extends Controller
     }
 
     /**
+     * Adds the POSTed message to session flash storage
+     *
      * @Route("/flash/{type}", name="flash", methods={"POST"})
      *
      * @param string $type
@@ -455,6 +411,30 @@ class ApiController extends Controller
         return new JsonResponse([
             'message' => 'ok'
         ]);
+    }
+
+    /**
+     * Returns the server with the given ID or throws a not found exception
+     *
+     * When given a role, throws a access denied exception when the authenticated user
+     * does not have that role on the server.
+     *
+     * @param string $serverID
+     * @param string $role
+     *
+     * @return Server
+     */
+    private function findServerOrThrow($serverID, $role = '')
+    {
+        $server = $this->em->getRepository(Server::class)->findByDiscordID($serverID);
+        if (!$server) {
+            throw $this->createNotFoundException();
+        }
+        if ($role && !$this->hasServerAccess($server, $role)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $server;
     }
 
     /**
@@ -479,14 +459,15 @@ class ApiController extends Controller
                 $points = 2;
                 break;
             case Server::STATUS_PLATINUM:
+            case Server::STATUS_MASTER:
                 $points = 3;
                 break;
             default:
                 $points = 1;
                 break;
         }
-        $server->incrementBumpPoints($points);
 
+        $server->incrementBumpPoints($points);
         $this->em->persist($bumpPeriodVote);
         $this->em->flush();
 
@@ -520,5 +501,16 @@ class ApiController extends Controller
             ]);
 
         return (bool)$vote;
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    private function validNonceOrThrow($key, $value)
+    {
+        if (!$this->nonceStorage->valid($key, $value)) {
+            throw $this->createAccessDeniedException();
+        }
     }
 }

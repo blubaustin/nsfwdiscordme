@@ -211,6 +211,11 @@ class Server
     protected $dateUpdated;
 
     /**
+     * @var BumpPeriodVote
+     */
+    protected $lastBumpPeriodVote;
+
+    /**
      * Constructor
      *
      * @throws Exception
@@ -773,6 +778,26 @@ class Server
     public function setDateUpdated(DateTime $dateUpdated): Server
     {
         $this->dateUpdated = $dateUpdated;
+
+        return $this;
+    }
+
+    /**
+     * @return BumpPeriodVote
+     */
+    public function getLastBumpPeriodVote(): ?BumpPeriodVote
+    {
+        return $this->lastBumpPeriodVote;
+    }
+
+    /**
+     * @param BumpPeriodVote $lastBumpPeriodVote
+     *
+     * @return Server
+     */
+    public function setLastBumpPeriodVote(BumpPeriodVote $lastBumpPeriodVote = null): Server
+    {
+        $this->lastBumpPeriodVote = $lastBumpPeriodVote;
 
         return $this;
     }

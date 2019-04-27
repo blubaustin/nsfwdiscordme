@@ -1,12 +1,12 @@
 <?php
-namespace App\Component;
+namespace App\Security;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class NonceComponent
  */
-class NonceComponent implements NonceComponentInterface
+class NonceStorage implements NonceStorageInterface
 {
     /**
      * @var SessionInterface
@@ -53,6 +53,19 @@ class NonceComponent implements NonceComponentInterface
     public function has($key)
     {
         return $this->session->has($this->getSessionKey($key));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function valid($key, $value, $remove = true)
+    {
+        $valid = $this->get($key) === $value;
+        if ($remove) {
+            $this->remove($key);
+        }
+
+        return $valid;
     }
 
     /**

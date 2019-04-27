@@ -1,11 +1,11 @@
 <?php
-namespace App\Component;
+namespace App\Security;
 
 
 /**
  * Saves security related values (known as nonces) to the user's session.
  */
-interface NonceComponentInterface
+interface NonceStorageInterface
 {
     /**
      * @param string $key
@@ -33,4 +33,15 @@ interface NonceComponentInterface
      * @return bool
      */
     public function has($key);
+
+    /**
+     * Returns whether the given nonce key value is valid and removes the nonce from storage
+     *
+     * @param string $key
+     * @param string $value
+     * @param bool   $remove
+     *
+     * @return bool
+     */
+    public function valid($key, $value, $remove = true);
 }

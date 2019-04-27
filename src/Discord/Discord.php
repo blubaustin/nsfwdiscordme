@@ -152,12 +152,35 @@ class Discord
     /**
      * @param string $channelID
      *
-     * @return array
+     * @return string
+     * @throws Exception
      * @throws GuzzleException
      */
-    public function createInvite($channelID)
+    public function createBotInviteURL($channelID)
     {
-        return $this->doRequest('POST', "channels/${channelID}/invites", [], true);
+        $invite = $this->doRequest('POST', "channels/${channelID}/invites", [], true);
+        if (!$invite || !isset($invite['code'])) {
+            throw new Exception('Unable to generate invite.');
+        }
+
+        return "https://discordapp.com/invite/${invite['code']}";
+    }
+
+    /**
+     * @param string $serverID
+     *
+     * @return string
+     * @throws Exception
+     * @throws GuzzleException
+     */
+    public function createWidgetInviteURL($serverID)
+    {
+        $widget = $this->fetchWidget($serverID);
+        if (!$widget || !isset($widget['instant_invite'])) {
+            throw new Exception('Unable to generate invite.');
+        }
+
+        return $widget['instant_invite'];
     }
 
     /**

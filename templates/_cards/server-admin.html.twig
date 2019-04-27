@@ -25,8 +25,8 @@
         <li>
           <span>Bumped Last</span>
           <i class="server-bump-date">
-            {% if server.lastBump %}
-              {{ server.lastBump.dateCreated|time_diff }}
+            {% if server.lastBumpPeriodVote %}
+              {{ server.lastBumpPeriodVote.dateCreated|time_diff }}
             {% else %}
               Never
             {% endif %}
@@ -35,8 +35,8 @@
         <li>
           <span>Bumped By</span>
           <i class="server-bump-user">
-            {% if server.lastBump %}
-              {{ server.lastBump.user|displayUsername }}
+            {% if server.lastBumpPeriodVote %}
+              {{ server.lastBumpPeriodVote.user|displayUsername }}
             {% else %}
               N/A
             {% endif %}
