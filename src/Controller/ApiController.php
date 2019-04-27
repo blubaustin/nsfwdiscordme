@@ -473,7 +473,20 @@ class ApiController extends Controller
             ->setUser($user)
             ->setBumpPeriod($bumpPeriod)
             ->setServer($server);
-        $server->incrementBumpPoints();
+
+        switch($server->getPremiumStatus()) {
+            case Server::STATUS_GOLD:
+                $points = 2;
+                break;
+            case Server::STATUS_PLATINUM:
+                $points = 3;
+                break;
+            default:
+                $points = 1;
+                break;
+        }
+        $server->incrementBumpPoints($points);
+
         $this->em->persist($bumpPeriodVote);
         $this->em->flush();
 

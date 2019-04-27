@@ -568,11 +568,13 @@ class Server
     }
 
     /**
+     * @param int $points
+     *
      * @return Server
      */
-    public function incrementBumpPoints() : Server
+    public function incrementBumpPoints(int $points = 1) : Server
     {
-        return $this->setBumpPoints($this->getBumpPoints() + 1);
+        return $this->setBumpPoints($this->getBumpPoints() + $points);
     }
 
     /**
