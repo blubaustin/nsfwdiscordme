@@ -4,21 +4,36 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User extends BaseUser
+class User implements UserInterface
 {
+    const ROLE_DEFAULT     = 'ROLE_USER';
+    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var array
+     * @ORM\Column(type="array")
+     */
+    protected $roles;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
 
     /**
      * @var AccessToken
@@ -69,13 +84,19 @@ class User extends BaseUser
     protected $dateCreated;
 
     /**
+     * @var DateTime
+     * @ORM\Column(type="datetime")
+     */
+    protected $dateLastLogin;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        parent::__construct();
-        $this->dateCreated = new DateTime();
-        $this->servers     = new ArrayCollection();
+        $this->dateCreated   = new DateTime();
+        $this->dateLastLogin = new DateTime();
+        $this->servers       = new ArrayCollection();
     }
 
     /**
@@ -83,7 +104,27 @@ class User extends BaseUser
      */
     public function __toString(): string
     {
-        return $this->getDiscordUsername() . '#' . $this->getDiscordDiscriminator();
+        return $this->getUsername();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return User
+     */
+    public function setEnabled(bool $enabled): User
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 
     /**
@@ -244,5 +285,110 @@ class User extends BaseUser
         $this->dateCreated = $dateCreated;
 
         return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateLastLogin(): DateTime
+    {
+        return $this->dateLastLogin;
+    }
+
+    /**
+     * @param DateTime $dateLastLogin
+     *
+     * @return User
+     */
+    public function setDateLastLogin(DateTime $dateLastLogin): User
+    {
+        $this->dateLastLogin = $dateLastLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole($role): bool
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
+    }
+
+    /**
+     * @param array $roles
+     *
+     * @return User
+     */
+    public function setRoles(array $roles): User
+    {
+        $this->roles = array();
+
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return User
+     */
+    public function addRole($role): User
+    {
+        $role = strtoupper($role);
+        if ($role === self::ROLE_DEFAULT) {
+            return $this;
+        }
+
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->getDiscordUsername();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function eraseCredentials()
+    {
+        // Nothing here
     }
 }

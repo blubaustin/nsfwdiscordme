@@ -56,14 +56,14 @@
               Profile
             </a>
             <div class="dropdown-divider"></div>
-            <a href="{{ path('discord_oauth2_logout') }}" class="dropdown-item">
+            <a href="{{ path('logout') }}" class="dropdown-item">
               Logout
             </a>
           </div>
         </li>
       {% else %}
         <li class="nav-item">
-          <a href="{{ path('discord_oauth2') }}" class="nav-link">
+          <a href="{{ path('login') }}" class="nav-link">
             <img src="{{ asset('images/discord-logo-white.png') }}" alt="Discord Logo" class="nav-image" />
             Login With Discord
           </a>

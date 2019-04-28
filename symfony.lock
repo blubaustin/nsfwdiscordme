@@ -148,9 +148,6 @@
             "config/routes/fos_js_routing.yaml"
         ]
     },
-    "friendsofsymfony/user-bundle": {
-        "version": "v2.1.2"
-    },
     "gumlet/php-image-resize": {
         "version": "1.9.2"
     },
@@ -486,7 +483,7 @@
         ]
     },
     "symfony/templating": {
-        "version": "v4.2.5"
+        "version": "v4.2.7"
     },
     "symfony/translation": {
         "version": "3.3",

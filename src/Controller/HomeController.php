@@ -64,7 +64,7 @@ class HomeController extends Controller
     {
         $user = $this->getUser();
         if (!$user) {
-            return new RedirectResponse($this->generateUrl('discord_oauth2'));
+            return new RedirectResponse($this->generateUrl('login'));
         }
 
         $query = $this->em->getRepository(Server::class)
@@ -226,20 +226,5 @@ class HomeController extends Controller
     public function termsAction()
     {
         return $this->render('home/terms.html.twig');
-    }
-
-    /**
-     * @Route("/login", name="login")
-     *
-     * FOSUserBundle redirects to this URL but it doesn't really exist. Redirect to
-     * the real login URL.
-     *
-     * @return RedirectResponse
-     */
-    public function loginAction()
-    {
-        return new RedirectResponse(
-            $this->generateUrl('discord_oauth2')
-        );
     }
 }

@@ -6,8 +6,8 @@ home:
 profile:
     resource: ../../src/Controller/ProfileController.php
     type: annotation
-discord:
-    resource: ../../src/Controller/DiscordController.php
+auth:
+    resource: ../../src/Controller/AuthController.php
     type: annotation
 search:
     resource: ../../src/Controller/SearchController.php
