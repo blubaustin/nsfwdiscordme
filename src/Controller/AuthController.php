@@ -93,6 +93,7 @@ class AuthController extends Controller
                 throw new Exception('User not created.');
             }
         } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
             $this->addFlash('danger', 'Unable to authenticate your account.');
 
             return $this->logoutAction($request, $tokenStorage);
