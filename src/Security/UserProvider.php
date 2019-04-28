@@ -150,6 +150,10 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
+        if (!($user instanceof User)) {
+            return null;
+        }
+
         $accessToken = $user->getDiscordAccessToken();
         if ($accessToken && !$accessToken->isExpired()) {
             return $user;
