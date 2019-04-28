@@ -97,6 +97,7 @@ class User implements UserInterface
         $this->dateCreated   = new DateTime();
         $this->dateLastLogin = new DateTime();
         $this->servers       = new ArrayCollection();
+        $this->roles         = [];
     }
 
     /**
