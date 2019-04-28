@@ -23,7 +23,7 @@ class ServerStatsPage extends Page {
     const { serverID } = this;
 
     $.ajax({
-      url: router.generate('api_stats_joins', { serverID })
+      url: router.generate('api_server_stats', { serverID })
     }).done((resp) => {
       if (resp.message !== 'ok') {
         return;

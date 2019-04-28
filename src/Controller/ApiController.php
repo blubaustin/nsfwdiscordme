@@ -72,24 +72,6 @@ class ApiController extends Controller
     }
 
     /**
-     * Returns a list of channels for the given server
-     *
-     * @Route("/guilds/{serverID}/channels", name="guild_channels")
-     *
-     * @param string $serverID
-     *
-     * @return JsonResponse
-     * @throws GuzzleException
-     */
-    public function guildChannelsAction($serverID)
-    {
-        return new JsonResponse([
-            'message'  => 'ok',
-            'channels' => $this->discord->fetchGuildChannels($serverID)
-        ]);
-    }
-
-    /**
      * Bumps multiple servers
      *
      * The POST data contains an array of server IDs to bump. Returns information
@@ -207,7 +189,7 @@ class ApiController extends Controller
     /**
      * Verifies a recaptcha token with google
      *
-     * @Route("/recaptcha-verify", name="recaptcha_verify", methods={"POST"})
+     * @Route("/recaptcha/verify", name="recaptcha_verify", methods={"POST"})
      *
      * @param Request          $request
      * @param RecaptchaService $recaptchaService
@@ -291,60 +273,34 @@ class ApiController extends Controller
     }
 
     /**
-     * Deletes a server
+     * Returns a list of channels for the given server
      *
-     * @Route("/delete-server/{serverID}", name="delete_server", methods={"POST"})
+     * @Route("/server/{serverID}/channels", name="server_channels")
      *
-     * @param string              $serverID
-     * @param WebHandlerInterface $webHandler
+     * @param string $serverID
      *
      * @return JsonResponse
+     * @throws GuzzleException
      */
-    public function deleteServerAction($serverID, WebHandlerInterface $webHandler)
+    public function serverChannelsAction($serverID)
     {
-        $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_MANAGER);
-        foreach($server->getTeamMembers() as $teamMember) {
-            $this->em->remove($teamMember);
-        }
-        $this->em->remove($server);
-
-        // Flush now because we don't care if there's a problem later deleting the
-        // media. Better to delete the server even if deleting the media fails.
-        $this->em->flush();
-
-        try {
-            $iconMedia   = $server->getIconMedia();
-            $bannerMedia = $server->getBannerMedia();
-            if ($iconMedia) {
-                $webHandler->getAdapter()->remove($iconMedia->getPath());
-                $this->em->remove($iconMedia);
-                $this->em->flush();
-            }
-            if ($bannerMedia) {
-                $webHandler->getAdapter()->remove($bannerMedia->getPath());
-                $this->em->remove($bannerMedia);
-                $this->em->flush();
-            }
-        } catch (Exception $e) {
-            $this->logger->error($e->getMessage(), ['serverID' => $serverID]);
-        }
-
         return new JsonResponse([
-            'message' => 'ok'
+            'message'  => 'ok',
+            'channels' => $this->discord->fetchGuildChannels($serverID)
         ]);
     }
 
     /**
      * Returns the views & joins stats for a server
      *
-     * @Route("/stats/joins/{serverID}", name="stats_joins")
+     * @Route("/server/{serverID}/stats", name="server_stats")
      *
      * @param string $serverID
      *
      * @return JsonResponse
      * @throws DBALException
      */
-    public function statsJoinsAction($serverID)
+    public function serverStatsAction($serverID)
     {
         $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_EDITOR);
 
@@ -388,6 +344,50 @@ class ApiController extends Controller
             'message' => 'ok',
             'joins'   => $joins,
             'views'   => $views
+        ]);
+    }
+
+    /**
+     * Deletes a server
+     *
+     * @Route("/server/{serverID}/delete", name="server_delete", methods={"POST"})
+     *
+     * @param string              $serverID
+     * @param WebHandlerInterface $webHandler
+     *
+     * @return JsonResponse
+     */
+    public function serverDeleteAction($serverID, WebHandlerInterface $webHandler)
+    {
+        $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_MANAGER);
+        foreach($server->getTeamMembers() as $teamMember) {
+            $this->em->remove($teamMember);
+        }
+        $this->em->remove($server);
+
+        // Flush now because we don't care if there's a problem later deleting the
+        // media. Better to delete the server even if deleting the media fails.
+        $this->em->flush();
+
+        try {
+            $iconMedia   = $server->getIconMedia();
+            $bannerMedia = $server->getBannerMedia();
+            if ($iconMedia) {
+                $webHandler->getAdapter()->remove($iconMedia->getPath());
+                $this->em->remove($iconMedia);
+                $this->em->flush();
+            }
+            if ($bannerMedia) {
+                $webHandler->getAdapter()->remove($bannerMedia->getPath());
+                $this->em->remove($bannerMedia);
+                $this->em->flush();
+            }
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage(), ['serverID' => $serverID]);
+        }
+
+        return new JsonResponse([
+            'message' => 'ok'
         ]);
     }
 

@@ -202,7 +202,7 @@ class ServerSettingsPage extends Page {
     this.$refreshButton.find('.icon').addClass('fa-spin');
 
     $.ajax({
-      url: router.generate('api_guild_channels', { serverID: discordID })
+      url: router.generate('api_server_channels', { serverID: discordID })
     }).done((resp) => {
       if (resp.message === 'ok') {
         $('<option />', {
@@ -255,7 +255,7 @@ class ServerSettingsPage extends Page {
     const { deleteServerID } = this.state;
 
     $.ajax({
-      url:  router.generate('api_delete_server', { serverID: deleteServerID }),
+      url:  router.generate('api_server_delete', { serverID: deleteServerID }),
       type: 'post'
     }).done((resp) => {
       if (resp.message === 'ok') {
