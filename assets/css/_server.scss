@@ -41,6 +41,8 @@
 }
 
 .card-server-about-description {
+  padding-top: $gutter-size * 2;
+
   em {
     font-style: italic;
   }

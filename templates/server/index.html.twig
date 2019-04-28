@@ -91,9 +91,6 @@
                 Join Server
               </button>
             </div>
-            <div class="card-server-about-owner">
-              Owned by {{ server.user|displayUsername }}
-            </div>
             <div class="card-server-about-categories">
               Categories
               {% for category in server.categories %}
@@ -103,7 +100,7 @@
                 {% if not loop.last %}, {% endif %}
               {% endfor %}
             </div>
-            <div class="card-server-about-description gutter-top">
+            <div class="card-server-about-description">
               {% if server.description %}
                 {{ server.description|markdown }}
               {% else %}
