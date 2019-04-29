@@ -41,7 +41,7 @@ class User implements UserInterface
      * @var bool
      * @ORM\Column(type="boolean")
      */
-    protected $enabled;
+    protected $isEnabled;
 
     /**
      * @var AccessToken
@@ -134,17 +134,17 @@ class User implements UserInterface
      */
     public function isEnabled(): bool
     {
-        return $this->enabled;
+        return $this->isEnabled;
     }
 
     /**
-     * @param bool $enabled
+     * @param bool $isEnabled
      *
      * @return User
      */
-    public function setEnabled(bool $enabled): User
+    public function setIsEnabled(bool $isEnabled): User
     {
-        $this->enabled = $enabled;
+        $this->isEnabled = $isEnabled;
 
         return $this;
     }

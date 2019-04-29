@@ -86,7 +86,7 @@ class UserProvider implements UserProviderInterface
             $accessToken = new AccessToken();
             $user        = new User();
             $user
-                ->setEnabled(true)
+                ->setIsEnabled(true)
                 ->setDateLastLogin(new DateTime())
                 ->setDiscordID($owner['id'])
                 ->setDiscordUsername($owner['username'])

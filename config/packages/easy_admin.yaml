@@ -47,11 +47,13 @@ easy_admin:
             list:
                 fields:
                     - id
+                    - isEnabled
                     - { property: 'discordID', label: 'Discord ID', type: 'string' }
                     - discordEmail
                     - discordUsername
                     - discordDiscriminator
                     - dateCreated
+                    - dateLastLogin
             form:
                 fields:
                     - { property: 'discordID', label: 'Discord ID', type: 'text' }
@@ -59,7 +61,6 @@ easy_admin:
                     - discordDiscriminator
                     - discordEmail
                     - discordAvatar
-                    - roles
 
         ServerTeamMember:
             label: Team Members
