@@ -238,6 +238,14 @@ class User implements UserInterface
     }
 
     /**
+     * @return string
+     */
+    public function getDiscordAvatarURL(): string
+    {
+        return sprintf('https://cdn.discordapp.com/avatars/%s/%s.png', $this->getDiscordID(), $this->getDiscordAvatar());
+    }
+
+    /**
      * @param string $discordAvatar
      *
      * @return User

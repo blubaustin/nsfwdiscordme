@@ -1,5 +1,7 @@
 easy_admin:
     site_name: nsfwdiscordme
+    user:
+        avatar_property_path: 'getDiscordAvatarURL'
     design:
         brand_color: '#2e365a'
         form_theme: 'admin/form/bootstrap_4.html.twig'
@@ -8,9 +10,17 @@ easy_admin:
                 - 'build/css/admin.css'
             js:
                 - 'build/js/admin.js'
+        menu:
+            - { entity: Server, label: 'Servers', icon: 'server' }
+            - { entity: User, label: 'Users', icon: 'user' }
+            - { entity: ServerTeamMember, label: 'Team Members', icon: 'users' }
+            - { entity: Media, label: 'Media', icon: 'image' }
+            - { entity: Category, label: 'Categories', icon: 'tags' }
+            - { entity: BannedServer, label: 'Banned Servers', icon: 'ban' }
+            - { entity: BannedUser, label: 'Banned Users', icon: 'ban' }
+            - { entity: BannedWord, label: 'Banned Words', icon: 'ban' }
     entities:
         Server:
-            label: Servers
             class: App\Entity\Server
             list:
                 fields:
@@ -42,16 +52,15 @@ easy_admin:
                     - teamMembers
 
         User:
-            label: Users
             class: App\Entity\User
             list:
                 fields:
                     - id
                     - isEnabled
                     - { property: 'discordID', label: 'Discord ID', type: 'string' }
-                    - discordEmail
-                    - discordUsername
-                    - discordDiscriminator
+                    - { property: 'discordEmail', label: 'Email' }
+                    - { property: 'discordUsername', label: 'Username' }
+                    - { property: 'discordDiscriminator', label: 'Discriminator' }
                     - dateCreated
                     - dateLastLogin
             form:
@@ -63,7 +72,6 @@ easy_admin:
                     - discordAvatar
 
         ServerTeamMember:
-            label: Team Members
             class: App\Entity\ServerTeamMember
             list:
                 fields:
@@ -89,7 +97,6 @@ easy_admin:
                     - adapter
 
         Category:
-            label: Categories
             class: App\Entity\Category
             list:
                 fields:
@@ -101,13 +108,10 @@ easy_admin:
                     - slug
 
         BannedServer:
-            label: Banned Servers
             class: App\Entity\BannedServer
 
         BannedUser:
-            label: Banned Users
             class: App\Entity\BannedUser
 
         BannedWord:
-            label: Banned Words
             class: App\Entity\BannedWord
