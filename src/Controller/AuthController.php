@@ -186,25 +186,6 @@ class AuthController extends Controller
     }
 
     /**
-     * @Route("/admin/code", name="admin_code")
-     *
-     * @return Response
-     * @throws Exception
-     */
-    public function googleCodeAction()
-    {
-        $user = $this->getUser();
-        $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
-        $secret = $googleAuthenticator->createSecret();
-        $user->setGoogleAuthenticatorSecret($secret);
-        $this->em->flush();
-
-        return $this->render('auth/google-code.html.twig', [
-            'qrURL' => $googleAuthenticator->getQRCodeGoogleUrl('nsfwdiscord.me', $secret)
-        ]);
-    }
-
-    /**
      * @param Request $request
      * @param User    $user
      * @param array   $roles
