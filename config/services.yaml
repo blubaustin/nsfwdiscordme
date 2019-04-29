@@ -49,11 +49,6 @@ services:
         calls:
             - [setLogger, ['@logger']]
 
-    RestCord\DiscordClient:
-        class: RestCord\DiscordClient
-        arguments:
-            - { token: '%env(DISCORD_BOT_TOKEN)%' }
-
     PHPGangsta_GoogleAuthenticator:
         class: PHPGangsta_GoogleAuthenticator
 
