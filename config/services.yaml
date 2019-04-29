@@ -107,6 +107,7 @@ services:
     App\Controller\ApiController:
         calls:
             - [setNonceStorage, ['@App\Security\NonceStorageInterface']]
+            - [setEventsFinder, ['@fos_elastica.finder.events.event']]
 
     # Event Listeners
     App\Event\Listener\ServerStatsListener:

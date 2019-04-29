@@ -21,3 +21,18 @@ fos_elastica:
                         model: App\Entity\Server
                         provider: ~
                         finder: ~
+        events:
+            types:
+                event:
+                    properties:
+                        server: ~
+                        eventType: ~
+                        dateCreated:
+                            type: date
+                    persistence:
+                        driver: orm
+                        model: App\Entity\ServerEvent
+                        provider: ~
+                        finder: ~
+                        listener:
+                            insert: true

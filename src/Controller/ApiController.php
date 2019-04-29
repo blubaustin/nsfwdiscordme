@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
+use App\Entity\ServerEvent;
 use App\Event\BumpEvent;
 use App\Event\JoinEvent;
 use App\Event\ServerActionEvent;
@@ -15,7 +16,11 @@ use DateInterval;
 use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
+use Elastica\Aggregation\DateHistogram;
+use Elastica\Query;
 use Exception;
+use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
+use FOS\ElasticaBundle\Paginator\FantaPaginatorAdapter;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,6 +44,11 @@ class ApiController extends Controller
     protected $nonceStorage;
 
     /**
+     * @var PaginatedFinderInterface
+     */
+    protected $eventsFinder;
+
+    /**
      * @param NonceStorageInterface $nonceStorage
      *
      * @return $this
@@ -46,6 +56,18 @@ class ApiController extends Controller
     public function setNonceStorage(NonceStorageInterface $nonceStorage)
     {
         $this->nonceStorage = $nonceStorage;
+
+        return $this;
+    }
+
+    /**
+     * @param PaginatedFinderInterface $eventsFinder
+     *
+     * @return $this
+     */
+    public function setEventsFinder(PaginatedFinderInterface $eventsFinder)
+    {
+        $this->eventsFinder = $eventsFinder;
 
         return $this;
     }
@@ -298,49 +320,24 @@ class ApiController extends Controller
      * @param string $serverID
      *
      * @return JsonResponse
-     * @throws DBALException
+     * @throws Exception
      */
     public function serverStatsAction($serverID)
     {
         $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_EDITOR);
 
-        $stmtJoin = $this->em->getConnection()->prepare('
-            SELECT COUNT(*) as `count`
-            FROM `server_event`
-            WHERE `server_id` = ?
-            AND `event_type` = 0
-            AND DATE(date_created) = ?
-            LIMIT 1
-        ');
-        $stmtView = $this->em->getConnection()->prepare('
-            SELECT COUNT(*) as `count`
-            FROM `server_event`
-            WHERE `server_id` = ?
-            AND `event_type` = 1
-            AND DATE(date_created) = ?
-            LIMIT 1
-        ');
+        /** @var FantaPaginatorAdapter $adapter */
+        $query   = $this->createServerEventQuery($server, ServerEvent::TYPE_JOIN);
+        $results = $this->eventsFinder->findPaginated($query);
+        $adapter = $results->getAdapter();
+        $buckets = $adapter->getAggregations()['hits']['buckets'];
+        $joins   = $this->generateStatsFromBuckets($buckets);
 
-        $joins = [];
-        $views = [];
-        $sid   = $server->getId();
-        $now   = new DateTime('30 days ago');
-        $int   = new DateInterval('P1D');
-
-        for($i = 30; $i > 0; $i--) {
-            $day = $now->add($int)->format('Y-m-d');
-            $stmtJoin->execute([$sid, $day]);
-            $stmtView->execute([$sid, $day]);
-
-            $joins[] = [
-                'day'   => $day,
-                'count' => $stmtJoin->fetchColumn(0)
-            ];
-            $views[] = [
-                'day'   => $day,
-                'count' => $stmtView->fetchColumn(0)
-            ];
-        }
+        $query   = $this->createServerEventQuery($server, ServerEvent::TYPE_VIEW);
+        $results = $this->eventsFinder->findPaginated($query);
+        $adapter = $results->getAdapter();
+        $buckets = $adapter->getAggregations()['hits']['buckets'];
+        $views   = $this->generateStatsFromBuckets($buckets);
 
         return new JsonResponse([
             'message' => 'ok',
@@ -516,5 +513,65 @@ class ApiController extends Controller
         if (!$this->nonceStorage->valid($key, $value)) {
             throw $this->createAccessDeniedException();
         }
+    }
+
+    /**
+     * @param Server $server
+     * @param int    $eventType
+     *
+     * @return Query
+     */
+    private function createServerEventQuery(Server $server, $eventType)
+    {
+        /** @var FantaPaginatorAdapter $adapter */
+        $query = new Query();
+        $query->setSize(0);
+
+        $bool = new Query\BoolQuery();
+        $bool->addMust(new Query\Term([
+            'eventType' => $eventType
+        ]));
+        $bool->addMust(new Query\Term([
+            'server' => $server->getDiscordID()
+        ]));
+        $query->setQuery($bool);
+        $query->addAggregation(new DateHistogram('hits', 'dateCreated', 'day'));
+
+        return $query;
+    }
+
+    /**
+     * @param array $buckets
+     *
+     * @return array
+     * @throws Exception
+     */
+    private function generateStatsFromBuckets(array $buckets)
+    {
+        $rows = [];
+        foreach($buckets as $bucket) {
+            $day = (new DateTime($bucket['key_as_string']))->format('Y-m-d');
+            $rows[$day] = $bucket['doc_count'];
+        }
+
+        $final = [];
+        $now   = new DateTime('30 days ago');
+        $int   = new DateInterval('P1D');
+        for($i = 30; $i > 0; $i--) {
+            $day = $now->add($int)->format('Y-m-d');
+            if (isset($rows[$day])) {
+                $final[] = [
+                    'day'   => $day,
+                    'count' => $rows[$day]
+                ];
+            } else {
+                $final[] = [
+                    'day'   => $day,
+                    'count' => 0
+                ];
+            }
+        }
+
+        return $final;
     }
 }
