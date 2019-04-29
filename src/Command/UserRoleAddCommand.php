@@ -4,6 +4,7 @@ namespace App\Command;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use PHPGangsta_GoogleAuthenticator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -79,5 +80,14 @@ class UserRoleAddCommand extends Command
         $this->em->flush();
 
         $output->writeln('Role added. The user should log out and log back in now.');
+
+        if (strtoupper($role) === User::ROLE_ADMIN) {
+            $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
+            $secret = $googleAuthenticator->createSecret();
+            $user->setGoogleAuthenticatorSecret($secret);
+            $this->em->flush();
+
+            $output->writeln('Google Authenticator secret: ' . $secret);
+        }
     }
 }
