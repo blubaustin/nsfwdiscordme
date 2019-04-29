@@ -78,7 +78,6 @@ class UserRoleAddCommand extends Command
 
         $user->addRole($role);
         $this->em->flush();
-
         $output->writeln('Role added. The user should log out and log back in now.');
 
         if (strtoupper($role) === User::ROLE_ADMIN) {
@@ -87,7 +86,8 @@ class UserRoleAddCommand extends Command
             $user->setGoogleAuthenticatorSecret($secret);
             $this->em->flush();
 
-            $output->writeln('Google Authenticator secret: ' . $secret);
+            $qr = $googleAuthenticator->getQRCodeGoogleUrl('nsfwdiscord.me', $secret);
+            $output->writeln('Google Authenticator secret: ' . $qr);
         }
     }
 }

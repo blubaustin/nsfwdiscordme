@@ -76,8 +76,10 @@ class UserRoleRemoveCommand extends Command
         }
 
         $user->removeRole($role);
+        if (strtoupper($role) === User::ROLE_ADMIN) {
+            $user->setGoogleAuthenticatorSecret('');
+        }
         $this->em->flush();
-
         $output->writeln('Role removed. The user should log out and log back in now.');
     }
 }
