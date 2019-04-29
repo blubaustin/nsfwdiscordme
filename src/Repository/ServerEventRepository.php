@@ -1,14 +1,14 @@
 <?php
 namespace App\Repository;
 
-use App\Entity\ServerBumpEvent;
+use App\Entity\ServerEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * Class ServerBumpEventRepository
+ * Class ServerEventRepository
  */
-class ServerBumpEventRepository extends ServiceEntityRepository
+class ServerEventRepository extends ServiceEntityRepository
 {
     /**
      * Constructor
@@ -17,13 +17,13 @@ class ServerBumpEventRepository extends ServiceEntityRepository
      */
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, ServerBumpEvent::class);
+        parent::__construct($registry, ServerEvent::class);
     }
 
     /**
      * @param int $id
      *
-     * @return object|ServerBumpEvent
+     * @return object|ServerEvent
      */
     public function findByID($id)
     {

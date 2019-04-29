@@ -306,15 +306,17 @@ class ApiController extends Controller
 
         $stmtJoin = $this->em->getConnection()->prepare('
             SELECT COUNT(*) as `count`
-            FROM `server_join_event`
+            FROM `server_event`
             WHERE `server_id` = ?
+            AND `event_type` = 0
             AND DATE(date_created) = ?
             LIMIT 1
         ');
         $stmtView = $this->em->getConnection()->prepare('
             SELECT COUNT(*) as `count`
-            FROM `server_view_event`
+            FROM `server_event`
             WHERE `server_id` = ?
+            AND `event_type` = 1
             AND DATE(date_created) = ?
             LIMIT 1
         ');

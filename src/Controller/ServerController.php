@@ -4,12 +4,11 @@ namespace App\Controller;
 use App\Entity\BannedServer;
 use App\Entity\BannedWord;
 use App\Entity\BumpPeriodVote;
-use App\Entity\ServerJoinEvent;
+use App\Entity\ServerEvent;
 use App\Entity\Media;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
 use App\Entity\ServerTeamMember;
-use App\Entity\ServerViewEvent;
 use App\Entity\User;
 use App\Event\ServerActionEvent;
 use App\Event\ViewEvent;
@@ -160,20 +159,24 @@ class ServerController extends Controller
             ->getQuery()
             ->execute();
 
-        $joinCount = $this->em->getRepository(ServerJoinEvent::class)
+        $joinCount = $this->em->getRepository(ServerEvent::class)
             ->createQueryBuilder('j')
             ->select('COUNT(j.id)')
             ->where('j.server = :server')
+            ->andWhere('j.eventType = :eventType')
             ->setParameter(':server', $server)
+            ->setParameter(':eventType', ServerEvent::TYPE_JOIN)
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleScalarResult();
 
-        $viewCount = $this->em->getRepository(ServerViewEvent::class)
+        $viewCount = $this->em->getRepository(ServerEvent::class)
             ->createQueryBuilder('j')
             ->select('COUNT(j.id)')
             ->where('j.server = :server')
+            ->andWhere('j.eventType = :eventType')
             ->setParameter(':server', $server)
+            ->setParameter(':eventType', ServerEvent::TYPE_VIEW)
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleScalarResult();

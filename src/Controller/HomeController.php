@@ -1,8 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\ServerBumpEvent;
-use App\Entity\ServerJoinEvent;
+use App\Entity\ServerEvent;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
 use App\Http\Request;
@@ -91,11 +90,13 @@ class HomeController extends Controller
     {
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
-            ->leftJoin(ServerBumpEvent::class, 'b', Join::WITH, 'b.server = s')
+            ->leftJoin(ServerEvent::class, 'e', Join::WITH, 'e.server = s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
+            ->andWhere('e.eventType = :eventType')
+            ->setParameter(':eventType', ServerEvent::TYPE_BUMP)
             ->orderBy('s.premiumStatus', 'desc')
-            ->addOrderBy('b.id', 'desc')
+            ->addOrderBy('e.dateCreated', 'desc')
             ->getQuery()
             ->useResultCache(true, self::CACHE_LIFETIME);
 
@@ -135,12 +136,14 @@ class HomeController extends Controller
     {
         $query = $this->em->getRepository(Server::class)
             ->createQueryBuilder('s')
-            ->leftJoin(ServerJoinEvent::class, 'j', Join::WITH, 'j.server = s')
+            ->leftJoin(ServerEvent::class, 'e', Join::WITH, 'e.server = s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->andWhere('j.dateCreated > :then')
+            ->andWhere('e.eventType = :eventType')
+            ->andWhere('e.dateCreated > :then')
             ->setParameter(':then', new DateTime('24 hours ago'))
-            ->orderBy('j.id', 'desc')
+            ->setParameter(':eventType', ServerEvent::TYPE_JOIN)
+            ->orderBy('e.id', 'desc')
             ->getQuery()
             ->useResultCache(true, self::CACHE_LIFETIME);
 
