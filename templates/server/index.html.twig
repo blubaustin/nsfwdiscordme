@@ -99,6 +99,14 @@
                 </a>
                 {% if not loop.last %}, {% endif %}
               {% endfor %}
+              {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <div>
+                  Owned by {{ server.user|displayUsername }}
+                </div>
+                <div>
+                  {{ server.bumpPoints }} bump points
+                </div>
+              {% endif %}
             </div>
             <div class="card-server-about-description">
               {% if server.description %}

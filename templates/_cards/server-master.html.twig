@@ -17,6 +17,9 @@
       <div class="card-server-master-members-online">
         {{ icon('app-online') }}
         {{ server.membersOnline|number_format }} online
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+          &middot; {{ server.bumpPoints }} bump points
+        {% endif %}
       </div>
       <div class="card-server-master-description">
         {{ server.summary }}

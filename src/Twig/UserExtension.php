@@ -71,11 +71,6 @@ class UserExtension extends AbstractExtension
      */
     public function displayUsername(User $user, $includeDiscriminator = true)
     {
-        $username = $user->getUsername();
-        if ($username) {
-            return $username;
-        }
-
         $discordUsername      = $user->getDiscordUsername();
         $discordDiscriminator = $user->getDiscordDiscriminator();
 
