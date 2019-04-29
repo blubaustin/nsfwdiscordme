@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+{% block body %}
+  {% for tag in tags %}
+    <a href="{{ path('category_tag', { tag: tag.name }) }}">
+      {{ tag.name }}
+    </a>
+    {% if not loop.last %}, {% endif %}
+  {% endfor %}
+{% endblock %}

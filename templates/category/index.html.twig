@@ -1,6 +1,10 @@
 {% extends 'home/index.html.twig' %}
 {% block heading %}
   <h1 class="layout-page-title">
-    {{ category.name }}
+    {% if category|default %}
+      {{ category.name }}
+    {% elseif tag|default %}
+      {{ tag }}
+    {% endif %}
   </h1>
 {% endblock %}
