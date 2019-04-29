@@ -83,7 +83,7 @@ services:
         arguments:
             - '%env(RECAPTCHA_SECRET_KEY)%'
 
-    App\Component\NonceStorageInterface:
+    App\Security\NonceStorageInterface:
         class: App\Security\NonceStorage
         arguments:
             - '@session'
