@@ -370,6 +370,31 @@ class User implements UserInterface
     }
 
     /**
+     * @param string $role
+     *
+     * @return User
+     */
+    public function removeRole($role): User
+    {
+        $role = strtoupper($role);
+        if (!in_array($role, self::ROLES)) {
+            throw new InvalidArgumentException(
+                "Invalid role ${role}."
+            );
+        }
+        $index = array_search($role, $this->roles);
+        if ($index !== false) {
+            unset($this->roles[$index]);
+        }
+
+        if (empty($this->roles)) {
+            $this->roles = [self::ROLE_USER];
+        }
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getPassword(): string
