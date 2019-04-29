@@ -375,7 +375,7 @@ class User implements UserInterface
                 "Invalid role ${role}."
             );
         }
-        if (!in_array($role, $this->roles, true)) {
+        if ($role !== self::ROLE_SUPER_ADMIN && !in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
 
