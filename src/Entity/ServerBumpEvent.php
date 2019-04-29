@@ -89,7 +89,7 @@ class ServerBumpEvent
     public function getIpString(): string
     {
         rewind($this->ip);
-        return stream_get_contents($this->ip);
+        return inet_ntop(stream_get_contents($this->ip));
     }
 
     /**
