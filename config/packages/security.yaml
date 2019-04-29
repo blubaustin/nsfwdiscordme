@@ -27,4 +27,6 @@ security:
         - { path: ^/server,       role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/api/bump/,    role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/api/server/,  role: IS_AUTHENTICATED_REMEMBERED }
-        - { path: ^/admin/,       role: ROLE_ADMIN }
+        - { path: ^/admin/login,  role: ROLE_ADMIN }
+        - { path: ^/admin/code,   role: ROLE_ADMIN }
+        - { path: ^/admin/,       role: ROLE_SUPER_ADMIN }

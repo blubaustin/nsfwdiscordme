@@ -160,7 +160,7 @@ class UserProvider implements UserProviderInterface
             return null;
         }
         if (!$accessToken->isExpired()) {
-            return $user;
+            return $this->findUser($user->getId());
         }
 
         $newAccessToken = $this->discord->getAccessToken('refresh_token', [
@@ -177,7 +177,7 @@ class UserProvider implements UserProviderInterface
                 ->setType($values['token_type']);
             $this->em->flush();
 
-            return $user;
+            return $this->findUser($user->getId());
         }
 
         return null;
@@ -193,5 +193,15 @@ class UserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return User::class === $class;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return User
+     */
+    private function findUser($id)
+    {
+        return $this->em->getRepository(User::class)->findByID($id);
     }
 }

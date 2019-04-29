@@ -1,0 +1,10 @@
+{% extends 'home/index.html.twig' %}
+{% block body %}
+  {{ form_start(form) }}
+  {{ form_row(form.code) }}
+  <button class="btn btn-info" type="submit">
+    Submit
+  </button>
+  {{ form_end(form) }}
+{% endblock %}
+

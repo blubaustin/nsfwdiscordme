@@ -54,6 +54,9 @@ services:
         arguments:
             - { token: '%env(DISCORD_BOT_TOKEN)%' }
 
+    PHPGangsta_GoogleAuthenticator:
+        class: PHPGangsta_GoogleAuthenticator
+
     Wohali\OAuth2\Client\Provider\Discord:
         class: Wohali\OAuth2\Client\Provider\Discord
         arguments:

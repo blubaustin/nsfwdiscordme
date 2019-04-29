@@ -202,6 +202,9 @@
     "pagerfanta/pagerfanta": {
         "version": "v2.1.2"
     },
+    "phpgangsta/googleauthenticator": {
+        "version": "dev-master"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },

@@ -3,8 +3,13 @@ namespace App\Controller;
 
 use App\Entity\BannedUser;
 use App\Entity\ServerTeamMember;
+use App\Entity\User;
+use App\Form\Model\AdminLoginModal;
+use App\Form\Type\AdminLoginType;
 use App\Security\UserProvider;
 use Exception;
+use PHPGangsta_GoogleAuthenticator;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -131,13 +136,7 @@ class AuthController extends Controller
         }
 
         // Authenticate with Symfony.
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $tokenStorage->setToken($token);
-        $request->getSession()->set('_security_main', serialize($token));
-        $this->eventDispatcher->dispatch(
-            'security.interactive_login',
-            new InteractiveLoginEvent($request, $token)
-        );
+        $this->authenticate($request, $user, $user->getRoles());
 
         // We're done! Send the user back where they came from or else the home page.
         $session = $this->get('session');
@@ -147,6 +146,77 @@ class AuthController extends Controller
 
         return new RedirectResponse(
             $this->generateUrl('home_index')
+        );
+    }
+
+    /**
+     * @Route("/admin/login", name="auth_admin_login")
+     *
+     * @param Request                        $request
+     * @param PHPGangsta_GoogleAuthenticator $googleAuthenticator
+     *
+     * @return Response
+     */
+    public function adminLogin(Request $request, PHPGangsta_GoogleAuthenticator $googleAuthenticator)
+    {
+        $user  = $this->getUser();
+        $modal = new AdminLoginModal();
+        $form  = $this->createForm(AdminLoginType::class, $modal);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $valid = $googleAuthenticator->verifyCode(
+                $user->getGoogleAuthenticatorSecret(),
+                $modal->getCode()
+            );
+            if ($valid) {
+                $this->authenticate($request, $user, [User::ROLE_SUPER_ADMIN]);
+
+                return new RedirectResponse(
+                    $this->generateUrl('easyadmin')
+                );
+            }
+
+            $form['code']->addError(new FormError('Invalid code.'));
+        }
+
+        return $this->render('auth/admin-login.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/code", name="admin_code")
+     *
+     * @return Response
+     * @throws Exception
+     */
+    public function googleCodeAction()
+    {
+        $user = $this->getUser();
+        $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
+        $secret = $googleAuthenticator->createSecret();
+        $user->setGoogleAuthenticatorSecret($secret);
+        $this->em->flush();
+
+        return $this->render('auth/google-code.html.twig', [
+            'qrURL' => $googleAuthenticator->getQRCodeGoogleUrl('nsfwdiscord.me', $secret)
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param User    $user
+     * @param array   $roles
+     */
+    private function authenticate(Request $request, User $user, array $roles)
+    {
+        $token = new UsernamePasswordToken($user, null, 'main', $roles);
+        $this->get('security.token_storage')->setToken($token);
+        $request->getSession()->set('_security_main', serialize($token));
+        $this->eventDispatcher->dispatch(
+            'security.interactive_login',
+            new InteractiveLoginEvent($request, $token)
         );
     }
 }

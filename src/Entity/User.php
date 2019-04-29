@@ -45,7 +45,7 @@ class User implements UserInterface
 
     /**
      * @var AccessToken
-     * @ORM\OneToOne(targetEntity="AccessToken", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="AccessToken", mappedBy="user", cascade={"persist"})
      */
     protected $discordAccessToken;
 
@@ -86,6 +86,11 @@ class User implements UserInterface
     protected $servers;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $googleAuthenticatorSecret;
+
+    /**
      * @var DateTime
      * @ORM\Column(type="datetime")
      */
@@ -114,6 +119,14 @@ class User implements UserInterface
     public function __toString(): string
     {
         return $this->getUsername();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**
@@ -424,5 +437,48 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // Nothing here
+    }
+
+    /**
+     * Return true if the user should do two-factor authentication.
+     *
+     * @return bool
+     */
+    public function isGoogleAuthenticatorEnabled(): bool
+    {
+        return $this->googleAuthenticatorSecret ? true : false;
+    }
+
+    /**
+     * Return the user name.
+     *
+     * @return string
+     */
+    public function getGoogleAuthenticatorUsername(): string
+    {
+        return $this->getUsername();
+    }
+
+    /**
+     * Return the Google Authenticator secret
+     * When an empty string is returned, the Google authentication is disabled.
+     *
+     * @return string
+     */
+    public function getGoogleAuthenticatorSecret(): ?string
+    {
+        return $this->googleAuthenticatorSecret;
+    }
+
+    /**
+     * @param string|null $googleAuthenticatorSecret
+     *
+     * @return User
+     */
+    public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): User
+    {
+        $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
+
+        return $this;
     }
 }
