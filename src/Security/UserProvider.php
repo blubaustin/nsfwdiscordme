@@ -112,6 +112,7 @@ class UserProvider implements UserProviderInterface
             ->setDateExpires($expires)
             ->setScope($values['scope'])
             ->setType($values['token_type']);
+        $user->setDiscordAccessToken($accessToken);
         $this->em->persist($accessToken);
 
         $this->em->flush();
@@ -150,12 +151,15 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!($user instanceof User)) {
+        if (!($user instanceof UserInterface)) {
             return null;
         }
 
         $accessToken = $user->getDiscordAccessToken();
-        if ($accessToken && !$accessToken->isExpired()) {
+        if (!$accessToken) {
+            return null;
+        }
+        if (!$accessToken->isExpired()) {
             return $user;
         }
 

@@ -5,6 +5,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -13,8 +14,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-    const ROLE_DEFAULT     = 'ROLE_USER';
+    const ROLE_USER        = 'ROLE_USER';
+    const ROLE_ADMIN       = 'ROLE_ADMIN';
     const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
+    const ROLES = [
+        self::ROLE_USER,
+        self::ROLE_ADMIN,
+        self::ROLE_SUPER_ADMIN
+    ];
 
     /**
      * @ORM\Id
@@ -97,7 +105,7 @@ class User implements UserInterface
         $this->dateCreated   = new DateTime();
         $this->dateLastLogin = new DateTime();
         $this->servers       = new ArrayCollection();
-        $this->roles         = [];
+        $this->roles         = [self::ROLE_USER];
     }
 
     /**
@@ -333,8 +341,7 @@ class User implements UserInterface
      */
     public function setRoles(array $roles): User
     {
-        $this->roles = array();
-
+        $this->roles = [];
         foreach ($roles as $role) {
             $this->addRole($role);
         }
@@ -350,10 +357,11 @@ class User implements UserInterface
     public function addRole($role): User
     {
         $role = strtoupper($role);
-        if ($role === self::ROLE_DEFAULT) {
-            return $this;
+        if (!in_array($role, self::ROLES)) {
+            throw new InvalidArgumentException(
+                "Invalid role ${role}."
+            );
         }
-
         if (!in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
