@@ -100,7 +100,7 @@ services:
     # Controllers
     App\Controller\SearchController:
         calls:
-            - [setFinder, ['@fos_elastica.finder.app.server']]
+            - [setServerFinder, ['@fos_elastica.finder.app.server']]
     App\Controller\ServerController:
         calls:
             - [setWebHandler, ['@App\Media\WebHandlerInterface']]

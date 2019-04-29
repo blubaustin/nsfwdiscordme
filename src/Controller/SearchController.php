@@ -20,14 +20,14 @@ class SearchController extends Controller
     /**
      * @var PaginatedFinderInterface
      */
-    protected $finder;
+    protected $serverFinder;
 
     /**
-     * @param PaginatedFinderInterface $finder
+     * @param PaginatedFinderInterface $serverFinder
      */
-    public function setFinder(PaginatedFinderInterface $finder)
+    public function setServerFinder(PaginatedFinderInterface $serverFinder)
     {
-        $this->finder = $finder;
+        $this->serverFinder = $serverFinder;
     }
 
     /**
@@ -48,17 +48,14 @@ class SearchController extends Controller
         $query = new Query();
         $query->addSort([
             'premiumStatus' => [
-                'order'         => 'desc',
-                'unmapped_type' => 'long'
+                'order' => 'desc'
             ],
             $orderField => [
-                'order'         => 'desc',
-                'unmapped_type' => 'long'
+                'order' => 'desc'
             ]
         ]);
         $query->setQuery(new QueryString($searchTerm));
-
-        $query = $this->finder->createPaginatorAdapter($query);
+        $query = $this->serverFinder->createPaginatorAdapter($query);
 
         return $this->render('search/index.html.twig', [
             'servers'    => $this->paginate($query),

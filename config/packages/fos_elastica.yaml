@@ -13,9 +13,12 @@ fos_elastica:
                         description: ~
                         categories: ~
                         tags: ~
-                        bumpPoints: { fielddata: true }
-                        membersOnline: { fielddata: true }
-                        premiumStatus: { fielddata: true }
+                        bumpPoints:
+                            type: long
+                        membersOnline:
+                            type: long
+                        premiumStatus:
+                            type: short
                     persistence:
                         driver: orm
                         model: App\Entity\Server
