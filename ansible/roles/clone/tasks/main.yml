@@ -1,0 +1,51 @@
+---
+- name: Clone site
+  git:
+    repo: git@github.com:blubaustin/nsfwdiscordme.git
+    version: master
+    dest: /home/ubuntu/nsfwdiscord.me
+    accept_hostkey: yes
+  become: no
+
+- name: Move files
+  command: mv /home/ubuntu/nsfwdiscord.me /var/www/nsfwdiscord.me
+
+- name: Copy .env file
+  template:
+    src: .env
+    dest: /var/www/nsfwdiscord.me/.env
+
+- name: Update version
+  command: bin/version.sh
+  args:
+    chdir: /var/www/nsfwdiscord.me
+
+- name: Composer install
+  command: composer install
+  args:
+    chdir: /var/www/nsfwdiscord.me
+  become: no
+
+- name: Yarn install
+  command: yarn install
+  args:
+    chdir: /var/www/nsfwdiscord.me
+  become: no
+
+- name: Yarn build
+  command: yarn run build
+  args:
+    chdir: /var/www/nsfwdiscord.me
+  become: no
+
+- name: Setting owner permissions
+  command: chown -R www-data:www-data /var/www/nsfwdiscord.me
+
+- name: Setting group permissions
+  command: chmod -R g+w /var/www/nsfwdiscord.me
+
+- name: Adding user to www-data
+  user:
+    name: ubuntu
+    groups: www-data
+    append: yes

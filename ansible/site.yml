@@ -1,0 +1,15 @@
+---
+- name: Install site
+  hosts: web
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+
+  roles:
+    - system
+    - git
+    - nginx
+    - php-fpm
+    - nodejs
+    - yarn
+    - clone

@@ -1,0 +1,25 @@
+---
+- name: Remove Apache
+  apt:
+    pkg: apache2
+    state: absent
+
+- name: Remove html directory
+  command: rm -rf /var/www/html
+
+- name: Install Nginx
+  apt:
+    pkg: nginx
+    state: present
+
+- name: Copy nginx configuration
+  template:
+    src: default.conf
+    dest: /etc/nginx/sites-available/default.conf
+
+- name: Remove default
+  command: rm -rf /etc/nginx/sites-available/default && rm -rf /etc/nginx/sites-enabled/default && rm -rf /etc/nginx/sites-enabled/default.conf
+
+- name: Add sites-enabled
+  command: ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+  notify: restart nginx
