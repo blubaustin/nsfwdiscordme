@@ -1,0 +1,170 @@
+@import "../vars";
+
+.card-server {
+  height: 240px;
+  position: relative;
+  border: 0;
+
+  &:hover {
+    .card-server-bg {
+      transform: scale(1.1);
+    }
+
+    .card-server-info {
+      height: 195px;
+    }
+
+    .card-server-description {
+      opacity: 1;
+    }
+
+    .card-server-info {
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+.card {
+  &:hover {
+    @each $name in $color-premium-names-list {
+      $i: index($color-premium-names-list, $name);
+      $color: nth($color-premium-list, $i);
+
+      &.card-server-border-premium-#{$name} {
+        box-shadow: 0 0 8px rgba($color, 0.5);
+      }
+    }
+  }
+
+  @each $name in $color-premium-names-list {
+    $i: index($color-premium-names-list, $name);
+    $color: nth($color-premium-list, $i);
+
+    &.card-server-border-premium-#{$name} {
+      border: 1px solid $color;
+      box-shadow: 0 0 5px 1px rgba($color, 0.5);
+    }
+  }
+}
+
+.card-server-bg-wrap {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.card-server-bg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+  min-height: 100%;
+  transition: all 0.25s;
+}
+
+.card-server-link {
+  display: block;
+  height: 100%;
+  z-index: 2;
+}
+
+.card-server-info-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.card-server-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 115px;
+  z-index: 2;
+  transition: height 0.25s;
+  background-color: rgba(0, 0, 0, 0.7);
+
+  .server-icon {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 80px;
+    border: 2px solid #FFF;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.card-server-name {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  right: 0;
+  color: #FFF;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.card-server-categories {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  color: #FFF;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: normal;
+
+  a {
+    color: #FFF;
+  }
+}
+
+.card-server-on-dot {
+  text-shadow: 0 0 10px;
+  display: inline-block;
+  background-color: $color-success;
+}
+
+.card-server-members-online {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.9rem;
+
+  .icon {
+    font-size: 0.75rem;
+    margin-right: 0.25rem;
+  }
+}
+
+.card-server-description {
+  position: absolute;
+  color: #FFF;
+  top: 115px;
+  left: $gutter-size;
+  right: $gutter-size;
+  opacity: 0;
+  text-align: center;
+  transition: opacity 0.5s;
+}
+
+.card-server-join-btn {
+  position: absolute;
+  top: $gutter-size;
+  right: $gutter-size;
+}

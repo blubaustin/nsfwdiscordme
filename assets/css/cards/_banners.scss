@@ -1,0 +1,135 @@
+@import "../vars";
+
+.card-premium-tag-wrap {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  z-index: 7;
+}
+
+.card-premium-tag-wrap-sm {
+  width: 45px;
+  height: 45px;
+}
+
+.card-premium-tag {
+  position: absolute;
+  top: -42px;
+  left: -20px;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 7px rgba(0,0,0,.4);
+  line-height: 0;
+  padding: 40px 5px 40px 30px;
+
+  .icon {
+    transform: rotate(-45deg);
+  }
+}
+
+@each $name in $color-premium-names-list {
+  $i: index($color-premium-names-list, $name);
+  $color: nth($color-premium-list, $i);
+
+  .card-premium-tag-#{$name} {
+    color: #F9EB7F;
+    background: $color;
+    font-size: 26px;
+    text-shadow: 0 1px 1px #fff;
+  }
+}
+
+.card-premium-tag-gold {
+  font-size: 22px;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.card-premium-tag-platinum {
+  color: #000;
+}
+
+.card-premium-tag-master {
+  color: #FFF;
+}
+
+.card-premium-tag-sm {
+  font-size: 12px;
+}
+
+.server-premium-banner {
+  position: absolute;
+  z-index: 6;
+  top: 12px;
+  left: -11px;
+  height: 44px;
+  line-height: 1;
+  padding: 9px 6px 0 25px;
+  font-size: 23px;
+  color: #fff;
+  text-shadow: 0 2px 2px #00000078;
+  box-shadow: 4px 4px 10px rgba(0,0,0,.5);
+
+  &::before {
+    content: "";
+    top: 100%;
+    left: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+    border: 4px solid transparent;
+    border-top: 4px solid #081a0b;
+    border-right: 4px solid #081a0b;
+  }
+
+  .icon {
+    margin-right: 0.5rem;
+  }
+}
+
+.server-premium-banner-gold {
+  background: $color-premium-gold;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 0;
+    height: 0;
+    border: 22px solid $color-premium-gold;
+    border-right: 22px solid transparent;
+  }
+}
+
+.server-premium-banner-platinum {
+  color: #000;
+  background: $color-premium-platinum;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 0;
+    height: 0;
+    border: 22px solid $color-premium-platinum;
+    border-right: 22px solid transparent;
+  }
+}
+
+.server-premium-banner-master {
+  background: $color-premium-master;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 0;
+    height: 0;
+    border: 22px solid $color-premium-master;
+    border-right: 22px solid transparent;
+  }
+}

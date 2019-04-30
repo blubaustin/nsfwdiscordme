@@ -1,0 +1,127 @@
+@import "../vars";
+
+.card-server-admin {
+  border: 1px solid #464646;
+  box-shadow: 0 0 5px rgba(103, 103, 103, 0.5);
+  transition: border 0.5s;
+
+  a {
+    color: #FFF;
+  }
+
+  .card-img {
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+  }
+}
+
+.card-server-admin-flash-success {
+  border: 1px solid $color-success;
+}
+
+.card-server-admin-bg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  opacity: 0.2;
+  transition: all 0.25s;
+}
+
+.card-server-admin-icon {
+  height: 40px;
+  margin-right: $gutter-size;
+  border: 2px solid #FFF;
+}
+
+.card-server-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    color: #FFF;
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-server-admin-header-meta {
+    display: flex;
+    flex-grow: 2;
+    align-items: center;
+
+    .server-icon {
+      height: 50px;
+      margin-right: 1rem;
+    }
+  }
+
+  .icon {
+    cursor: pointer;
+    color: #ffffffc7;
+    font-size: 1.5rem;
+
+    &:hover {
+      color: #FFF;
+    }
+  }
+}
+
+.card-server-admin-banner {
+  width: 100%;
+}
+
+.card-server-admin-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: $gutter-size;
+  background-color: rgba(0, 0, 0, 0.65);
+
+  ul {
+    margin: 0;
+
+    li span {
+      width: 100px;
+      font-weight: bold;
+      display: inline-block;
+    }
+  }
+}
+
+.card-server-admin-footer {
+  display: flex;
+  border-top: 0;
+  background-color: inherit;
+  justify-content: space-between;
+
+  a,
+  span {
+    cursor: pointer;
+    color: #ffffffc7;
+    font-size: 1.5rem;
+    padding: 4px $gutter-size 0 $gutter-size;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+    transition: padding-bottom 0.15s, padding-top 0.15s;
+
+    &:hover {
+      color: #FFF;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.75);
+      padding: 0 $gutter-size 4px $gutter-size;
+    }
+  }
+}
+
+.card-server-admin-bump-btn {
+  color: $color-success;
+  text-shadow: 0 0 4px rgba($color-success, 0.5) !important;
+}

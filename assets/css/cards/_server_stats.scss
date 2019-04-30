@@ -1,0 +1,39 @@
+@import "../vars";
+
+.card-server-stats {
+  .card-body {
+    ul {
+      margin: 0;
+    }
+  }
+}
+
+.card-server-stats-summary {
+  font-size: 0.9rem;
+}
+
+.card-server-stats-list {
+  li span {
+    display: inline-block;
+    font-weight: bold;
+    width: 150px;
+  }
+}
+
+.card-server-summary-header {
+  display: flex;
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .server-icon {
+    height: 50px;
+    margin-right: 1rem;
+  }
+}

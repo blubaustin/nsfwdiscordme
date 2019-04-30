@@ -1,0 +1,54 @@
+@import "../vars";
+
+.card-server-master {
+  height: 265px;
+  position: relative;
+
+  &:hover {
+    .card-server-master-bg {
+      transform: scale(1.05);
+    }
+
+    .card-server-master-info {
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+.card-server-master-bg {
+  @extend .card-server-bg;
+}
+
+.card-server-master-info {
+  @extend .card-server-info;
+  height: 150px;
+  bottom: 48px;
+
+  .server-icon {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 80px;
+    border: 2px solid #FFF;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.card-server-master-name {
+  @extend .card-server-name;
+}
+
+.card-server-master-categories {
+  @extend .card-server-categories;
+}
+
+.card-server-master-members-online {
+  @extend .card-server-members-online;
+}
+
+.card-server-master-description {
+  @extend .card-server-description;
+  opacity: 1;
+}
