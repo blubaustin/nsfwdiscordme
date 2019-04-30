@@ -1,7 +1,46 @@
 {% extends '@EasyAdmin/default/layout.html.twig' %}
 {% block main %}
   <div id="page-admin-stats">
+    <div class="row gutter">
+      <div class="col col-md-3 col-sm-6 col-12">
+        <div class="card card-stat bg-info">
+          <div class="card-body">
+            <span class="card-stat-count">{{ todayAdded }}</span>
+            <span class="card-stat-label">Servers Added Today</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col col-md-3 col-sm-6 col-12">
+        <div class="card card-stat bg-info">
+          <div class="card-body">
+            <span class="card-stat-count">{{ todayBumped }}</span>
+            <span class="card-stat-label">Servers Bumped Today</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col col-md-3 col-sm-6 col-12">
+        <div class="card card-stat bg-info">
+          <div class="card-body">
+            <span class="card-stat-count">{{ todayJoined }}</span>
+            <span class="card-stat-label">Servers Joined Today</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col col-md-3 col-sm-6 col-12">
+        <div class="card card-stat bg-info">
+          <div class="card-body">
+            <span class="card-stat-count">{{ todayViewed }}</span>
+            <span class="card-stat-label">Servers Viewed Today</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <canvas id="server-stats-chart-bumps" width="400" height="150"></canvas>
     <canvas id="server-stats-chart-joins" width="400" height="150"></canvas>
+    <canvas id="server-stats-chart-adds" width="400" height="150"></canvas>
   </div>
 {% endblock %}

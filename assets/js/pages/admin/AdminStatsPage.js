@@ -31,6 +31,7 @@ class ServerStatsPage extends Page {
       const joins   = [];
       const views   = [];
       const bumps   = [];
+      const added   = [];
       resp.joins.forEach((stat) => {
         labels.push(stat.day);
 
@@ -44,6 +45,10 @@ class ServerStatsPage extends Page {
       resp.bumps.forEach((stat) => {
         const count = parseInt(stat.count, 10);
         bumps.push(count);
+      });
+      resp.added.forEach((stat) => {
+        const count = parseInt(stat.count, 10);
+        added.push(count);
       });
 
       let $canvas = $('#server-stats-chart-joins');
@@ -99,6 +104,42 @@ class ServerStatsPage extends Page {
               label:           '# of Server Bumps',
               borderWidth:     0,
               backgroundColor: styles.colorSuccess,
+            }
+          ]
+        },
+        options: {
+          legend: {
+            labels: {
+              fontColor: '#000'
+            }
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                fontColor:   '#000',
+                beginAtZero: true
+              }
+            }],
+            xAxes: [{
+              ticks: {
+                fontColor: '#000'
+              }
+            }]
+          }
+        }
+      });
+
+      $canvas = $('#server-stats-chart-adds');
+      new Chart($canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              data:            added,
+              label:           '# of Servers Added',
+              borderWidth:     0,
+              backgroundColor: styles.colorInfo,
             }
           ]
         },

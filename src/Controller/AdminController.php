@@ -27,6 +27,11 @@ class AdminController extends EasyAdminController
     protected $eventsFinder;
 
     /**
+     * @var PaginatedFinderInterface
+     */
+    protected $serverFinder;
+
+    /**
      * @param PaginatedFinderInterface $eventsFinder
      *
      * @return $this
@@ -34,6 +39,18 @@ class AdminController extends EasyAdminController
     public function setEventsFinder(PaginatedFinderInterface $eventsFinder)
     {
         $this->eventsFinder = $eventsFinder;
+
+        return $this;
+    }
+
+    /**
+     * @param PaginatedFinderInterface $serverFinder
+     *
+     * @return $this
+     */
+    public function setServerFinder(PaginatedFinderInterface $serverFinder)
+    {
+        $this->serverFinder = $serverFinder;
 
         return $this;
     }
@@ -67,31 +84,78 @@ class AdminController extends EasyAdminController
             /** @var FantaPaginatorAdapter $adapter */
             $query   = $this->createServerEventQuery(ServerEvent::TYPE_JOIN);
             $results = $this->eventsFinder->findPaginated($query);
-            $adapter = $results->getAdapter();
-            $buckets = $adapter->getAggregations()['hits']['buckets'];
-            $joins   = $this->generateStatsFromBuckets($buckets);
+            $joins   = $this->generateStatsFromResults($results);
 
             $query   = $this->createServerEventQuery(ServerEvent::TYPE_VIEW);
             $results = $this->eventsFinder->findPaginated($query);
-            $adapter = $results->getAdapter();
-            $buckets = $adapter->getAggregations()['hits']['buckets'];
-            $views   = $this->generateStatsFromBuckets($buckets);
+            $views   = $this->generateStatsFromResults($results);
 
             $query   = $this->createServerEventQuery(ServerEvent::TYPE_BUMP);
             $results = $this->eventsFinder->findPaginated($query);
-            $adapter = $results->getAdapter();
-            $buckets = $adapter->getAggregations()['hits']['buckets'];
-            $bumps   = $this->generateStatsFromBuckets($buckets);
+            $bumps   = $this->generateStatsFromResults($results);
+
+            $query = new Query();
+            $query->setSize(0);
+            $query->addAggregation(new DateHistogram('hits', 'dateCreated', 'day'));
+            $results = $this->serverFinder->findPaginated($query);
+            $added   = $this->generateStatsFromResults($results);
 
             return new JsonResponse([
                 'message' => 'ok',
                 'joins'   => $joins,
                 'views'   => $views,
-                'bumps'   => $bumps
+                'bumps'   => $bumps,
+                'added'   => $added
             ]);
         }
 
-        return $this->render('admin/stats.html.twig');
+        $eventRepo  = $this->getDoctrine()->getRepository(ServerEvent::class);
+        $serverRepo = $this->getDoctrine()->getRepository(Server::class);
+
+        $todayBumped = $eventRepo->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->where('e.dateCreated >= :dayAgo')
+            ->andWhere('e.eventType = :eventType')
+            ->setParameter(':dayAgo', new DateTime('24 hours ago'))
+            ->setParameter(':eventType', ServerEvent::TYPE_BUMP)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $todayJoined = $eventRepo->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->where('e.dateCreated >= :dayAgo')
+            ->andWhere('e.eventType = :eventType')
+            ->setParameter(':dayAgo', new DateTime('24 hours ago'))
+            ->setParameter(':eventType', ServerEvent::TYPE_JOIN)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $todayViewed = $eventRepo->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->where('e.dateCreated >= :dayAgo')
+            ->andWhere('e.eventType = :eventType')
+            ->setParameter(':dayAgo', new DateTime('24 hours ago'))
+            ->setParameter(':eventType', ServerEvent::TYPE_VIEW)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $todayAdded = $serverRepo->createQueryBuilder('e')
+            ->select('COUNT(e)')
+            ->where('e.dateCreated >= :dayAgo')
+            ->setParameter(':dayAgo', new DateTime('24 hours ago'))
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $this->render('admin/stats.html.twig', [
+            'todayBumped' => $todayBumped,
+            'todayJoined' => $todayJoined,
+            'todayViewed' => $todayViewed,
+            'todayAdded'  => $todayAdded
+        ]);
     }
 
     /**
@@ -101,10 +165,8 @@ class AdminController extends EasyAdminController
      */
     private function createServerEventQuery($eventType)
     {
-        /** @var FantaPaginatorAdapter $adapter */
         $query = new Query();
         $query->setSize(0);
-
         $bool = new Query\BoolQuery();
         $bool->addMust(new Query\Term([
             'eventType' => $eventType
@@ -116,13 +178,17 @@ class AdminController extends EasyAdminController
     }
 
     /**
-     * @param array $buckets
+     * @param mixed $results
      *
      * @return array
      * @throws Exception
      */
-    private function generateStatsFromBuckets(array $buckets)
+    private function generateStatsFromResults($results)
     {
+        /** @var FantaPaginatorAdapter $adapter */
+        $adapter = $results->getAdapter();
+        $buckets = $adapter->getAggregations()['hits']['buckets'];
+
         $rows = [];
         foreach($buckets as $bucket) {
             $day = (new DateTime($bucket['key_as_string']))->format('Y-m-d');

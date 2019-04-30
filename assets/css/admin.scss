@@ -9,3 +9,21 @@
 .admin-icon-media {
   height: 2.5rem;
 }
+
+.gutter {
+  padding: $gutter-size;
+}
+
+.card-stat {
+  color: #FFF;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25);
+
+  .card-body {
+    text-align: center;
+  }
+}
+
+.card-stat-count {
+  font-size: 3rem;
+  display: block;
+}

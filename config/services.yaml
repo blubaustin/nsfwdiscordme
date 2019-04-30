@@ -106,6 +106,7 @@ services:
     App\Controller\AdminController:
         calls:
             - [setEventsFinder, ['@fos_elastica.finder.events.event']]
+            - [setServerFinder, ['@fos_elastica.finder.app.server']]
     # Event Listeners
     App\Event\Listener\ServerStatsListener:
         tags:
