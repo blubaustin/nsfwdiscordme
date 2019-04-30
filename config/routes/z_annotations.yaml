@@ -24,6 +24,9 @@ contact:
 api:
     resource: ../../src/Controller/ApiController.php
     type: annotation
+admin:
+    resource: ../../src/Controller/AdminController.php
+    type: annotation
 server:
     resource: ../../src/Controller/ServerController.php
     type: annotation

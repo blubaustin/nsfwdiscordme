@@ -10,7 +10,9 @@ easy_admin:
                 - 'build/css/admin.css'
             js:
                 - 'build/js/admin.js'
+                - 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js'
         menu:
+            - { label: 'Stats', url: '/admin/stats', default: true }
             - { entity: Server, label: 'Servers', icon: 'server' }
             - { entity: User, label: 'Users', icon: 'user' }
             - { entity: ServerTeamMember, label: 'Team Members', icon: 'users' }
