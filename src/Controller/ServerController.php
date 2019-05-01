@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\BannedServer;
 use App\Entity\BannedWord;
 use App\Entity\BumpPeriodVote;
+use App\Entity\ServerAction;
 use App\Entity\ServerEvent;
 use App\Entity\Media;
 use App\Entity\Server;
@@ -159,6 +160,15 @@ class ServerController extends Controller
             ->getQuery()
             ->execute();
 
+        $actionLog = $this->em->getRepository(ServerAction::class)
+            ->createQueryBuilder('a')
+            ->where('a.server = :server')
+            ->setParameter(':server', $server)
+            ->orderBy('a.id', 'desc')
+            ->setMaxResults(100)
+            ->getQuery()
+            ->execute();
+
         $joinCount = $this->em->getRepository(ServerEvent::class)
             ->createQueryBuilder('j')
             ->select('COUNT(j.id)')
@@ -184,6 +194,7 @@ class ServerController extends Controller
         return $this->render('server/stats.html.twig', [
             'server'    => $server,
             'bumpLog'   => $bumpLog,
+            'actionLog' => $actionLog,
             'joinCount' => $joinCount,
             'viewCount' => $viewCount
         ]);

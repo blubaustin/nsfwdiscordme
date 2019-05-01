@@ -1,6 +1,7 @@
 <?php
 namespace App\Event\Listener;
 
+use App\Entity\ServerAction;
 use App\Entity\ServerTeamMember;
 use App\Event\ServerActionEvent;
 use DateTime;
@@ -39,8 +40,15 @@ class ServerActionRecorderListener
                 ->findByServerAndUser($server, $user);
             if ($teamMember) {
                 $teamMember->setDateLastAction(new DateTime());
-                $this->em->flush();
             }
+
+            $serverAction = (new ServerAction())
+                ->setUser($user)
+                ->setServer($server)
+                ->setAction($event->getAction());
+            $this->em->persist($serverAction);
         } catch (Exception $e) {}
+
+        $this->em->flush();
     }
 }
