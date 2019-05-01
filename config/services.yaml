@@ -39,8 +39,8 @@ services:
             - '@Redis'
             - { prefix: '', database: 2 }
 
-    App\Discord\Discord:
-        class: App\Discord\Discord
+    App\Services\DiscordService:
+        class: App\Services\DiscordService
         arguments:
             - '@Symfony\Component\Cache\Adapter\AdapterInterface'
             - '%env(DISCORD_CLIENT_ID)%'

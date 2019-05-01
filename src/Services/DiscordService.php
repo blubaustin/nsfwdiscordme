@@ -1,18 +1,18 @@
 <?php
-namespace App\Discord;
+namespace App\Services;
 
 use App\Entity\AccessToken;
 use Exception;
+use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
-use GuzzleHttp\Client as Guzzle;
 
 /**
- * Class Discord
+ * Class DiscordService
  */
-class Discord
+class DiscordService
 {
     use LoggerAwareTrait;
 

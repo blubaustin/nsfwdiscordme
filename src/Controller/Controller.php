@@ -1,10 +1,10 @@
 <?php
 namespace App\Controller;
 
-use App\Discord\Discord;
 use App\Entity\Server;
 use App\Entity\User;
 use App\Security\ServerAccessInterface;
+use App\Services\DiscordService;
 use App\Storage\Snowflake\SnowflakeGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -51,7 +51,7 @@ class Controller extends AbstractController
     protected $paginator;
 
     /**
-     * @var Discord
+     * @var \App\Services\DiscordService
      */
     protected $discord;
 
@@ -63,7 +63,7 @@ class Controller extends AbstractController
     /**
      * Constructor
      *
-     * @param Discord                     $discord
+     * @param DiscordService              $discord
      * @param LoggerInterface             $logger
      * @param EntityManagerInterface      $em
      * @param EventDispatcherInterface    $eventDispatcher
@@ -72,7 +72,7 @@ class Controller extends AbstractController
      * @param ServerAccessInterface       $serverAccess
      */
     public function __construct(
-        Discord $discord,
+        DiscordService $discord,
         LoggerInterface $logger,
         EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,

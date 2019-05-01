@@ -1,11 +1,11 @@
 <?php
 namespace App\Form\Type;
 
-use App\Discord\Discord;
 use App\Entity\Category;
 use App\Entity\Server;
 use App\Entity\User;
 use App\Repository\TagRepository;
+use App\Services\DiscordService;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ServerType extends AbstractType
 {
     /**
-     * @var Discord
+     * @var DiscordService
      */
     protected $discord;
 
@@ -45,11 +45,11 @@ class ServerType extends AbstractType
     /**
      * Constructor
      *
-     * @param Discord               $discord
+     * @param DiscordService        $discord
      * @param UrlGeneratorInterface $urlGenerator
      * @param TagRepository         $tagRepository
      */
-    public function __construct(Discord $discord, UrlGeneratorInterface $urlGenerator, TagRepository $tagRepository)
+    public function __construct(DiscordService $discord, UrlGeneratorInterface $urlGenerator, TagRepository $tagRepository)
     {
         $this->discord       = $discord;
         $this->urlGenerator  = $urlGenerator;

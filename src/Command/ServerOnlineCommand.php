@@ -1,8 +1,8 @@
 <?php
 namespace App\Command;
 
-use App\Discord\Discord;
 use App\Entity\Server;
+use App\Services\DiscordService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -26,17 +26,17 @@ class ServerOnlineCommand extends Command
     protected $em;
 
     /**
-     * @var Discord
+     * @var DiscordService
      */
     protected $discord;
 
     /**
      * Constructor
      *
-     * @param EntityManagerInterface $em
-     * @param Discord                $discord
+     * @param EntityManagerInterface       $em
+     * @param \App\Services\DiscordService $discord
      */
-    public function __construct(EntityManagerInterface $em, Discord $discord)
+    public function __construct(EntityManagerInterface $em, DiscordService $discord)
     {
         parent::__construct();
 
