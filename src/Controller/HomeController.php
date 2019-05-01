@@ -5,7 +5,6 @@ use App\Entity\ServerEvent;
 use App\Entity\Server;
 use App\Entity\ServerFollow;
 use App\Http\Request;
-use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Join;
@@ -140,8 +139,6 @@ class HomeController extends Controller
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
             ->andWhere('e.eventType = :eventType')
-            ->andWhere('e.dateCreated > :then')
-            ->setParameter(':then', new DateTime('24 hours ago'))
             ->setParameter(':eventType', ServerEvent::TYPE_JOIN)
             ->orderBy('e.id', 'desc')
             ->getQuery()
