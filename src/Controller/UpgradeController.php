@@ -4,7 +4,6 @@ namespace App\Controller;
 use App\Entity\Purchase;
 use App\Entity\PurchasePeriod;
 use App\Entity\Server;
-use App\Entity\User;
 use App\Event\ServerActionEvent;
 use App\Http\Request;
 use App\Services\PaymentService;
@@ -92,8 +91,11 @@ class UpgradeController extends Controller
         $this->em->persist($purchase);
         $this->em->flush();
 
+        $description = sprintf('Upgrading server "%s" to premium status.', $server->getName());
+
         $token = $paymentService->getToken([
             'price'         => self::PRICES[$premiumStatus][$period],
+            'description'   => $description,
             'transactionID' => $purchase->getId(),
             'successURL'    => $this->generateUrl('upgrade_complete', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'failureURL'    => $this->generateUrl('upgrade_failure', [], UrlGeneratorInterface::ABSOLUTE_URL),

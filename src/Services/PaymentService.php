@@ -51,6 +51,7 @@ class PaymentService
     {
         if (empty($values['transactionID'])
             || empty($values['price'])
+            || empty($values['description'])
             || empty($values['successURL'])
             || empty($values['failureURL'])
             || empty($values['webhookURL'])
