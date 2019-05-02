@@ -4,6 +4,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * @ORM\Table(name="purchase", indexes={@ORM\Index(columns={"purchase_token"})})
@@ -11,6 +12,16 @@ use Exception;
  */
 class Purchase
 {
+    const STATUS_PENDING = 0;
+    const STATUS_SUCCESS = 1;
+    const STATUS_FAILURE = 2;
+
+    const STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_SUCCESS,
+        self::STATUS_FAILURE
+    ];
+
     /**
      * @var int
      * @ORM\Id
@@ -35,7 +46,7 @@ class Purchase
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="string", length=32, nullable=true)
      */
     protected $purchaseToken;
 
@@ -44,6 +55,12 @@ class Purchase
      * @ORM\Column(type="smallint")
      */
     protected $status;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint")
+     */
+    protected $premiumStatus;
 
     /**
      * @var int
@@ -71,6 +88,7 @@ class Purchase
     public function __construct()
     {
         $this->dateCreated = new DateTime();
+        $this->status      = self::STATUS_PENDING;
     }
 
     /**
@@ -156,7 +174,32 @@ class Purchase
      */
     public function setStatus(int $status): Purchase
     {
+        if (!in_array($status, self::STATUSES)) {
+            throw new InvalidArgumentException(
+                "Invalid status ${status}."
+            );
+        }
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPremiumStatus(): int
+    {
+        return $this->premiumStatus;
+    }
+
+    /**
+     * @param int $premiumStatus
+     *
+     * @return Purchase
+     */
+    public function setPremiumStatus(int $premiumStatus): Purchase
+    {
+        $this->premiumStatus = $premiumStatus;
 
         return $this;
     }

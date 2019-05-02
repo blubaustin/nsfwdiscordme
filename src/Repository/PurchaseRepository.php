@@ -4,7 +4,6 @@ namespace App\Repository;
 use App\Entity\Purchase;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -39,16 +38,9 @@ class PurchaseRepository extends ServiceEntityRepository
      */
     public function findByUser(User $user)
     {
-        return $this->findBy(['user' => $user]);
-    }
-
-    /**
-     * @param string $purchaseToken
-     *
-     * @return object|Purchase
-     */
-    public function findByPurchaseToken($purchaseToken)
-    {
-        return $this->findOneBy(['purchaseToken' => $purchaseToken]);
+        return $this->findBy([
+            'user' => $user,
+            'status' => Purchase::STATUS_SUCCESS
+        ]);
     }
 }

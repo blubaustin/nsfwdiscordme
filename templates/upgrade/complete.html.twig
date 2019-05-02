@@ -14,8 +14,8 @@
                   Server
                 </td>
                 <td>
-                  <a href="{{ path('server_index', { slug: server.slug }) }}" target="_blank">
-                    {{ server.name }} ({{ server.discordID }})
+                  <a href="{{ path('server_index', { slug: purchase.server.slug }) }}" target="_blank">
+                    {{ purchase.server.name }} ({{ purchase.server.discordID }})
                   </a>
                 </td>
               </tr>
@@ -40,7 +40,7 @@
                   Premium Status
                 </td>
                 <td>
-                  {{ purchase.status|premiumStatusString|ucwords }}
+                  {{ purchase.premiumStatus|premiumStatusString|ucwords }}
                 </td>
               </tr>
             </tbody>
@@ -55,7 +55,7 @@
           </p>
         </div>
         <div class="card-footer">
-          <a href="{{ path('server_index', { slug: server.slug }) }}" class="btn btn-success btn-block">
+          <a href="{{ path('server_index', { slug: purchase.server.slug }) }}" class="btn btn-success btn-block">
             Go to Server
           </a>
         </div>

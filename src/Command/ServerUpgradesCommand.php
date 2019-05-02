@@ -106,7 +106,7 @@ class ServerUpgradesCommand extends Command
     {
         $purchase = $purchasePeriod->getPurchase();
         $server   = $purchasePeriod->getPurchase()->getServer();
-        $server->setPremiumStatus($purchase->getStatus());
+        $server->setPremiumStatus($purchase->getPremiumStatus());
 
         $period = $purchase->getPeriod();
         $purchasePeriod

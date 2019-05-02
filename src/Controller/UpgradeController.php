@@ -11,6 +11,7 @@ use App\Services\PaymentService;
 use DateTime;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,10 +23,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class UpgradeController extends Controller
 {
     const PRICES = [
-        'gold' => [
+        Server::STATUS_GOLD => [
             '30' => 1250
         ],
-        'platinum' => [
+        Server::STATUS_PLATINUM => [
             '30' => 4500
         ]
     ];
@@ -60,6 +61,7 @@ class UpgradeController extends Controller
      *
      * @return RedirectResponse
      * @throws GuzzleException
+     * @throws Exception
      */
     public function purchaseAction($slug, Request $request, PaymentService $paymentService)
     {
@@ -68,112 +70,156 @@ class UpgradeController extends Controller
             throw $this->createAccessDeniedException();
         }
 
-        $status = $request->request->get('status');
-        $period = $request->request->get('period');
-        if (empty($status) || empty($period) || empty(self::PRICES[$status][$period])) {
+        $premiumStatus = $request->request->get('premiumStatus');
+        $period        = $request->request->get('period');
+        if (empty($period) || empty(self::PRICES[$premiumStatus][$period])) {
+            throw $this->createNotFoundException();
+        }
+        if (!isset(Server::STATUSES[$premiumStatus])) {
+            throw $this->createNotFoundException();
+        }
+        if (!isset(self::PRICES[$premiumStatus][$period])) {
             throw $this->createNotFoundException();
         }
 
-        $url = $paymentService->getRedirectURL([
-            'discordID'   => $server->getDiscordID(),
-            'userID'      => $this->getUser()->getId(),
-            'status'      => $status,
-            'period'      => $period,
-            'price'       => self::PRICES[$status][$period],
-            'redirectURL' => $this->generateUrl('upgrade_complete', [], UrlGeneratorInterface::ABSOLUTE_URL)
+        $purchase = (new Purchase())
+            ->setServer($server)
+            ->setPeriod($period)
+            ->setUser($this->getUser())
+            ->setPremiumStatus(Server::STATUSES[$premiumStatus])
+            ->setPrice(self::PRICES[$premiumStatus][$period])
+            ->setStatus(Purchase::STATUS_PENDING);
+        $this->em->persist($purchase);
+        $this->em->flush();
+
+        $token = $paymentService->getToken([
+            'price'         => self::PRICES[$premiumStatus][$period],
+            'transactionID' => $purchase->getId(),
+            'successURL'    => $this->generateUrl('upgrade_complete', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'failureURL'    => $this->generateUrl('upgrade_failure', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'webhookURL'    => $this->generateUrl('upgrade_webhook', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
 
-        return new RedirectResponse($url);
+        return new RedirectResponse(
+            sprintf('%s/%s', PaymentService::BASE_URL_PURCHASE, $token)
+        );
     }
 
     /**
      * @Route("/upgrade/complete", name="complete")
      *
-     * @param Request        $request
-     * @param PaymentService $paymentService
+     * @param Request $request
      *
      * @return Response
      * @throws Exception
-     * @throws GuzzleException
      */
-    public function completeAction(Request $request, PaymentService $paymentService)
+    public function completeAction(Request $request)
     {
-        $token = $request->query->get('token');
-        $code  = $request->query->get('code');
-        if (!$token || !$code) {
+        $transactionID = $request->query->get('t');
+        if (!$transactionID) {
             throw $this->createNotFoundException();
         }
 
-        $details = $paymentService->getDetails($token, $code);
-        if (!$details['success']) {
+        $purchase = $this->em->getRepository(Purchase::class)->findByID($transactionID);
+        if (!$purchase
+            || $purchase->getStatus() !== Purchase::STATUS_SUCCESS
+            || $purchase->getUser()->getId() !== $this->getUser()->getId()
+        ) {
             throw $this->createNotFoundException();
-        }
-        $server = $this->em->getRepository(Server::class)->findByDiscordID($details['discordID']);
-        if (!$server || !$server->isEnabled()) {
-            throw $this->createNotFoundException();
-        }
-        if (!$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $purchase = $this->em->getRepository(Purchase::class)->findByPurchaseToken($token);
-        if (!$purchase) {
-            $price  = (int)$details['price'];
-            $period = (int)$details['period'];
-            $userID = (int)$details['userID'];
-            $premiumStatus = array_search($details['status'], Server::STATUSES_STR);
-            if (!$premiumStatus) {
-                $this->logger->error(
-                    sprintf('Received invalid premium status "%s" from purchase server.', $details['status'])
-                );
-                throw new Exception();
-            }
-
-            $purchaseUser = $this->em->getRepository(User::class)->findByID($userID);
-            if (!$purchaseUser) {
-                $this->logger->error(
-                    sprintf('Payment user not found for purchase token = %s code = %s.', $token, $code)
-                );
-                $purchaseUser = $this->getUser();
-            }
-
-            $purchase = (new Purchase())
-                ->setServer($server)
-                ->setUser($purchaseUser)
-                ->setPurchaseToken($token)
-                ->setStatus($premiumStatus)
-                ->setPrice($price)
-                ->setPeriod($period);
-            $this->em->persist($purchase);
-
-            $purchasePeriod = (new PurchasePeriod())
-                ->setPurchase($purchase);
-            $this->em->persist($purchasePeriod);
-
-            // Starts the premium status immediately when the server is not already
-            // premium. Otherwise the cron job will upgrade the server status when
-            // the existing premium status expires.
-            if ($server->getPremiumStatus() === Server::STATUS_STANDARD) {
-                $server->setPremiumStatus($premiumStatus);
-                $purchasePeriod
-                    ->setDateBegins(new DateTime())
-                    ->setDateExpires(new DateTime("${period} days"));
-            }
-
-            $this->em->flush();
-
-            $action = sprintf('Upgraded server to %s.', Server::STATUSES_STR[$premiumStatus]);
-            $this->eventDispatcher->dispatch(
-                'app.server.action',
-                new ServerActionEvent($server, $purchaseUser, $action)
-            );
         }
 
         $this->addFlash('success', 'Upgrade complete!');
 
         return $this->render('upgrade/complete.html.twig', [
-            'server'   => $server,
             'purchase' => $purchase
         ]);
+    }
+
+    /**
+     * @Route("/upgrade/failure", name="failure")
+     */
+    public function failureAction()
+    {
+        $this->addFlash('danger', 'Payment failure!');
+
+        return $this->render('upgrade/failure.html.twig');
+    }
+
+    /**
+     * @Route("/webhook", name="webhook", methods={"POST"})
+     *
+     * @param Request        $request
+     * @param PaymentService $paymentService
+     *
+     * @return JsonResponse
+     * @throws Exception
+     * @throws GuzzleException
+     */
+    public function webhookAction(Request $request, PaymentService $paymentService)
+    {
+        $success       = $request->json->get('success');
+        $token         = $request->json->get('token');
+        $code          = $request->json->get('code');
+        $price         = $request->json->get('price');
+        $transactionID = $request->json->get('transactionID');
+        if (!$token || !$code || !$transactionID || !$price) {
+            return new JsonResponse(['ok'], 400);
+        }
+
+        $purchase = $this->em->getRepository(Purchase::class)->findByID($transactionID);
+        if (!$purchase) {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$paymentService->verify($token, $code, $price, $transactionID)) {
+            $purchase->setStatus(Purchase::STATUS_FAILURE);
+            $this->em->flush();
+
+            return new JsonResponse(['ok'], 401);
+        }
+
+        if (!$success) {
+            $purchase->setStatus(Purchase::STATUS_FAILURE);
+            $this->em->flush();
+
+            return new JsonResponse(['ok']);
+        }
+
+        $server = $purchase->getServer();
+        if (!$server || !$server->isEnabled()) {
+            throw $this->createNotFoundException();
+        }
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER, $purchase->getUser())) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $purchase
+            ->setStatus(Purchase::STATUS_SUCCESS)
+            ->setPurchaseToken($token);
+        $purchasePeriod = (new PurchasePeriod())
+            ->setPurchase($purchase);
+        $this->em->persist($purchasePeriod);
+
+        // Starts the premium status immediately when the server is not already
+        // premium. Otherwise the cron job will upgrade the server status when
+        // the existing premium status expires.
+        if ($server->getPremiumStatus() === Server::STATUS_STANDARD) {
+            $period = $purchase->getPeriod();
+            $server->setPremiumStatus($purchase->getPremiumStatus());
+            $purchasePeriod
+                ->setDateBegins(new DateTime())
+                ->setDateExpires(new DateTime("${period} days"));
+        }
+
+        $this->em->flush();
+
+        $premiumStatus = array_search($purchase->getPremiumStatus(), Server::STATUSES_STR);
+        $action = sprintf('Upgraded server to %s.', Server::STATUSES_STR[$premiumStatus]);
+        $this->eventDispatcher->dispatch(
+            'app.server.action',
+            new ServerActionEvent($server, $purchase->getUser(), $action)
+        );
+
+        return new JsonResponse(['ok']);
     }
 }

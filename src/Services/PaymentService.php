@@ -4,6 +4,7 @@ namespace App\Services;
 use Exception;
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
 use Psr\Log\LoggerAwareTrait;
 
 /**
@@ -14,42 +15,75 @@ class PaymentService
     use LoggerAwareTrait;
 
     const BASE_URL_API      = 'http://dev.yunogasai.site/api/v1';
-    const BASE_URL_REDIRECT = 'http://dev.yunogasai.site/purchase';
+    const BASE_URL_PURCHASE = 'http://dev.yunogasai.site/purchase';
     const TIMEOUT           = 2.0;
 
     /**
-     * @param array $details
+     * @var string
+     */
+    protected $clientID;
+
+    /**
+     * @var string
+     */
+    protected $clientSecret;
+
+    /**
+     * Constructor
+     *
+     * @param string $clientID
+     * @param string $clientSecret
+     */
+    public function __construct($clientID, $clientSecret)
+    {
+        $this->clientID     = $clientID;
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * @param array $values
      *
      * @return string
      * @throws Exception
      * @throws GuzzleException
      */
-    public function getRedirectURL(array $details)
+    public function getToken(array $values)
     {
-        $resp = $this->doRequest('POST', 'token', $details);
+        if (empty($values['transactionID'])
+            || empty($values['price'])
+            || empty($values['successURL'])
+            || empty($values['failureURL'])
+            || empty($values['webhookURL'])
+        ) {
+            throw new InvalidArgumentException('Missing values.');
+        }
+
+        $resp = $this->doRequest('POST', 'token', $values);
         if (empty($resp['token'])) {
             throw new Exception('Invalid response.');
         }
 
-        return sprintf('%s/%s', self::BASE_URL_REDIRECT, $resp['token']);
+        return $resp['token'];
     }
 
     /**
      * @param string $token
      * @param string $code
+     * @param string $price
+     * @param string $transactionID
      *
      * @return array
      * @throws Exception
      * @throws GuzzleException
      */
-    public function getDetails($token, $code)
+    public function verify($token, $code, $price, $transactionID)
     {
-        $resp = $this->doRequest('POST', 'verify', compact('token', 'code'));
-        if (!isset($resp['success'])) {
+        $resp = $this->doRequest('POST', 'verify', compact('token', 'code', 'price', 'transactionID'));
+        if (!isset($resp['valid'])) {
             throw new Exception('Invalid response.');
         }
 
-        return $resp;
+        return $resp['valid'];
     }
 
     /**
@@ -63,8 +97,10 @@ class PaymentService
     protected function doRequest($method, $path, $body = null)
     {
         $headers = [
-            'Accept'       => 'application/json',
-            'Content-Type' => 'application/json'
+            'X-Client-ID'     => $this->clientID,
+            'X-Client-Secret' => $this->clientSecret,
+            'Accept'          => 'application/json',
+            'Content-Type'    => 'application/json'
         ];
         $options = [
             'headers' => $headers,
@@ -72,7 +108,7 @@ class PaymentService
         ];
 
         $url = $this->buildURL($path);
-        $this->logger->debug($method . ': ' . $url, [$headers]);
+        $this->logger->debug($method . ': ' . $url, [$options]);
 
         $client = new Guzzle([
             'timeout' => self::TIMEOUT

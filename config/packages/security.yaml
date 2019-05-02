@@ -25,6 +25,7 @@ security:
     access_control:
         - { path: ^/profile,      role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/server,       role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/upgrade,      role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/api/bump/,    role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/api/server/,  role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/admin/login,  role: ROLE_ADMIN }

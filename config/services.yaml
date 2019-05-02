@@ -51,6 +51,9 @@ services:
 
     App\Services\PaymentService:
         class: App\Services\PaymentService
+        arguments:
+            - '%env(YUNOGASAI_ID)%'
+            - '%env(YUNOGASAI_SECRET)%'
         calls:
             - [setLogger, ['@logger']]
 

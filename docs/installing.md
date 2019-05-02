@@ -107,6 +107,8 @@ server {
                 fastcgi_param RECAPTCHA_SITE_KEY "xxx";
                 fastcgi_param RECAPTCHA_SECRET_KEY "xxx";
                 fastcgi_param SNOWFLAKE_MACHINE_ID "1";
+                fastcgi_param YUNOGASAI_ID "1";
+                fastcgi_param YUNOGASAI_SECRET "xxx";
         }
 }
 
