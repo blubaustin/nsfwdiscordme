@@ -2,7 +2,9 @@
 namespace App\Repository;
 
 use App\Entity\Purchase;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -28,6 +30,16 @@ class PurchaseRepository extends ServiceEntityRepository
     public function findByID($id)
     {
         return $this->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Purchase[]
+     */
+    public function findByUser(User $user)
+    {
+        return $this->findBy(['user' => $user]);
     }
 
     /**

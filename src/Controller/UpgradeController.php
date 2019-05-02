@@ -131,6 +131,7 @@ class UpgradeController extends Controller
 
             $purchase = (new Purchase())
                 ->setServer($server)
+                ->setUser($this->getUser())
                 ->setPurchaseToken($token)
                 ->setStatus($premiumStatus)
                 ->setPrice($price)

@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\BumpPeriod;
 use App\Entity\BumpPeriodVote;
+use App\Entity\Purchase;
 use App\Entity\Server;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -63,5 +64,17 @@ class ProfileController extends Controller
     public function settingsAction()
     {
         return $this->render('profile/settings.html.twig');
+    }
+
+    /**
+     * @Route("/profile/invoices", name="invoices")
+     */
+    public function invoicesAction()
+    {
+        $purchases = $this->em->getRepository(Purchase::class)->findByUser($this->getUser());
+
+        return $this->render('profile/invoices.html.twig', [
+            'purchases' => $purchases
+        ]);
     }
 }

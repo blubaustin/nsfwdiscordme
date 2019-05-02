@@ -27,6 +27,13 @@ class Purchase
     protected $server;
 
     /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * @var string
      * @ORM\Column(type="string", length=32)
      */
@@ -90,6 +97,26 @@ class Purchase
     public function setServer(Server $server): Purchase
     {
         $this->server = $server;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Purchase
+     */
+    public function setUser(User $user): Purchase
+    {
+        $this->user = $user;
 
         return $this;
     }

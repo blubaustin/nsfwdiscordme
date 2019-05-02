@@ -47,7 +47,7 @@ class ServerExtension extends AbstractExtension
         return [
             new TwigFilter('serverURL', [$this, 'serverURL']),
             new TwigFilter('serverNextBump', [$this, 'serverNextBump']),
-            new TwigFilter('serverPremiumStatus', [$this, 'serverPremiumStatus'])
+            new TwigFilter('premiumStatusString', [$this, 'premiumStatusString'])
         ];
     }
 
@@ -108,14 +108,12 @@ class ServerExtension extends AbstractExtension
     }
 
     /**
-     * @param Server $server
+     * @param string $status
      *
      * @return string
      */
-    public function serverPremiumStatus(Server $server)
+    public function premiumStatusString($status)
     {
-        $status = $server->getPremiumStatus();
-
         return Server::STATUSES_STR[$status];
     }
 }

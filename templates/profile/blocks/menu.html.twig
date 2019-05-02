@@ -5,11 +5,15 @@
         {{ icon('plus') }}
         Add Server
       </a>
+      <a href="{{ path('profile_invoices') }}" class="btn btn-info btn-icon">
+        {{ icon('app-invoices') }}
+        Invoices
+      </a>
 {#      <a href="{{ path('profile_settings') }}" class="btn btn-info btn-icon">
         {{ icon('app-settings') }}
         Settings
       </a>#}
-      {% if premiumStatus != 'standard' %}
+      {% if premiumStatus is defined and premiumStatus != 'standard' %}
         <button id="profile-bump-all-btn" class="btn btn-success btn-icon" style="margin-left: auto">
           {{ icon('app-bump') }}
           Bump All Servers

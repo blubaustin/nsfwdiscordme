@@ -30,7 +30,8 @@ class FontAwesomeExtension extends AbstractExtension
         'app-join'            => 'sign-in-alt',
         'app-gold'            => 'star',
         'app-platinum'        => 'shield-alt',
-        'app-master'          => 'crown'
+        'app-master'          => 'crown',
+        'app-invoices'        => 'file-invoice-dollar'
     ];
 
     /**
