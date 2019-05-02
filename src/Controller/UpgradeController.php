@@ -4,7 +4,7 @@ namespace App\Controller;
 use App\Entity\Purchase;
 use App\Entity\PurchasePeriod;
 use App\Entity\Server;
-use App\Entity\ServerAction;
+use App\Entity\User;
 use App\Event\ServerActionEvent;
 use App\Http\Request;
 use App\Services\PaymentService;
@@ -35,12 +35,10 @@ class UpgradeController extends Controller
      *
      * @param string  $slug
      *
-     * @param Request $request
-     *
      * @return Response
      * @throws Exception
      */
-    public function indexAction($slug, Request $request)
+    public function indexAction($slug)
     {
         $server = $this->fetchServerOrThrow($slug);
         if (!$this->hasServerAccess($server, self::SERVER_ROLE_MANAGER)) {
@@ -78,6 +76,7 @@ class UpgradeController extends Controller
 
         $url = $paymentService->getRedirectURL([
             'discordID'   => $server->getDiscordID(),
+            'userID'      => $this->getUser()->getId(),
             'status'      => $status,
             'period'      => $period,
             'price'       => self::PRICES[$status][$period],
@@ -121,6 +120,7 @@ class UpgradeController extends Controller
         if (!$purchase) {
             $price  = (int)$details['price'];
             $period = (int)$details['period'];
+            $userID = (int)$details['userID'];
             $premiumStatus = array_search($details['status'], Server::STATUSES_STR);
             if (!$premiumStatus) {
                 $this->logger->error(
@@ -129,9 +129,17 @@ class UpgradeController extends Controller
                 throw new Exception();
             }
 
+            $purchaseUser = $this->em->getRepository(User::class)->findByID($userID);
+            if (!$purchaseUser) {
+                $this->logger->error(
+                    sprintf('Payment user not found for purchase token = %s code = %s.', $token, $code)
+                );
+                $purchaseUser = $this->getUser();
+            }
+
             $purchase = (new Purchase())
                 ->setServer($server)
-                ->setUser($this->getUser())
+                ->setUser($purchaseUser)
                 ->setPurchaseToken($token)
                 ->setStatus($premiumStatus)
                 ->setPrice($price)
@@ -157,7 +165,7 @@ class UpgradeController extends Controller
             $action = sprintf('Upgraded server to %s.', Server::STATUSES_STR[$premiumStatus]);
             $this->eventDispatcher->dispatch(
                 'app.server.action',
-                new ServerActionEvent($server, $this->getUser(), $action)
+                new ServerActionEvent($server, $purchaseUser, $action)
             );
         }
 
