@@ -14,8 +14,8 @@ class PaymentService
 {
     use LoggerAwareTrait;
 
-    const BASE_URL_API      = 'http://dev.yunogasai.site/api/v1';
-    const BASE_URL_PURCHASE = 'http://dev.yunogasai.site/purchase';
+    const BASE_URL_API      = 'https://yunogasai.site/api/v1';
+    const BASE_URL_PURCHASE = 'https://yunogasai.site/purchase';
     const TIMEOUT           = 2.0;
 
     /**
