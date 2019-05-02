@@ -55,12 +55,16 @@
           </ul>
         </div>
         <div class="card-upgrade-price">
-          $12.50 USD / 30 Days
+          ${{ (prices.gold['30'] / 100)|number_format(2) }} USD / 30 Days
         </div>
         <div class="card-footer">
-          <button type="button" class="btn btn-info btn-block">
-            Upgrade
-          </button>
+          <form method="post">
+            <input type="hidden" name="status" value="gold" />
+            <input type="hidden" name="period" value="30" />
+            <button type="submit" class="btn btn-info btn-block">
+              Upgrade
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -86,12 +90,16 @@
           </ul>
         </div>
         <div class="card-upgrade-price">
-          $45.00 USD / 30 Days
+          ${{ (prices.platinum['30'] / 100)|number_format(2) }} USD / 30 Days
         </div>
         <div class="card-footer">
-          <button type="button" class="btn btn-info btn-block">
-            Upgrade
-          </button>
+          <form method="post">
+            <input type="hidden" name="status" value="platinum" />
+            <input type="hidden" name="period" value="30" />
+            <button type="submit" class="btn btn-info btn-block">
+              Upgrade
+            </button>
+          </form>
         </div>
       </div>
     </div>

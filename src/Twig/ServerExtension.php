@@ -46,7 +46,8 @@ class ServerExtension extends AbstractExtension
     {
         return [
             new TwigFilter('serverURL', [$this, 'serverURL']),
-            new TwigFilter('serverNextBump', [$this, 'serverNextBump'])
+            new TwigFilter('serverNextBump', [$this, 'serverNextBump']),
+            new TwigFilter('serverPremiumStatus', [$this, 'serverPremiumStatus'])
         ];
     }
 
@@ -104,5 +105,17 @@ class ServerExtension extends AbstractExtension
     public function hasServerAccess(Server $server, $role, User $user = null)
     {
         return $this->serverAccess->can($server, $role, $user);
+    }
+
+    /**
+     * @param Server $server
+     *
+     * @return string
+     */
+    public function serverPremiumStatus(Server $server)
+    {
+        $status = $server->getPremiumStatus();
+
+        return Server::STATUSES_STR[$status];
     }
 }

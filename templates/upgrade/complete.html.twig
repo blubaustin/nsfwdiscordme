@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+  <div class="row">
+    <div class="col col-md-8 offset-md-2 col-sm-12 col-12">
+      <div class="card card-primary">
+        <div class="card-header">
+          Purchase Summary
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>
+                  Server
+                </td>
+                <td>
+                  <a href="{{ path('server_index', { slug: server.slug }) }}" target="_blank">
+                    {{ server.name }} ({{ server.discordID }})
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Price
+                </td>
+                <td>
+                  ${{ (purchase.price / 100)|number_format(2) }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Period
+                </td>
+                <td>
+                  {{ purchase.period }} days
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Premium Status
+                </td>
+                <td>
+                  {{ server|serverPremiumStatus|ucwords }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <h3 class="text-center">
+            Thank you!
+          </h3>
+          <p>
+            A receipt for the purchase will be emailed to you shortly.
+            Your premium status begins immediately or when your existing
+            premium status expires.
+          </p>
+        </div>
+        <div class="card-footer">
+          <a href="{{ path('server_index', { slug: server.slug }) }}" class="btn btn-success btn-block">
+            Go to Server
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

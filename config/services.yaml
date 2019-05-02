@@ -49,6 +49,11 @@ services:
         calls:
             - [setLogger, ['@logger']]
 
+    App\Services\PaymentService:
+        class: App\Services\PaymentService
+        calls:
+            - [setLogger, ['@logger']]
+
     PHPGangsta_GoogleAuthenticator:
         class: PHPGangsta_GoogleAuthenticator
 

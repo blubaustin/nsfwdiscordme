@@ -12,6 +12,7 @@ use Exception;
 class AccessToken
 {
     /**
+     * @var int
      * @ORM\Id
      * @ORM\Column(type="bigint", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -70,9 +71,9 @@ class AccessToken
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

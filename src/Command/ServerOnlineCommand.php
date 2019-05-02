@@ -33,8 +33,8 @@ class ServerOnlineCommand extends Command
     /**
      * Constructor
      *
-     * @param EntityManagerInterface       $em
-     * @param \App\Services\DiscordService $discord
+     * @param EntityManagerInterface $em
+     * @param DiscordService         $discord
      */
     public function __construct(EntityManagerInterface $em, DiscordService $discord)
     {
