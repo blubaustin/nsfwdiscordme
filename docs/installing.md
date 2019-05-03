@@ -51,6 +51,7 @@ Install the cron jobs using the `crontab -e` command.
 ```
 @hourly /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:logs:check
 @hourly /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:server:online
+@daily /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:bumps:reset
 0 */6 * * * /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:server:upgrades
 ```
 
