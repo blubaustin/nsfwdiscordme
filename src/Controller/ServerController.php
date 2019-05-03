@@ -75,6 +75,7 @@ class ServerController extends Controller
 
         return $this->render('server/index.html.twig', [
             'server'      => $server,
+            'title'       => $server->getName(),
             'isFollowing' => $isFollowing
         ]);
     }
@@ -196,7 +197,8 @@ class ServerController extends Controller
             'bumpLog'   => $bumpLog,
             'actionLog' => $actionLog,
             'joinCount' => $joinCount,
-            'viewCount' => $viewCount
+            'viewCount' => $viewCount,
+            'title'     => sprintf('Stats for %s', $server->getName())
         ]);
     }
 
@@ -296,7 +298,8 @@ class ServerController extends Controller
         return $this->render('server/team.html.twig', [
             'server'      => $server,
             'form'        => $form->createView(),
-            'teamMembers' => $teamMembers
+            'teamMembers' => $teamMembers,
+            'title'       => sprintf('Team %s', $server->getName())
         ]);
     }
 
@@ -352,7 +355,8 @@ class ServerController extends Controller
             [
                 'form'      => $form->createView(),
                 'server'    => $server,
-                'isEditing' => true
+                'isEditing' => true,
+                'title'     => sprintf('Settings for %s', $server->getName())
             ]
         );
     }
@@ -408,7 +412,8 @@ class ServerController extends Controller
             'server/add.html.twig',
             [
                 'form'      => $form->createView(),
-                'isEditing' => false
+                'isEditing' => false,
+                'title'     => 'Add Server'
             ]
         );
     }

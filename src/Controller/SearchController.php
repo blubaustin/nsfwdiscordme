@@ -59,7 +59,8 @@ class SearchController extends Controller
 
         return $this->render('search/index.html.twig', [
             'servers'    => $this->paginate($query),
-            'searchTerm' => $searchTerm
+            'searchTerm' => $searchTerm,
+            'title'      => $searchTerm
         ]);
     }
 }

@@ -38,7 +38,8 @@ class CategoryController extends Controller
 
         return $this->render('category/index.html.twig', [
             'servers'  => $this->paginate($query),
-            'category' => $category
+            'category' => $category,
+            'title'    => $category->getName()
         ]);
     }
 
@@ -68,7 +69,8 @@ class CategoryController extends Controller
 
         return $this->render('category/index.html.twig', [
             'servers' => $this->paginate($query),
-            'tag'     => $tag
+            'tag'     => $tag,
+            'title'   => $tag->getName()
         ]);
     }
 
@@ -78,7 +80,8 @@ class CategoryController extends Controller
     public function tagsAction()
     {
         return $this->render('category/tags.html.twig', [
-            'tags' => $this->em->getRepository(Tag::class)->findAll()
+            'tags'  => $this->em->getRepository(Tag::class)->findAll(),
+            'title' => 'Tags'
         ]);
     }
 }

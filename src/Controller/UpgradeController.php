@@ -47,7 +47,8 @@ class UpgradeController extends Controller
 
         return $this->render('upgrade/index.html.twig', [
             'server' => $server,
-            'prices' => self::PRICES
+            'prices' => self::PRICES,
+            'title'  => sprintf('Upgrade %s', $server->getName())
         ]);
     }
 
@@ -132,7 +133,8 @@ class UpgradeController extends Controller
         $this->addFlash('success', 'Upgrade complete!');
 
         return $this->render('upgrade/complete.html.twig', [
-            'purchase' => $purchase
+            'purchase' => $purchase,
+            'title'    => 'Purchase Complete'
         ]);
     }
 
@@ -143,7 +145,9 @@ class UpgradeController extends Controller
     {
         $this->addFlash('danger', 'Payment failure!');
 
-        return $this->render('upgrade/failure.html.twig');
+        return $this->render('upgrade/failure.html.twig', [
+            'title' => 'Purchase Failed'
+        ]);
     }
 
     /**

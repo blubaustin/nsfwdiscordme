@@ -52,7 +52,8 @@ class ProfileController extends Controller
         return $this->render('profile/index.html.twig', [
             'servers'        => $servers,
             'premiumStatus'  => $premiumStatus,
-            'bumpPeriodNext' => $bumpPeriodNext->getFormattedDate()
+            'bumpPeriodNext' => $bumpPeriodNext->getFormattedDate(),
+            'title'          => 'Profile'
         ]);
     }
 
@@ -63,7 +64,9 @@ class ProfileController extends Controller
      */
     public function settingsAction()
     {
-        return $this->render('profile/settings.html.twig');
+        return $this->render('profile/settings.html.twig', [
+            'title' => 'Profile Settings'
+        ]);
     }
 
     /**
@@ -74,7 +77,8 @@ class ProfileController extends Controller
         $purchases = $this->em->getRepository(Purchase::class)->findByUser($this->getUser());
 
         return $this->render('profile/invoices.html.twig', [
-            'purchases' => $purchases
+            'purchases' => $purchases,
+            'title'     => 'Invoices'
         ]);
     }
 }

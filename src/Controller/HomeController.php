@@ -101,6 +101,7 @@ class HomeController extends Controller
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'recently-bumped',
+            'title'   => 'Recently Bumped',
             'servers' => $this->paginate($query)
         ]);
     }
@@ -121,6 +122,7 @@ class HomeController extends Controller
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'recently-added',
+            'title'   => 'Recently Added',
             'servers' => $this->paginate($query)
         ]);
     }
@@ -146,6 +148,7 @@ class HomeController extends Controller
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'trending',
+            'title'   => 'Trending',
             'servers' => $this->paginate($query)
         ]);
     }
@@ -168,6 +171,7 @@ class HomeController extends Controller
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'most-online',
+            'title'   => 'Most Online',
             'servers' => $this->paginate($query)
         ]);
     }

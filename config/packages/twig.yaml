@@ -5,5 +5,6 @@ twig:
     form_themes: ['_forms/bootstrap_4_layout.html.twig']
     globals:
         siteName: nsfwdiscord.me
+        titleSuffix: ' - nsfwdiscord.me'
         discordClientID: '%env(DISCORD_CLIENT_ID)%'
         recaptchaSiteKey: '%env(RECAPTCHA_SITE_KEY)%'
