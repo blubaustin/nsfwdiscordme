@@ -101,7 +101,9 @@ services:
         tags:
             - { name: twig.extension }
 
+    # ################################################
     # Controllers
+    # ################################################
     App\Controller\SearchController:
         calls:
             - [setServerFinder, ['@fos_elastica.finder.app.server']]
@@ -116,12 +118,25 @@ services:
         calls:
             - [setEventsFinder, ['@fos_elastica.finder.events.event']]
             - [setServerFinder, ['@fos_elastica.finder.app.server']]
+
+    # ################################################
     # Event Listeners
+    # ################################################
     App\Event\Listener\ServerStatsListener:
         tags:
             - { name: kernel.event_listener, event: 'app.server.bump', method: 'onBump' }
             - { name: kernel.event_listener, event: 'app.server.join', method: 'onJoin' }
             - { name: kernel.event_listener, event: 'app.server.view', method: 'onView' }
+
     App\Event\Listener\ServerActionRecorderListener:
         tags:
             - { name: kernel.event_listener, event: 'app.server.action', method: 'onAction' }
+
+    # ################################################
+    # Commands
+    # ################################################
+    App\Command\LogsCheckCommand:
+        class: App\Command\LogsCheckCommand
+        arguments:
+            - '%kernel.logs_dir%/%kernel.environment%.log'
+            - '@Redis'

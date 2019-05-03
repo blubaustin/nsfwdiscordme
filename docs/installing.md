@@ -49,6 +49,7 @@ bin/console doctrine:migrations:migrate
 Install the cron jobs using the `crontab -e` command.
 
 ```
+@hourly /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:logs:check
 @hourly /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:server:online
 0 */6 * * * /usr/bin/php /var/www/www.nsfwdiscordme.com/bin/console app:server:upgrades
 ```
