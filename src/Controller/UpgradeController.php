@@ -214,8 +214,7 @@ class UpgradeController extends Controller
 
         $this->em->flush();
 
-        $premiumStatus = array_search($purchase->getPremiumStatus(), Server::STATUSES_STR);
-        $action = sprintf('Purchased premium server status %s.', Server::STATUSES_STR[$premiumStatus]);
+        $action = sprintf('Purchased premium server status %s.', Server::STATUSES_STR[$purchase->getPremiumStatus()]);
         $this->eventDispatcher->dispatch(
             'app.server.action',
             new ServerActionEvent($server, $purchase->getUser(), $action)
