@@ -32,6 +32,16 @@ class PurchaseRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string $token
+     *
+     * @return object|Purchase
+     */
+    public function findByToken($token)
+    {
+        return $this->findOneBy(['purchaseToken' => $token]);
+    }
+
+    /**
      * @param User $user
      *
      * @return Purchase[]

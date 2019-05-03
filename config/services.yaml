@@ -54,6 +54,7 @@ services:
         arguments:
             - '%env(YUNOGASAI_ID)%'
             - '%env(YUNOGASAI_SECRET)%'
+            - '%paymentBaseURL%'
         calls:
             - [setLogger, ['@logger']]
 

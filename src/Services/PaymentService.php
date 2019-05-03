@@ -14,9 +14,7 @@ class PaymentService
 {
     use LoggerAwareTrait;
 
-    const BASE_URL_API      = 'https://yunogasai.site/api/v1';
-    const BASE_URL_PURCHASE = 'https://yunogasai.site/purchase';
-    const TIMEOUT           = 2.0;
+    const TIMEOUT = 2.0;
 
     /**
      * @var string
@@ -29,15 +27,42 @@ class PaymentService
     protected $clientSecret;
 
     /**
+     * @var string
+     */
+    protected $baseURL;
+
+    /**
      * Constructor
      *
      * @param string $clientID
      * @param string $clientSecret
+     * @param string $baseURL
      */
-    public function __construct($clientID, $clientSecret)
+    public function __construct($clientID, $clientSecret, $baseURL = 'https://yunogasai.site')
     {
         $this->clientID     = $clientID;
         $this->clientSecret = $clientSecret;
+        $this->baseURL      = rtrim($baseURL, '/');
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getURL($path)
+    {
+        return sprintf('%s/api/v1/%s', $this->baseURL, $path);
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return string
+     */
+    public function getPurchaseURL($token)
+    {
+        return sprintf('%s/purchase/%s', $this->baseURL, $token);
     }
 
     /**
@@ -53,13 +78,14 @@ class PaymentService
             || empty($values['price'])
             || empty($values['description'])
             || empty($values['successURL'])
+            || empty($values['cancelURL'])
             || empty($values['failureURL'])
             || empty($values['webhookURL'])
         ) {
             throw new InvalidArgumentException('Missing values.');
         }
 
-        $resp = $this->doRequest('POST', 'token', $values);
+        $resp = $this->doRequest('POST', $this->getURL('token'), $values);
         if (empty($resp['token'])) {
             throw new Exception('Invalid response.');
         }
@@ -79,7 +105,8 @@ class PaymentService
      */
     public function verify($token, $code, $price, $transactionID)
     {
-        $resp = $this->doRequest('POST', 'verify', compact('token', 'code', 'price', 'transactionID'));
+        $body = compact('token', 'code', 'price', 'transactionID');
+        $resp = $this->doRequest('POST', $this->getURL('verify'), $body);
         if (!isset($resp['valid'])) {
             throw new Exception('Invalid response.');
         }
@@ -88,14 +115,14 @@ class PaymentService
     }
 
     /**
-     * @param string           $method
-     * @param string           $path
-     * @param array|null       $body
+     * @param string     $method
+     * @param string     $url
+     * @param array|null $body
      *
      * @return mixed
      * @throws GuzzleException
      */
-    protected function doRequest($method, $path, $body = null)
+    protected function doRequest($method, $url, $body = null)
     {
         $headers = [
             'X-Client-ID'     => $this->clientID,
@@ -108,7 +135,6 @@ class PaymentService
             'body'    => json_encode($body)
         ];
 
-        $url = $this->buildURL($path);
         $this->logger->debug($method . ': ' . $url, [$options]);
 
         $client = new Guzzle([
@@ -117,15 +143,5 @@ class PaymentService
         $response = $client->request($method, $url, $options);
 
         return json_decode((string)$response->getBody(), true);
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return string
-     */
-    private function buildURL($path)
-    {
-        return sprintf('%s/%s', self::BASE_URL_API, $path);
     }
 }

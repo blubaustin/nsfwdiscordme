@@ -91,20 +91,19 @@ class UpgradeController extends Controller
         $this->em->persist($purchase);
         $this->em->flush();
 
-        $description = sprintf('Upgrading server "%s" to premium status.', $server->getName());
+        $description = sprintf('Purchasing premium server status for "%s".', $server->getName());
 
         $token = $paymentService->getToken([
             'price'         => self::PRICES[$premiumStatus][$period],
             'description'   => $description,
             'transactionID' => $purchase->getId(),
             'successURL'    => $this->generateUrl('upgrade_complete', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'cancelURL'     => $this->generateUrl('home_index'),
             'failureURL'    => $this->generateUrl('upgrade_failure', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'webhookURL'    => $this->generateUrl('upgrade_webhook', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
 
-        return new RedirectResponse(
-            sprintf('%s/%s', PaymentService::BASE_URL_PURCHASE, $token)
-        );
+        return new RedirectResponse($paymentService->getPurchaseURL($token));
     }
 
     /**
@@ -117,12 +116,12 @@ class UpgradeController extends Controller
      */
     public function completeAction(Request $request)
     {
-        $transactionID = $request->query->get('t');
-        if (!$transactionID) {
+        $token = $request->query->get('t');
+        if (!$token) {
             throw $this->createNotFoundException();
         }
 
-        $purchase = $this->em->getRepository(Purchase::class)->findByID($transactionID);
+        $purchase = $this->em->getRepository(Purchase::class)->findByToken($token);
         if (!$purchase
             || $purchase->getStatus() !== Purchase::STATUS_SUCCESS
             || $purchase->getUser()->getId() !== $this->getUser()->getId()
@@ -216,7 +215,7 @@ class UpgradeController extends Controller
         $this->em->flush();
 
         $premiumStatus = array_search($purchase->getPremiumStatus(), Server::STATUSES_STR);
-        $action = sprintf('Upgraded server to %s.', Server::STATUSES_STR[$premiumStatus]);
+        $action = sprintf('Purchased premium server status %s.', Server::STATUSES_STR[$premiumStatus]);
         $this->eventDispatcher->dispatch(
             'app.server.action',
             new ServerActionEvent($server, $purchase->getUser(), $action)
