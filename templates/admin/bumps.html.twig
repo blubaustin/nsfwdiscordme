@@ -1,0 +1,20 @@
+{% extends '@EasyAdmin/default/layout.html.twig' %}
+{% block main %}
+  <div class="gutter">
+    <form id="form-reset" method="post">
+      <input type="hidden" name="action" value="reset" />
+      <button id="btn-reset" class="btn btn-danger" type="submit">
+        Reset Bump Points
+      </button>
+    </form>
+  </div>
+  <script>
+    $(function() {
+      $('#form-reset').on('submit', function(e) {
+        if (!confirm('Are you absolutely sure you want to reset all bump points?! This cannot be undone.')) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+{% endblock %}

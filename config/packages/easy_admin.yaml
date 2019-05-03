@@ -7,12 +7,14 @@ easy_admin:
         form_theme: 'admin/form/bootstrap_4.html.twig'
         assets:
             css:
+                - 'https://use.fontawesome.com/releases/v5.6.1/css/all.css'
                 - 'build/css/admin.css'
             js:
                 - 'build/js/admin.js'
                 - 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js'
         menu:
-            - { label: 'Stats', url: '/admin/stats', default: true }
+            - { label: 'Stats', url: '/admin/stats', default: true, icon: 'chart-bar' }
+            - { label: 'Bump Points', url: '/admin/bumps', icon: 'arrow-alt-circle-up' }
             - { entity: Server, label: 'Servers', icon: 'server' }
             - { entity: User, label: 'Users', icon: 'user' }
             - { entity: ServerTeamMember, label: 'Team Members', icon: 'users' }
@@ -32,6 +34,7 @@ easy_admin:
                     - name
                     - { property: 'slug', label: 'Slug', template: 'admin/fields/slug.html.twig' }
                     - { property: 'discordID', label: 'Discord ID', type: 'string' }
+                    - bumpPoints
                     - dateCreated
             form:
                 fields:
