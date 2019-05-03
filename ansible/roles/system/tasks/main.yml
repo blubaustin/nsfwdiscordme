@@ -4,3 +4,16 @@
     upgrade: yes
     update_cache: yes
     cache_valid_time: 86400 #One day
+
+- name: Install logrotate
+  apt:
+    pkg: logrotate
+    state: absent
+
+- name: Copy logrotate configuration
+  template:
+    src: logrotate.conf
+    dest: /etc/logrotate.d/nsfwdiscord
+
+- name: Update logrotate
+  command: logrotate /etc/logrotate.d/nsfwdiscord
