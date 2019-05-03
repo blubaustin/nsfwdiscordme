@@ -219,7 +219,9 @@ class HomeController extends Controller
      */
     public function privacyAction()
     {
-        return $this->render('home/privacy.html.twig');
+        return $this->render('home/privacy.html.twig', [
+            'title' => 'Privacy Policy'
+        ]);
     }
 
     /**
@@ -229,6 +231,8 @@ class HomeController extends Controller
      */
     public function termsAction()
     {
-        return $this->render('home/terms.html.twig');
+        return $this->render('home/terms.html.twig', [
+            'Terms of Use'
+        ]);
     }
 }
