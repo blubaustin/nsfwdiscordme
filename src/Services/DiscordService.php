@@ -3,6 +3,8 @@ namespace App\Services;
 
 use App\Entity\AccessToken;
 use App\Services\Exception\DiscordRateLimitException;
+use DateTime;
+use DateTimeZone;
 use Exception;
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Exception\GuzzleException;
@@ -252,6 +254,7 @@ class DiscordService
      * @return mixed
      * @throws GuzzleException
      * @throws DiscordRateLimitException
+     * @throws Exception
      */
     protected function doRequest($method, $path, $body = null, $token = null)
     {
@@ -285,7 +288,16 @@ class DiscordService
 
         $rateLimit = $response->getHeader('X-RateLimit-Remaining');
         if (isset($rateLimit[0]) && $rateLimit[0] == '0') {
-            throw new DiscordRateLimitException();
+            $message        = 'Rate limited';
+            $rateLimitReset = $response->getHeader('X-RateLimit-Reset');
+            if (isset($rateLimitReset[0])) {
+                $date = new DateTime();
+                $date->setTimestamp($rateLimitReset[0]);
+                $date->setTimezone(new DateTimeZone('UTC'));
+                $message = sprintf('Rate limited until %s', $date->format('Y-m-d H:i:s'));
+            }
+
+            throw new DiscordRateLimitException($message);
         }
 
         return json_decode((string)$response->getBody(), true);
