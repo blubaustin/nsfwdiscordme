@@ -37,7 +37,6 @@ class AuthController extends Controller
     public function loginAction(Request $request, UserProvider $provider)
     {
         // The saved state key will be validated in discordOauth2RedirectAction().
-
         $url     = $provider->getAuthorizationURL();
         $session = $request->getSession();
         $session->set(self::OAUTH2_STATE_KEY, $url);
@@ -82,8 +81,9 @@ class AuthController extends Controller
         // We saved this session value in loginAction(). Ensures
         // the user arrived at this route via the login path.
         $session = $request->getSession();
-        if (!$session->get(self::OAUTH2_STATE_KEY)) {
-            throw $this->createAccessDeniedException();
+        if (!$session->get(self::OAUTH2_STATE_KEY) || $request->query->get('error')) {
+            $session->remove(self::OAUTH2_STATE_KEY);
+            return new RedirectResponse('/');
         }
         $session->remove(self::OAUTH2_STATE_KEY);
 
