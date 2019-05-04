@@ -11,6 +11,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\Cache\CacheItem;
 
 /**
  * Class DiscordService
@@ -258,9 +259,15 @@ class DiscordService
      */
     protected function doRequest($method, $path, $body = null, $token = null)
     {
-        $client = new Guzzle([
-            'timeout' => self::TIMEOUT
-        ]);
+        $cacheKey  = sprintf('discord.%s.%s', $method, md5($path));
+        $cacheItem = null;
+
+        try {
+            $cacheItem = $this->cache->getItem($cacheKey);
+            if ($cacheItem->isHit()) {
+                return $cacheItem->get();
+            }
+        } catch (\Psr\Cache\InvalidArgumentException $e) {}
 
         $headers = [
             'User-Agent'   => self::USER_AGENT,
@@ -284,23 +291,25 @@ class DiscordService
 
         $url = $this->buildURL($path);
         $this->logger->debug($method . ': ' . $url, [$headers, $options]);
+
+        $client = new Guzzle([
+            'timeout' => self::TIMEOUT
+        ]);
         $response = $client->request($method, $url, $options);
+        $data     = json_decode((string)$response->getBody(), true);
 
-        $rateLimit = $response->getHeader('X-RateLimit-Remaining');
-        if (isset($rateLimit[0]) && $rateLimit[0] == '0') {
-            $message        = 'Rate limited';
-            $rateLimitReset = $response->getHeader('X-RateLimit-Reset');
-            if (isset($rateLimitReset[0])) {
-                $date = new DateTime();
-                $date->setTimestamp($rateLimitReset[0]);
-                $date->setTimezone(new DateTimeZone('UTC'));
-                $message = sprintf('Rate limited until %s', $date->format('Y-m-d H:i:s'));
-            }
-
-            throw new DiscordRateLimitException($message);
+        $rateLimitRemaining = $response->getHeader('X-RateLimit-Remaining');
+        if (isset($rateLimitRemaining[0]) && $rateLimitRemaining[0] == '0') {
+            throw new DiscordRateLimitException();
         }
 
-        return json_decode((string)$response->getBody(), true);
+        if (!$cacheItem) {
+            $cacheItem = new CacheItem();
+        }
+        $cacheItem->set($data)->expiresAfter(30);
+        $this->cache->save($cacheItem);
+
+        return $data;
     }
 
     /**

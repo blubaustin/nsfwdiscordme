@@ -523,7 +523,21 @@ class ServerController extends Controller
         $iconMedia   = null;
         $bannerMedia = null;
         try {
-            $guild    = $this->discord->fetchGuild($server->getDiscordID());
+            $guild  = null;
+            $guilds = $this->discord->fetchMeGuilds($this->getUser()->getDiscordAccessToken());
+            foreach($guilds as $g) {
+                if ($g['id'] == $server->getDiscordID()) {
+                    $guild = $g;
+                    break;
+                }
+            }
+            if (!$guild) {
+                $form
+                    ->get('discordID')
+                    ->addError(new FormError('Unable to get server information from Discord.'));
+                return false;
+            }
+
             $iconFile = $this->discord->writeGuildIcon($server->getDiscordID(), $guild['icon']);
             if ($iconFile) {
                 $iconMedia = $this->moveIconFile($iconFile, $server);
