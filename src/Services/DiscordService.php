@@ -298,10 +298,10 @@ class DiscordService
         $response = $client->request($method, $url, $options);
         $data     = json_decode((string)$response->getBody(), true);
 
-        $rateLimitRemaining = $response->getHeader('X-RateLimit-Remaining');
+/*        $rateLimitRemaining = $response->getHeader('X-RateLimit-Remaining');
         if (isset($rateLimitRemaining[0]) && $rateLimitRemaining[0] == '0') {
             throw new DiscordRateLimitException();
-        }
+        }*/
 
         if (!$cacheItem) {
             $cacheItem = new CacheItem();
