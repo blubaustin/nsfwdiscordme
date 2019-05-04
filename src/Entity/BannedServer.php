@@ -62,7 +62,7 @@ class BannedServer
     /**
      * @return int
      */
-    public function getDiscordID(): int
+    public function getDiscordID(): ?int
     {
         return $this->discordID;
     }

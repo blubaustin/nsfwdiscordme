@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Entity\AccessToken;
+use App\Services\Exception\DiscordRateLimitException;
 use Exception;
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Exception\GuzzleException;
@@ -62,6 +63,7 @@ class DiscordService
      *
      * @return array
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function fetchWidget($serverID)
     {
@@ -73,6 +75,7 @@ class DiscordService
      *
      * @return array
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function fetchUser($userID)
     {
@@ -84,6 +87,7 @@ class DiscordService
      *
      * @return array
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function fetchGuild($serverID)
     {
@@ -95,6 +99,7 @@ class DiscordService
      *
      * @return array
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function fetchMeGuilds(AccessToken $token)
     {
@@ -106,6 +111,7 @@ class DiscordService
      *
      * @return array
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function fetchGuildChannels($serverID)
     {
@@ -117,6 +123,7 @@ class DiscordService
      *
      * @return array
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function fetchGuildMembers($serverID)
     {
@@ -244,6 +251,7 @@ class DiscordService
      *
      * @return mixed
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     protected function doRequest($method, $path, $body = null, $token = null)
     {
@@ -274,6 +282,11 @@ class DiscordService
         $url = $this->buildURL($path);
         $this->logger->debug($method . ': ' . $url, [$headers, $options]);
         $response = $client->request($method, $url, $options);
+
+        $rateLimit = $response->getHeader('X-RateLimit-Remaining');
+        if (isset($rateLimit[0]) && $rateLimit[0] == '0') {
+            throw new DiscordRateLimitException();
+        }
 
         return json_decode((string)$response->getBody(), true);
     }
