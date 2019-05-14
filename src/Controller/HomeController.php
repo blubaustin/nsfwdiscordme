@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function indexAction(Request $request)
     {
         $masterServer = null;
-        if ($request->query->get('page', 1) == 1) {
+        if ($request->query->getInt('page', 1) === 1) {
             $masterServer = $this->em->getRepository(Server::class)
                 ->findOneBy(['premiumStatus' => Server::STATUS_MASTER]);
         }
