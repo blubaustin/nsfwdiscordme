@@ -2,6 +2,7 @@
 namespace App\Event;
 
 use App\Entity\Server;
+use App\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,6 +17,11 @@ class BumpEvent extends Event
     protected $server;
 
     /**
+     * @var User
+     */
+    protected $user;
+
+    /**
      * @var Request
      */
     protected $request;
@@ -24,11 +30,13 @@ class BumpEvent extends Event
      * Constructor
      *
      * @param Server  $server
+     * @param User    $user
      * @param Request $request
      */
-    public function __construct(Server $server, Request $request)
+    public function __construct(Server $server, User $user, Request $request)
     {
         $this->server  = $server;
+        $this->user    = $user;
         $this->request = $request;
     }
 
@@ -38,6 +46,14 @@ class BumpEvent extends Event
     public function getServer(): Server
     {
         return $this->server;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
     }
 
     /**

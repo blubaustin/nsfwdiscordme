@@ -90,44 +90,6 @@
     <div class="col">
       <div class="card card-primary card-server-stats-bump-log">
         <div class="card-header card-server-stats-header">
-          {{ icon('app-bump') }} Bump Log
-        </div>
-        <div class="card-body">
-          {% if bumpLog|length == 0 %}
-            <p class="text-center">
-              This server does not have any bumps.
-            </p>
-          {% else %}
-            <table class="table">
-              <thead>
-                <tr>
-                  <th style="width: 20%">Date</th>
-                  <th>User</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% for log in bumpLog %}
-                <tr>
-                  <td>
-                    {{ log.dateCreated|date('Y-m-d H:i:s') }}
-                  </td>
-                  <td>
-                    {{ log.user|displayUsername }}
-                  </td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <div class="card card-primary card-server-stats-bump-log">
-        <div class="card-header card-server-stats-header">
           {{ icon('exclamation-circle') }} Action Log
         </div>
         <div class="card-body">

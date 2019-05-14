@@ -18,23 +18,20 @@ use InvalidArgumentException;
  */
 class Server
 {
-    const STATUS_STANDARD = 0;
-    const STATUS_GOLD     = 1;
-    const STATUS_PLATINUM = 2;
-    const STATUS_MASTER   = 3;
-
+    const STATUS_STANDARD     = 0;
+    const STATUS_GOLD         = 1;
+    const STATUS_PLATINUM     = 2;
+    const STATUS_MASTER       = 3;
     const STATUS_STR_STANDARD = 'standard';
     const STATUS_STR_GOLD     = 'gold';
     const STATUS_STR_PLATINUM = 'platinum';
     const STATUS_STR_MASTER   = 'master';
-
-    const STATUSES = [
+    const STATUSES            = [
         self::STATUS_STANDARD,
         self::STATUS_GOLD,
         self::STATUS_PLATINUM,
         self::STATUS_MASTER
     ];
-
     const STATUSES_STR = [
         self::STATUS_STANDARD => self::STATUS_STR_STANDARD,
         self::STATUS_GOLD     => self::STATUS_STR_GOLD,
@@ -42,10 +39,17 @@ class Server
         self::STATUS_MASTER   => self::STATUS_STR_MASTER
     ];
 
+    const BUMP_PERIOD_SECONDS = 21600; // 6 hours
+    const POINTS_PER_BUMP     = [
+        self::STATUS_STANDARD => 1,
+        self::STATUS_GOLD     => 2,
+        self::STATUS_PLATINUM => 3,
+        self::STATUS_MASTER   => 4
+    ];
+
     const INVITE_TYPE_BOT    = 'bot';
     const INVITE_TYPE_WIDGET = 'widget';
-
-    const INVITE_TYPES = [
+    const INVITE_TYPES       = [
         self::INVITE_TYPE_BOT,
         self::INVITE_TYPE_WIDGET
     ];
@@ -214,6 +218,12 @@ class Server
 
     /**
      * @var DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $dateBumped;
+
+    /**
+     * @var DateTime
      * @ORM\Column(type="datetime")
      */
     protected $dateCreated;
@@ -225,9 +235,14 @@ class Server
     protected $dateUpdated;
 
     /**
-     * @var BumpPeriodVote
+     * @var int
      */
-    protected $lastBumpPeriodVote;
+    protected $nextBumpSeconds = 0;
+
+    /**
+     * @var ServerEvent
+     */
+    protected $lastBumpEvent;
 
     /**
      * Constructor
@@ -784,6 +799,26 @@ class Server
     /**
      * @return DateTime
      */
+    public function getDateBumped(): ?DateTime
+    {
+        return $this->dateBumped;
+    }
+
+    /**
+     * @param DateTime $dateBumped
+     *
+     * @return Server
+     */
+    public function setDateBumped(DateTime $dateBumped): Server
+    {
+        $this->dateBumped = $dateBumped;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
     public function getDateCreated(): DateTime
     {
         return $this->dateCreated;
@@ -817,26 +852,6 @@ class Server
     public function setDateUpdated(DateTime $dateUpdated): Server
     {
         $this->dateUpdated = $dateUpdated;
-
-        return $this;
-    }
-
-    /**
-     * @return BumpPeriodVote
-     */
-    public function getLastBumpPeriodVote(): ?BumpPeriodVote
-    {
-        return $this->lastBumpPeriodVote;
-    }
-
-    /**
-     * @param BumpPeriodVote $lastBumpPeriodVote
-     *
-     * @return Server
-     */
-    public function setLastBumpPeriodVote(BumpPeriodVote $lastBumpPeriodVote = null): Server
-    {
-        $this->lastBumpPeriodVote = $lastBumpPeriodVote;
 
         return $this;
     }
@@ -893,5 +908,69 @@ class Server
         $this->setCategories($categories);
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNextBumpSeconds(): int
+    {
+        return $this->nextBumpSeconds;
+    }
+
+    /**
+     * @param int $nextBumpSeconds
+     *
+     * @return Server
+     */
+    public function setNextBumpSeconds(int $nextBumpSeconds): Server
+    {
+        $this->nextBumpSeconds = $nextBumpSeconds;
+
+        return $this;
+    }
+
+    /**
+     * @return ServerEvent
+     */
+    public function getLastBumpEvent(): ?ServerEvent
+    {
+        return $this->lastBumpEvent;
+    }
+
+    /**
+     * @param ServerEvent $lastBumpEvent
+     *
+     * @return Server
+     */
+    public function setLastBumpEvent(?ServerEvent $lastBumpEvent): Server
+    {
+        $this->lastBumpEvent = $lastBumpEvent;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBumpReady(): bool
+    {
+        $dateBumped = $this->getDateBumped();
+        if (!$dateBumped) {
+            return true;
+        }
+
+        $window = $dateBumped->getTimestamp() + self::BUMP_PERIOD_SECONDS;
+        $diff   = $window - time();
+
+        return $diff <= 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPointsPerBump(): int
+    {
+        return self::POINTS_PER_BUMP[$this->getPremiumStatus()];
     }
 }

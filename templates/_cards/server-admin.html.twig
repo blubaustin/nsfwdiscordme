@@ -1,4 +1,8 @@
-<div class="card card-primary card-server-admin" data-server-id="{{ server.discordID }}">
+<div
+  class="card card-primary card-server-admin"
+  data-server-id="{{ server.discordID }}"
+  data-next-bump="{{ server.nextBumpSeconds }}"
+>
   {% include "_cards/blocks/premium-tag.html.twig" with { sm: true } %}
   <div class="card-header card-server-admin-header">
     <div class="card-server-admin-header-meta">
@@ -23,23 +27,29 @@
           </i>
         </li>
         <li>
-          <span>Bumped Last</span>
+          <span>Last Bumped</span>
           <i class="server-bump-date">
-            {% if server.lastBumpPeriodVote %}
-              {{ server.lastBumpPeriodVote.dateCreated|time_diff }}
+            {% if server.lastBumpEvent %}
+              {{ server.lastBumpEvent.dateCreated|time_diff }}
             {% else %}
               Never
             {% endif %}
           </i>
         </li>
         <li>
-          <span>Bumped By</span>
+          <span>By</span>
           <i class="server-bump-user">
-            {% if server.lastBumpPeriodVote %}
-              {{ server.lastBumpPeriodVote.user|displayUsername }}
+            {% if server.lastBumpEvent %}
+              {{ server.lastBumpEvent.user|displayUsername }}
             {% else %}
               N/A
             {% endif %}
+          </i>
+        </li>
+        <li>
+          <span>Next Bump</span>
+          <i class="server-bump-next">
+            -
           </i>
         </li>
       </ul>

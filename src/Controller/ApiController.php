@@ -1,8 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\BumpPeriod;
-use App\Entity\BumpPeriodVote;
 use App\Entity\Server;
 use App\Entity\ServerEvent;
 use App\Event\BumpEvent;
@@ -11,11 +9,10 @@ use App\Event\ServerActionEvent;
 use App\Http\Request;
 use App\Media\WebHandlerInterface;
 use App\Security\NonceStorageInterface;
+use App\Services\Exception\DiscordRateLimitException;
 use App\Services\RecaptchaService;
 use DateInterval;
 use DateTime;
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\NonUniqueResultException;
 use Elastica\Aggregation\DateHistogram;
 use Elastica\Query;
 use Exception;
@@ -104,21 +101,16 @@ class ApiController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws DBALException
-     * @throws NonUniqueResultException
      */
     public function bumpMultiAction(Request $request)
     {
-        $this->validNonceOrThrow(self::NONCE_RECAPTCHA, 'bump-ready');
+        $this->validateNonceOrThrow(self::NONCE_RECAPTCHA, 'bump-ready');
 
         $bumped = [];
         $repo   = $this->em->getRepository(Server::class);
         foreach($request->request->get('servers') as $serverID) {
             $server = $repo->findByDiscordID($serverID);
-            if ($server
-                && $this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)
-                && !$this->hasVotedCurrentBumpPeriod($server)) {
-
+            if ($server && $server->isBumpReady() && $this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)) {
                 $bumped[$serverID] = $this->bumpServer($server, $request);
             }
         }
@@ -138,17 +130,15 @@ class ApiController extends Controller
      * @param int     $serverID
      *
      * @return JsonResponse
-     * @throws NonUniqueResultException
-     * @throws DBALException
      */
     public function bumpAction(Request $request, $serverID)
     {
-        $this->validNonceOrThrow(self::NONCE_RECAPTCHA, $serverID);
+        $this->validateNonceOrThrow(self::NONCE_RECAPTCHA, $serverID);
 
         $server = $this->findServerOrThrow($serverID, self::SERVER_ROLE_EDITOR);
-        if ($this->hasVotedCurrentBumpPeriod($server)) {
+        if (!$server->isBumpReady()) {
             return new JsonResponse([
-                'message' => 'Already voted for this bump period.'
+                'message' => 'Server not bump ready.'
             ], 403);
         }
 
@@ -167,8 +157,7 @@ class ApiController extends Controller
      * @param string $serverID
      *
      * @return JsonResponse
-     * @throws NonUniqueResultException
-     * @throws DBALException
+     * @throws Exception
      */
     public function bumpServerReadyAction($serverID)
     {
@@ -176,7 +165,7 @@ class ApiController extends Controller
 
         return new JsonResponse([
             'message' => 'ok',
-            'voted'   => $this->hasVotedCurrentBumpPeriod($server)
+            'ready'   => $server->isBumpReady()
         ]);
     }
 
@@ -186,8 +175,6 @@ class ApiController extends Controller
      * @Route("/bump/ready", name="bump_ready")
      *
      * @return JsonResponse
-     * @throws DBALException
-     * @throws NonUniqueResultException
      */
     public function bumpReadyAction()
     {
@@ -196,8 +183,7 @@ class ApiController extends Controller
 
         $ready = [];
         foreach($servers as $server) {
-            if ($this->hasServerAccess($server, self::SERVER_ROLE_EDITOR)
-                && !$this->hasVotedCurrentBumpPeriod($server)) {
+            if ($this->hasServerAccess($server, self::SERVER_ROLE_EDITOR) && $server->isBumpReady()) {
                 $ready[] = $server->getDiscordID();
             }
         }
@@ -303,6 +289,7 @@ class ApiController extends Controller
      *
      * @return JsonResponse
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function serverChannelsAction($serverID)
     {
@@ -443,36 +430,22 @@ class ApiController extends Controller
      * @param Request $request
      *
      * @return array
-     * @throws DBALException
-     * @throws NonUniqueResultException
      */
     private function bumpServer(Server $server, Request $request)
     {
-        $user       = $this->getUser();
-        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
-        $bumpPeriodVote = (new BumpPeriodVote())
-            ->setUser($user)
-            ->setBumpPeriod($bumpPeriod)
-            ->setServer($server);
-
-        switch($server->getPremiumStatus()) {
-            case Server::STATUS_GOLD:
-                $points = 2;
-                break;
-            case Server::STATUS_PLATINUM:
-            case Server::STATUS_MASTER:
-                $points = 3;
-                break;
-            default:
-                $points = 1;
-                break;
+        try {
+            $server->setDateBumped(new DateTime());
+            $server->incrementBumpPoints($server->getPointsPerBump());
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
         }
 
-        $server->incrementBumpPoints($points);
-        $this->em->persist($bumpPeriodVote);
         $this->em->flush();
-
-        $this->eventDispatcher->dispatch('app.server.bump', new BumpEvent($server, $request));
+        $user = $this->getUser();
+        $this->eventDispatcher->dispatch(
+            'app.server.bump',
+            new BumpEvent($server, $user, $request)
+        );
         $this->eventDispatcher->dispatch(
             'app.server.action',
             new ServerActionEvent($server, $user, 'Bumped server.')
@@ -481,34 +454,15 @@ class ApiController extends Controller
         return [
             'bumpPoints' => $server->getBumpPoints(),
             'bumpUser'   => $user->getDiscordUsername() . '#' . $user->getDiscordDiscriminator(),
-            'bumpDate'   => $bumpPeriodVote->getDateCreated()->format('Y-m-d H:i:s')
+            'nextBump'   => Server::BUMP_PERIOD_SECONDS
         ];
-    }
-
-    /**
-     * @param Server $server
-     *
-     * @return bool
-     * @throws NonUniqueResultException
-     * @throws DBALException
-     */
-    private function hasVotedCurrentBumpPeriod(Server $server)
-    {
-        $bumpPeriod = $this->em->getRepository(BumpPeriod::class)->findCurrentPeriod();
-        $vote       = $this->em->getRepository(BumpPeriodVote::class)
-            ->findOneBy([
-                'bumpPeriod' => $bumpPeriod,
-                'server'     => $server
-            ]);
-
-        return (bool)$vote;
     }
 
     /**
      * @param string $key
      * @param string $value
      */
-    private function validNonceOrThrow($key, $value)
+    private function validateNonceOrThrow($key, $value)
     {
         if (!$this->nonceStorage->valid($key, $value)) {
             throw $this->createAccessDeniedException();

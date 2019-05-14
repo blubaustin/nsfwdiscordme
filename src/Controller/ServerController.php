@@ -3,7 +3,6 @@ namespace App\Controller;
 
 use App\Entity\BannedServer;
 use App\Entity\BannedWord;
-use App\Entity\BumpPeriodVote;
 use App\Entity\ServerAction;
 use App\Entity\ServerEvent;
 use App\Entity\Media;
@@ -22,7 +21,7 @@ use App\Media\Adapter\Exception\FileNotFoundException;
 use App\Media\Adapter\Exception\WriteException;
 use App\Media\Paths;
 use App\Media\WebHandlerInterface;
-use DateTime;
+use App\Services\Exception\DiscordRateLimitException;
 use Exception;
 use Gumlet\ImageResize;
 use GuzzleHttp\Exception\GuzzleException;
@@ -91,7 +90,7 @@ class ServerController extends Controller
     {
         $user = $this->getUser();
         if (!$user) {
-            return new RedirectResponse($this->generateUrl('discord_oauth2'));
+            return new RedirectResponse($this->generateUrl('login'));
         }
 
         $server = $this->fetchServerOrThrow($slug);
@@ -114,7 +113,7 @@ class ServerController extends Controller
     {
         $user = $this->getUser();
         if (!$user) {
-            return new RedirectResponse($this->generateUrl('discord_oauth2'));
+            return new RedirectResponse($this->generateUrl('login'));
         }
 
         $server = $this->fetchServerOrThrow($slug);
@@ -151,16 +150,6 @@ class ServerController extends Controller
             throw $this->createAccessDeniedException();
         }
 
-        $bumpLog = $this->em->getRepository(BumpPeriodVote::class)
-            ->createQueryBuilder('b')
-            ->where('b.server = :server')
-            ->andWhere('b.dateCreated >= :date')
-            ->setParameter(':server', $server)
-            ->setParameter(':date', new DateTime('10 days ago'))
-            ->orderBy('b.id', 'desc')
-            ->getQuery()
-            ->execute();
-
         $actionLog = $this->em->getRepository(ServerAction::class)
             ->createQueryBuilder('a')
             ->where('a.server = :server')
@@ -194,7 +183,6 @@ class ServerController extends Controller
 
         return $this->render('server/stats.html.twig', [
             'server'    => $server,
-            'bumpLog'   => $bumpLog,
             'actionLog' => $actionLog,
             'joinCount' => $joinCount,
             'viewCount' => $viewCount,
@@ -369,6 +357,7 @@ class ServerController extends Controller
      * @return Response
      * @throws FileNotFoundException
      * @throws GuzzleException
+     * @throws DiscordRateLimitException
      */
     public function addAction(Request $request)
     {

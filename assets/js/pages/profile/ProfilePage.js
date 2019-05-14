@@ -1,5 +1,5 @@
 import router from 'lib/router';
-import { randomNumber } from 'lib/utils';
+import { millisecondsToTime, randomNumber, objectForEach } from 'lib/utils';
 import { recaptchaShow, recaptchaVerify } from 'lib/recaptcha';
 
 /**
@@ -9,47 +9,53 @@ class ProfilePage
 {
   /**
    * Initializes the page
-   *
-   * @param {jQuery} $page
    */
-  setup = ($page) => {
-    this.$modal         = $('#recaptcha-model');
-    this.$modalBumpBtn  = $('#modal-server-bump-btn');
-    this.$modalVoted    = $('.modal-server-admin-voted:first');
-    this.$recaptcha     = this.$modal.find('.recaptcha-container');
-    this.bumpPeriodNext = new Date($page.data('bump-period-next')).getTime();
-    this.$activeCard    = null;
-    this.bumpingAll     = false;
+  setup = () => {
+    this.$modal        = $('#recaptcha-model');
+    this.$cards        = $('.card-server-admin');
+    this.$modalBumpBtn = $('#modal-server-bump-btn');
+    this.$modalVoted   = $('.modal-server-admin-voted:first');
+    this.$recaptcha    = this.$modal.find('.recaptcha-container');
+    this.$activeCard   = null;
+    this.bumpingAll    = false;
+    this.countdowns    = {};
 
     this.$modalBumpBtn.on('click', this.handleModalBumpButtonClick);
     $('.card-server-admin-bump-btn').on('click', this.handleBumpButtonClick);
     $('#profile-bump-all-btn').on('click', this.handleBumpAllClick);
 
-    this.runBumpCountdown();
+    this.startCountdowns();
   };
 
   /**
-   * Animates the bump count down on the modal
+   * Animates the bump count downs
    */
-  runBumpCountdown = () => {
-    const $countDown = $('.server-next-bump:first');
+  startCountdowns = () => {
+    this.$cards.each((i, item) => {
+      const $el      = $(item);
+      const serverID = $el.data('server-id');
+      this.countdowns[serverID] = {
+        label:    $el.find('.server-bump-next:first'),
+        nextBump: $el.data('next-bump') * 1000
+      };
+    });
 
-    setInterval(() => {
-      const now      = new Date().getTime();
-      const distance = this.bumpPeriodNext - now;
-      const days     = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours    = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes  = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds  = Math.floor((distance % (1000 * 60)) / 1000);
+    this.handleCountdownTick();
+    setInterval(this.handleCountdownTick, 1000);
+  };
 
-      if (days !== 0) {
-        $countDown.text(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-      } else if (hours !== 0) {
-        $countDown.text(`${hours}h ${minutes}m ${seconds}s`);
-      } else if (minutes !== 0) {
-        $countDown.text(`${minutes}m ${seconds}s`);
+  /**
+   * Called for each countdown interval
+   */
+  handleCountdownTick = () => {
+    objectForEach(this.countdowns, (item, key) => {
+      this.countdowns[key].nextBump -= 1000;
+      if (item.nextBump <= 0) {
+        item.label.text('NOW!');
+      } else {
+        item.label.text(millisecondsToTime(item.nextBump));
       }
-    }, 1000);
+    });
   };
 
   /**
@@ -73,13 +79,13 @@ class ProfilePage
     }).done((resp) => {
       this.$modal.modal('show');
 
-      if (resp.voted) {
-        // The have bumped already. Nothing to do but show them the already
+      if (!resp.ready) {
+        // Server is not ready to bump. Nothing to do but show them the already
         // bumped message.
         this.$modalVoted.show();
         this.$recaptcha.hide();
       } else {
-        // Recaptcha complains if you reuse an element, but the user
+        // Recaptcha complains if we reuse an element, but the user
         // may want to bump several servers. So we create a unique
         // element in the model for each recaptcha.
         const $container = $('<div />', {
@@ -151,7 +157,7 @@ class ProfilePage
           });
       }
     });
-  }
+  };
 
   /**
    * Called when the modal bump button is clicked
@@ -181,7 +187,6 @@ class ProfilePage
     }).done((resp) => {
       if (resp.message && resp.message === 'ok') {
         this.updateCardInfo(this.$activeCard, resp);
-
         this.$modal.modal('hide');
         this.$recaptcha.hide();
       } else {
@@ -194,24 +199,25 @@ class ProfilePage
    * Bumps all of the servers
    */
   bumpAll = () => {
-    let serverIDs = [];
+    let servers = [];
     $('.card-server-admin').each((i, item) => {
-      serverIDs.push($(item).data('server-id'));
+      servers.push($(item).data('server-id'));
     });
 
     $.ajax({
       url:  router.generate('api_bump_multi'),
       type: 'post',
       data: {
-        servers: serverIDs
+        servers
       }
     }).done((resp) => {
-      if (resp.message && resp.message === 'ok') {
-        for(const serverID in resp.bumped) {
-          const $card = $(`.card-server-admin[data-server-id="${serverID}"]:first`);
-          this.updateCardInfo($card, resp.bumped[serverID]);
-        }
+      const { message, bumped } = resp;
 
+      if (message === 'ok') {
+        objectForEach(bumped, (item, serverID) => {
+          const $card = $(`.card-server-admin[data-server-id="${serverID}"]:first`);
+          this.updateCardInfo($card, item);
+        });
         this.$modal.modal('hide');
         this.$recaptcha.hide();
       } else {
@@ -222,14 +228,18 @@ class ProfilePage
 
   /**
    * @param {jQuery} $card
-   * @param {{ bumpPoints: {number}, bumpUser: {string} }} info
+   * @param {{ bumpPoints: {number}, bumpUser: {string}, nextBump: {number} }} info
    */
   updateCardInfo = ($card, info) => {
+    const serverID = $card.data('server-id');
+    this.countdowns[serverID].nextBump = info.nextBump * 1000;
+    $card.data('next-bump', info.nextBump);
+
     $card.find('.server-bump-points:first').text(info.bumpPoints);
     $card.find('.server-bump-user:first').text(info.bumpUser);
     $card.find('.server-bump-date:first').text('Just now');
-    $card.addClass('card-server-admin-flash-success');
 
+    $card.addClass('card-server-admin-flash-success');
     setTimeout(() => {
       $card.removeClass('card-server-admin-flash-success');
     }, 2000);

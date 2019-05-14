@@ -51,7 +51,7 @@ class Controller extends AbstractController
     protected $paginator;
 
     /**
-     * @var \App\Services\DiscordService
+     * @var DiscordService
      */
     protected $discord;
 

@@ -41,6 +41,13 @@ class ServerEvent
     protected $server;
 
     /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", referencedColumnName="id", nullable=true)
+     */
+    protected $user;
+
+    /**
      * @var string|resource
      * @ORM\Column(type="binary", length=16)
      */
@@ -117,6 +124,26 @@ class ServerEvent
             );
         }
         $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return ServerEvent
+     */
+    public function setUser(User $user): ServerEvent
+    {
+        $this->user = $user;
 
         return $this;
     }

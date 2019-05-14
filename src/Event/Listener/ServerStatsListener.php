@@ -36,6 +36,7 @@ class ServerStatsListener
         try {
             $bse = (new ServerEvent())
                 ->setServer($event->getServer())
+                ->setUser($event->getUser())
                 ->setEventType(ServerEvent::TYPE_BUMP)
                 ->setIpString($event->getRequest()->getClientIp());
             $this->em->persist($bse);
