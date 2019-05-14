@@ -72,16 +72,6 @@
                   {{ icon('app-stats') }}
                 </a>
               {% endif %}
-              {#
-              <a
-                href="{{ path('server_follow', { slug: server.slug }) }}"
-                class="btn btn-lg btn-info {% if isFollowing %}server-following{% endif %}"
-                title="{% if isFollowing %}Unfollow{% else %}Follow{% endif %} Server"
-                data-toggle="tooltip"
-              >
-                {{ icon('app-follow') }}
-              </a>
-              #}
               <button
                 id="server-join-btn"
                 class="btn btn-lg btn-success"

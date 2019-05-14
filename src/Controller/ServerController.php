@@ -80,62 +80,6 @@ class ServerController extends Controller
     }
 
     /**
-     * @Route("/server/follow/{slug}", name="follow")
-     *
-     * @param string $slug
-     *
-     * @return Response
-     */
-    public function followAction($slug)
-    {
-        $user = $this->getUser();
-        if (!$user) {
-            return new RedirectResponse($this->generateUrl('login'));
-        }
-
-        $server = $this->fetchServerOrThrow($slug);
-
-        return $this->render('server/follow.html.twig', [
-            'server'      => $server,
-            'isFollowing' => $this->em->getRepository(ServerFollow::class)->isFollowing($server, $user)
-        ]);
-    }
-
-    /**
-     * @Route("/server/follow-confirm/{slug}", name="follow_confirm", methods={"POST"})
-     *
-     * @param string $slug
-     *
-     * @return Response
-     * @throws Exception
-     */
-    public function followConfirmAction($slug)
-    {
-        $user = $this->getUser();
-        if (!$user) {
-            return new RedirectResponse($this->generateUrl('login'));
-        }
-
-        $server = $this->fetchServerOrThrow($slug);
-        $follow = $this->em->getRepository(ServerFollow::class)->findFollow($server, $user);
-
-        if ($follow) {
-            $this->em->remove($follow);
-            $this->addFlash('success', 'You are no longer following the server.');
-        } else {
-            $follow = (new ServerFollow())
-                ->setServer($server)
-                ->setUser($user);
-            $this->em->persist($follow);
-            $this->addFlash('success', 'You are now following the server.');
-        }
-
-        $this->em->flush();
-
-        return new RedirectResponse($this->generateUrl('server_index', ['slug' => $server->getSlug()]));
-    }
-
-    /**
      * @Route("/server/stats/{slug}", name="stats")
      *
      * @param string $slug

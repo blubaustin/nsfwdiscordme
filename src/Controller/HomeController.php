@@ -54,33 +54,6 @@ class HomeController extends Controller
     }
 
     /**
-     * @Route("/following", name="following")
-     *
-     * @return Response
-     */
-    public function followingAction()
-    {
-        $user = $this->getUser();
-        if (!$user) {
-            return new RedirectResponse($this->generateUrl('login'));
-        }
-
-        $query = $this->em->getRepository(Server::class)
-            ->createQueryBuilder('s')
-            ->leftJoin(ServerFollow::class, 'f', Join::WITH, 'f.server = s')
-            ->where('s.isEnabled = 1')
-            ->andWhere('s.isPublic = 1')
-            ->andWhere('f.user = :user')
-            ->setParameter(':user', $user)
-            ->orderBy('f.id', 'desc');
-
-        return $this->render('home/index.html.twig', [
-            'sort'    => 'following',
-            'servers' => $this->paginate($query)
-        ]);
-    }
-
-    /**
      * @Route("/recently-bumped", name="recently_bumped")
      *
      * @return Response

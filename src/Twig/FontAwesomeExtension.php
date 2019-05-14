@@ -25,7 +25,6 @@ class FontAwesomeExtension extends AbstractExtension
         'app-online'          => 'circle fa server-icon-online',
         'app-most-online'     => 'user',
         'app-random'          => 'random',
-        'app-follow'          => 'heart',
         'app-delete'          => 'trash-alt',
         'app-join'            => 'sign-in-alt',
         'app-gold'            => 'star',
