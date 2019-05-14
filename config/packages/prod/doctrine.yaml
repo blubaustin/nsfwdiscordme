@@ -1,8 +1,12 @@
 doctrine:
     orm:
         auto_generate_proxy_classes: false
-        metadata_cache_driver: apc
-        query_cache_driver: apc
+        metadata_cache_driver:
+            type: service
+            id: App\Storage\Doctrine\RedisCacheHandler
+        query_cache_driver:
+            type: service
+            id: App\Storage\Doctrine\RedisCacheHandler
         result_cache_driver:
             type: service
             id: App\Storage\Doctrine\RedisCacheHandler
