@@ -3,7 +3,6 @@ namespace App\Controller;
 
 use App\Entity\ServerEvent;
 use App\Entity\Server;
-use App\Entity\ServerFollow;
 use App\Http\Request;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NonUniqueResultException;

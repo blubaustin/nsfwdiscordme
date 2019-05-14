@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
+use Gedmo\Mapping\Annotation as Gedmo;
 use InvalidArgumentException;
 
 /**
@@ -232,6 +233,7 @@ class Server
     /**
      * @var DateTime
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
      */
     protected $dateUpdated;
 

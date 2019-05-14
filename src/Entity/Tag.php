@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use DateTime;
 use Exception;
 
@@ -33,6 +34,7 @@ class Tag
     /**
      * @var DateTime
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
      */
     protected $dateUpdated;
 

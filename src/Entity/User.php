@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -99,6 +100,13 @@ class User implements UserInterface
     /**
      * @var DateTime
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $dateUpdated;
+
+    /**
+     * @var DateTime
+     * @ORM\Column(type="datetime")
      */
     protected $dateLastLogin;
 
@@ -108,6 +116,7 @@ class User implements UserInterface
     public function __construct()
     {
         $this->dateCreated   = new DateTime();
+        $this->dateUpdated   = new DateTime();
         $this->dateLastLogin = new DateTime();
         $this->servers       = new ArrayCollection();
         $this->roles         = [self::ROLE_USER];
@@ -313,6 +322,26 @@ class User implements UserInterface
     public function setDateCreated(DateTime $dateCreated): User
     {
         $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateUpdated(): DateTime
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param DateTime $dateUpdated
+     *
+     * @return User
+     */
+    public function setDateUpdated(DateTime $dateUpdated): User
+    {
+        $this->dateUpdated = $dateUpdated;
 
         return $this;
     }

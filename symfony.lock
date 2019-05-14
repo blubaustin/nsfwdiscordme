@@ -1,4 +1,7 @@
 {
+    "behat/transliterator": {
+        "version": "v1.2.0"
+    },
     "cakephp/core": {
         "version": "3.7.6"
     },
@@ -148,6 +151,9 @@
             "config/routes/fos_js_routing.yaml"
         ]
     },
+    "gedmo/doctrine-extensions": {
+        "version": "v2.4.37"
+    },
     "gumlet/php-image-resize": {
         "version": "1.9.2"
     },
@@ -258,6 +264,18 @@
     },
     "ruflin/elastica": {
         "version": "6.1.1"
+    },
+    "stof/doctrine-extensions-bundle": {
+        "version": "1.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.2",
+            "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
+        },
+        "files": [
+            "config/packages/stof_doctrine_extensions.yaml"
+        ]
     },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.0"
