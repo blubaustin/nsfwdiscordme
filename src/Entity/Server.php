@@ -10,9 +10,10 @@ use InvalidArgumentException;
 
 /**
  * @ORM\Table(name="server", indexes={
- *     @ORM\Index(name="enabled_public_idx", columns={"is_enabled", "is_public", "premium_status"}),
- *     @ORM\Index(name="enabled_public_bump_points_idx", columns={"is_enabled", "is_public", "bump_points", "premium_status"}),
- *     @ORM\Index(name="enabled_public_members_online_idx", columns={"is_enabled", "is_public", "members_online", "premium_status"})
+ *     @ORM\Index(name="enabled_public_idx", columns={"is_enabled", "is_public"}),
+ *     @ORM\Index(name="enabled_public_premium_idx", columns={"is_enabled", "is_public", "premium_status"}),
+ *     @ORM\Index(name="enabled_public_bump_points_idx", columns={"is_enabled", "is_public", "premium_status", "bump_points", "date_bumped"}),
+ *     @ORM\Index(name="enabled_public_members_online_idx", columns={"is_enabled", "is_public", "members_online", "bump_points", "date_bumped"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ServerRepository")
  */

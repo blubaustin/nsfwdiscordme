@@ -43,6 +43,7 @@ class HomeController extends Controller
             ->setParameter(':status', Server::STATUS_MASTER)
             ->orderBy('s.premiumStatus', 'desc')
             ->addOrderBy('s.bumpPoints', 'desc')
+            ->addOrderBy('s.dateBumped', 'desc')
             ->getQuery()
             ->useResultCache(true, self::CACHE_LIFETIME);
 
@@ -137,8 +138,8 @@ class HomeController extends Controller
             ->createQueryBuilder('s')
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
-            ->orderBy('s.premiumStatus', 'desc')
-            ->addOrderBy('s.membersOnline', 'desc')
+            ->orderBy('s.membersOnline', 'desc')
+            ->addOrderBy('s.bumpPoints', 'desc')
             ->getQuery()
             ->useResultCache(true, self::CACHE_LIFETIME);
 
