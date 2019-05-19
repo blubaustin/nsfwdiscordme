@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Admin\LoggableEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
@@ -10,7 +11,7 @@ use InvalidArgumentException;
  * @ORM\Table(name="purchase", indexes={@ORM\Index(columns={"purchase_token"})})
  * @ORM\Entity(repositoryClass="App\Repository\PurchaseRepository")
  */
-class Purchase
+class Purchase implements LoggableEntityInterface
 {
     const STATUS_PENDING = 0;
     const STATUS_SUCCESS = 1;
@@ -89,6 +90,19 @@ class Purchase
     {
         $this->dateCreated = new DateTime();
         $this->status      = self::STATUS_PENDING;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoggableMessage()
+    {
+        return sprintf(
+            'purchase #%d server = "%s", purchase token = "%s"',
+            $this->getId(),
+            $this->getServer()->getDiscordID(),
+            $this->getPurchaseToken()
+        );
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Admin\LoggableEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
@@ -14,7 +15,7 @@ use InvalidArgumentException;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ServerTeamMemberRepository")
  */
-class ServerTeamMember
+class ServerTeamMember implements LoggableEntityInterface
 {
     const ROLE_OWNER   = 'owner';
     const ROLE_MANAGER = 'manager';
@@ -106,6 +107,19 @@ class ServerTeamMember
     public function __toString(): string
     {
         return $this->getDiscordID() ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoggableMessage()
+    {
+        return sprintf(
+            'team member #%d "%s#%s"',
+            $this->getId(),
+            $this->getDiscordUsername(),
+            $this->getDiscordDiscriminator()
+        );
     }
 
     /**

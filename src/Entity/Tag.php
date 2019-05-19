@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Admin\LoggableEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DateTime;
@@ -10,7 +11,7 @@ use Exception;
  * @ORM\Table(name="tag")
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
  */
-class Tag
+class Tag implements LoggableEntityInterface
 {
     /**
      * @ORM\Id
@@ -55,6 +56,14 @@ class Tag
     public function __toString(): ?string
     {
         return $this->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoggableMessage()
+    {
+        return sprintf('tag #%d "%s"', $this->getId(), $this->getName());
     }
 
     /**

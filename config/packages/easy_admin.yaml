@@ -23,6 +23,7 @@ easy_admin:
             - { entity: BannedServer, label: 'Banned Servers', icon: 'ban' }
             - { entity: BannedUser, label: 'Banned Users', icon: 'ban' }
             - { entity: BannedWord, label: 'Banned Words', icon: 'ban' }
+            - { entity: AdminEvent, label: 'Admin Events', icon: 'calendar-alt' }
     entities:
         Server:
             class: App\Entity\Server
@@ -120,3 +121,13 @@ easy_admin:
 
         BannedWord:
             class: App\Entity\BannedWord
+
+        AdminEvent:
+            class: App\Entity\AdminEvent
+            disabled_actions: ['new', 'edit', 'update', 'delete']
+            list:
+                fields:
+                    - { property: 'eventType', label: 'Event Type', template: 'admin/fields/admin_event.html.twig', type: 'entity' }
+                    - user
+                    - message
+                    - dateCreated

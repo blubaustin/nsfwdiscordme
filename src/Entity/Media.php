@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Admin\LoggableEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
@@ -11,7 +12,7 @@ use InvalidArgumentException;
  * @ORM\Table(name="media")
  * @ORM\Entity(repositoryClass="App\Repository\MediaRepository")
  */
-class Media
+class Media implements LoggableEntityInterface
 {
     const ADAPTERS = [
         'aws',
@@ -66,6 +67,14 @@ class Media
     {
         $this->dateCreated = new DateTime();
         $this->dateUpdated = new DateTime();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoggableMessage()
+    {
+        return sprintf('media #%d "%s"', $this->getId(), $this->getPath());
     }
 
     /**

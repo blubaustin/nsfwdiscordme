@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Server;
 use App\Entity\ServerEvent;
+use App\Event\AppEvents;
 use App\Event\BumpEvent;
 use App\Event\JoinEvent;
 use App\Event\ServerActionEvent;
@@ -272,7 +273,7 @@ class ApiController extends Controller
             ], 500);
         }
 
-        $this->eventDispatcher->dispatch('app.server.join', new JoinEvent($server, $request));
+        $this->eventDispatcher->dispatch(AppEvents::SERVER_JOIN, new JoinEvent($server, $request));
 
         return new JsonResponse([
             'message'  => 'ok',
@@ -443,11 +444,11 @@ class ApiController extends Controller
         $this->em->flush();
         $user = $this->getUser();
         $this->eventDispatcher->dispatch(
-            'app.server.bump',
+            AppEvents::SERVER_BUMP,
             new BumpEvent($server, $user, $request)
         );
         $this->eventDispatcher->dispatch(
-            'app.server.action',
+            AppEvents::SERVER_ACTION,
             new ServerActionEvent($server, $user, 'Bumped server.')
         );
 

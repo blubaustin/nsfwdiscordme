@@ -10,6 +10,7 @@ use App\Entity\Server;
 use App\Entity\ServerFollow;
 use App\Entity\ServerTeamMember;
 use App\Entity\User;
+use App\Event\AppEvents;
 use App\Event\ServerActionEvent;
 use App\Event\ViewEvent;
 use App\Form\Model\ServerTeamMemberModel;
@@ -63,19 +64,13 @@ class ServerController extends Controller
      */
     public function indexAction($slug, Request $request)
     {
-        $server      = $this->fetchServerOrThrow($slug);
-        $user        = $this->getUser();
-        $isFollowing = false;
-        if ($user) {
-            $isFollowing = $this->em->getRepository(ServerFollow::class)->isFollowing($server, $user);
-        }
+        $server = $this->fetchServerOrThrow($slug);
 
-        $this->eventDispatcher->dispatch('app.server.view', new ViewEvent($server, $request));
+        $this->eventDispatcher->dispatch(AppEvents::SERVER_VIEW, new ViewEvent($server, $request));
 
         return $this->render('server/index.html.twig', [
-            'server'      => $server,
-            'title'       => $server->getName(),
-            'isFollowing' => $isFollowing
+            'server' => $server,
+            'title'  => $server->getName()
         ]);
     }
 

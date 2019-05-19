@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Admin\LoggableEntityInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, LoggableEntityInterface
 {
     const ROLE_USER        = 'ROLE_USER';
     const ROLE_ADMIN       = 'ROLE_ADMIN';
@@ -128,6 +129,19 @@ class User implements UserInterface
     public function __toString(): string
     {
         return $this->getUsername();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoggableMessage()
+    {
+        return sprintf(
+            'user #%d "%s#%s"',
+            $this->getId(),
+            $this->getDiscordUsername(),
+            $this->getDiscordDiscriminator()
+        );
     }
 
     /**

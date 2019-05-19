@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Admin\LoggableEntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +19,7 @@ use InvalidArgumentException;
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ServerRepository")
  */
-class Server
+class Server implements LoggableEntityInterface
 {
     const STATUS_STANDARD     = 0;
     const STATUS_GOLD         = 1;
@@ -268,6 +269,14 @@ class Server
     public function __toString(): string
     {
         return $this->discordID ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoggableMessage()
+    {
+        return sprintf('server #%d "%s"', $this->getId(), $this->getDiscordID());
     }
 
     /**

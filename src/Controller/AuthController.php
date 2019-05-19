@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Entity\BannedUser;
 use App\Entity\ServerTeamMember;
 use App\Entity\User;
+use App\Event\AdminLoginEvent;
+use App\Event\AppEvents;
 use App\Form\Model\AdminLoginModal;
 use App\Form\Type\AdminLoginType;
 use App\Security\UserProvider;
@@ -171,6 +173,7 @@ class AuthController extends Controller
             );
             if ($valid) {
                 $this->authenticate($request, $user, [User::ROLE_SUPER_ADMIN]);
+                $this->eventDispatcher->dispatch(AppEvents::ADMIN_LOGIN, new AdminLoginEvent($user));
 
                 return new RedirectResponse(
                     $this->generateUrl('easyadmin')

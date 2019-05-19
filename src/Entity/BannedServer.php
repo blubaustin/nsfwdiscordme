@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Admin\LoggableEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 use Exception;
@@ -13,7 +14,7 @@ use Exception;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\BannedServerRepository")
  */
-class BannedServer
+class BannedServer implements LoggableEntityInterface
 {
     /**
      * @var int
@@ -49,6 +50,14 @@ class BannedServer
     public function __construct()
     {
         $this->dateCreated = new DateTime();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoggableMessage()
+    {
+        return sprintf('banned server #%d "%s"', $this->getId(), $this->getDiscordID());
     }
 
     /**
