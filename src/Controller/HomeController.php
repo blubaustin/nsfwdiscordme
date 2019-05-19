@@ -43,8 +43,7 @@ class HomeController extends Controller
             ->orderBy('s.premiumStatus', 'desc')
             ->addOrderBy('s.bumpPoints', 'desc')
             ->addOrderBy('s.dateBumped', 'desc')
-            ->getQuery()
-            ->useResultCache(true, self::CACHE_LIFETIME);
+            ->getQuery();
 
         return $this->render('home/index.html.twig', [
             'sort'         => 'most-bumped',
@@ -69,8 +68,7 @@ class HomeController extends Controller
             ->setParameter(':eventType', ServerEvent::TYPE_BUMP)
             ->orderBy('s.premiumStatus', 'desc')
             ->addOrderBy('e.dateCreated', 'desc')
-            ->getQuery()
-            ->useResultCache(true, self::CACHE_LIFETIME);
+            ->getQuery();
 
         return $this->render('home/index.html.twig', [
             'sort'    => 'recently-bumped',
