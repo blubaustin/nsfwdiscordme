@@ -5,4 +5,5 @@ bin/version.sh && \
 rm .env && \
 mv .env-prod .env && \
 yarn run build && \
-bin/console cache:clear
+bin/console cache:clear && \
+bin/console doctrine:cache:clear-metadata
