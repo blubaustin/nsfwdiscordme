@@ -39,7 +39,7 @@
         <li>
           <span>By</span>
           <i class="server-bump-user">
-            {% if server.lastBumpEvent %}
+            {% if server.lastBumpEvent and server.lastBumpEvent.user|default %}
               {{ server.lastBumpEvent.user|displayUsername }}
             {% else %}
               N/A
