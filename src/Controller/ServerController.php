@@ -465,6 +465,7 @@ class ServerController extends Controller
                     ->addError(new FormError('Unable to get server information from Discord.'));
                 return false;
             }
+            dump($guild);die();
 
             $iconFile = $this->discord->writeGuildIcon($server->getDiscordID(), $guild['icon']);
             if ($iconFile) {
