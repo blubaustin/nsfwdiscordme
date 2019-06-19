@@ -42,6 +42,11 @@ class DiscordService
     protected $botToken;
 
     /**
+     * @var string
+     */
+    protected $defaultIcon;
+
+    /**
      * @var AdapterInterface
      */
     protected $cache;
@@ -53,13 +58,15 @@ class DiscordService
      * @param string $clientID
      * @param string $clientSecret
      * @param string $botToken
+     * @param string $defaultIcon
      */
-    public function __construct(AdapterInterface $cache, $clientID, $clientSecret, $botToken)
+    public function __construct(AdapterInterface $cache, $clientID, $clientSecret, $botToken, $defaultIcon)
     {
         $this->cache        = $cache;
         $this->clientID     = $clientID;
         $this->clientSecret = $clientSecret;
         $this->botToken     = $botToken;
+        $this->defaultIcon  = $defaultIcon;
     }
 
     /**
@@ -203,8 +210,14 @@ class DiscordService
      */
     public function writeGuildIcon($serverID, $iconHash, $ext = 'png')
     {
-        $url = sprintf('%s/icons/%s/%s.%s', self::CDN_BASE_URL, $serverID, $iconHash, $ext);
+        if (!$iconHash) {
+            $tmp = tempnam(sys_get_temp_dir(), 'icon_');
+            file_put_contents($tmp, file_get_contents($this->defaultIcon));
 
+            return $tmp;
+        }
+
+        $url    = sprintf('%s/icons/%s/%s.%s', self::CDN_BASE_URL, $serverID, $iconHash, $ext);
         $client = new Guzzle([
             'timeout' => self::TIMEOUT
         ]);

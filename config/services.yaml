@@ -46,6 +46,7 @@ services:
             - '%env(DISCORD_CLIENT_ID)%'
             - '%env(DISCORD_CLIENT_SECRET)%'
             - '%env(DISCORD_BOT_TOKEN)%'
+            - '%kernel.project_dir%/public/images/default-icon.png'
         calls:
             - [setLogger, ['@logger']]
 
