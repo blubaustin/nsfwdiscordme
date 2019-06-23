@@ -30,6 +30,7 @@ use InvalidArgumentException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -130,7 +131,7 @@ class ServerController extends Controller
     }
 
     /**
-     * @Route("/server/team/{slug}", name="team")
+     * @Route("/server/team/{slug}", name="team", methods={"GET", "POST"})
      *
      * @param string  $slug
      *
@@ -228,6 +229,34 @@ class ServerController extends Controller
             'teamMembers' => $teamMembers,
             'title'       => sprintf('Team %s', $server->getName())
         ]);
+    }
+
+    /**
+     * @Route("/server/team/{slug}", name="team_delete", methods={"DELETE"}, options={"expose"=true})
+     *
+     * @param string  $slug
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function teamRemoveAction($slug, Request $request)
+    {
+        $server = $this->fetchServerOrThrow($slug);
+        if (!$this->hasServerAccess($server, self::SERVER_ROLE_OWNER)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $teamMember = $this->getDoctrine()->getRepository(ServerTeamMember::class)
+            ->findByServerAndID($server, $request->request->get('teamMemberID'));
+        if (!$teamMember) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->em->remove($teamMember);
+        $this->em->flush();
+
+        return new JsonResponse('ok');
     }
 
     /**

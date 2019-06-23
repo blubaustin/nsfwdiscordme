@@ -34,6 +34,20 @@ class ServerTeamMemberRepository extends ServiceEntityRepository
 
     /**
      * @param Server $server
+     * @param int $id
+     *
+     * @return object|ServerTeamMember
+     */
+    public function findByServerAndID(Server $server, $id)
+    {
+        return $this->findOneBy([
+            'server' => $server,
+            'id'     => $id
+        ]);
+    }
+
+    /**
+     * @param Server $server
      *
      * @return ServerTeamMember[]
      */

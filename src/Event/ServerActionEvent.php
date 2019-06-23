@@ -32,7 +32,7 @@ class ServerActionEvent extends Event
      * @param User   $user
      * @param string $action
      */
-    public function __construct(Server $server, User $user, $action)
+    public function __construct(Server $server, ?User $user, $action)
     {
         $this->server = $server;
         $this->user   = $user;

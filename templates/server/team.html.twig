@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-  <div id="page-server-team" class="row">
+  <div id="page-server-team" class="row" data-server-slug="{{ server.slug }}">
     <div class="col col-md-8 offset-md-2 col-sm-12">
       <div class="card card-primary">
         <div class="card-header card-team-header">
@@ -80,7 +80,13 @@
                       {{ icon('exchange-alt') }}
                     </button>
                   {% else %}
-                    <button type="button" class="btn btn-info" title="Remove Team Member" data-toggle="tooltip">
+                    <button
+                      type="button"
+                      class="btn btn-info server-team-member-remove-btn"
+                      title="Remove Team Member"
+                      data-toggle="tooltip"
+                      data-member-id="{{ teamMember.id }}"
+                    >
                       {{ icon('app-delete') }}
                     </button>
                   {% endif %}
