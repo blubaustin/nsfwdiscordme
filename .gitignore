@@ -11,6 +11,7 @@
 .idea
 node_modules
 public/build
+public/cdn
 bin/db-dump-scp.sh
 config/packages/version.yaml
 .env.test
