@@ -520,6 +520,11 @@ class ServerController extends Controller
                         ->get('bannerFile')
                         ->addError(new FormError('There was an error uploading the file.'));
                 }
+            } else {
+                $isValid = false;
+                $form
+                    ->get('bannerFile')
+                    ->addError(new FormError('Banner is required.'));
             }
         } catch (Exception $e) {
             if ($iconMedia) {
