@@ -63,7 +63,7 @@ class BannedServer implements LoggableEntityInterface
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -91,7 +91,7 @@ class BannedServer implements LoggableEntityInterface
     /**
      * @return string
      */
-    public function getReason(): string
+    public function getReason(): ?string
     {
         return $this->reason;
     }
