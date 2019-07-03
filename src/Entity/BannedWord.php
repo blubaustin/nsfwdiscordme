@@ -57,7 +57,7 @@ class BannedWord implements LoggableEntityInterface
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -65,7 +65,7 @@ class BannedWord implements LoggableEntityInterface
     /**
      * @return string
      */
-    public function getWord(): string
+    public function getWord(): ?string
     {
         return $this->word;
     }
