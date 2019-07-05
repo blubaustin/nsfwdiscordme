@@ -252,8 +252,9 @@ class ServerType extends AbstractType
                 )
             );
 
-        // Adds the user's servers to the drop down list.
-        if ($options['user'] && ($accessToken = $options['user']->getDiscordAccessToken())) {
+        if ($options['isEditing']) {
+            $builder->add('discordID');
+        } else if ($options['user'] && ($accessToken = $options['user']->getDiscordAccessToken())) {
             $servers = [
                 'Select...' => ''
             ];
@@ -285,7 +286,8 @@ class ServerType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => Server::class,
-                'user'       => null
+                'user'       => null,
+                'isEditing'  => false
             ]
         );
         $resolver->setAllowedTypes('user', [User::class]);

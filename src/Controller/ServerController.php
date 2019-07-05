@@ -280,7 +280,8 @@ class ServerController extends Controller
         $slug      = $server->getSlug();
         $discordID = $server->getDiscordID();
         $form      = $this->createForm(ServerType::class, $server, [
-            'user' => $user
+            'user'      => $user,
+            'isEditing' => true
         ]);
 
         $form->handleRequest($request);
