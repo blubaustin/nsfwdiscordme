@@ -494,7 +494,7 @@ class ServerController extends Controller
             if (!$widget || !isset($widget['instant_invite'])) {
                 $isValid = false;
                 $form
-                    ->get('botInviteChannelID')
+                    ->get('inviteType')
                     ->addError(new FormError('Instant invite not enabled. A channel is required.'));
             }
         }
@@ -542,11 +542,6 @@ class ServerController extends Controller
                         ->get('bannerFile')
                         ->addError(new FormError('There was an error uploading the file.'));
                 }
-            } else {
-                $isValid = false;
-                $form
-                    ->get('bannerFile')
-                    ->addError(new FormError('Banner is required.'));
             }
         } catch (Exception $e) {
             if ($iconMedia) {

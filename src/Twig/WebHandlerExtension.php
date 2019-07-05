@@ -57,6 +57,9 @@ class WebHandlerExtension extends AbstractExtension
             return $this->webHandler->getWebURL($media);
         } else {
             $media = $this->em->getRepository(Media::class)->findByPath($media);
+            if (!$media) {
+                return '/images/default-banner.jpg';
+            }
             return $this->webHandler->getWebURL($media);
         }
     }

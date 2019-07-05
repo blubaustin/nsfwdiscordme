@@ -300,7 +300,7 @@ class Server implements LoggableEntityInterface
      *
      * @return Server
      */
-    public function setDiscordID(int $discordID): Server
+    public function setDiscordID($discordID): Server
     {
         $this->discordID = $discordID;
 
@@ -410,7 +410,7 @@ class Server implements LoggableEntityInterface
     /**
      * @return Media
      */
-    public function getIconMedia(): Media
+    public function getIconMedia(): ?Media
     {
         return $this->iconMedia;
     }
@@ -430,7 +430,7 @@ class Server implements LoggableEntityInterface
     /**
      * @return Media
      */
-    public function getBannerMedia(): Media
+    public function getBannerMedia(): ?Media
     {
         return $this->bannerMedia;
     }
