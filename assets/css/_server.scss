@@ -79,3 +79,9 @@
     margin-bottom: 0;
   }
 }
+
+.server-banner-media {
+  max-height: 100px;
+  display: block;
+  margin-top: $gutter-size;
+}

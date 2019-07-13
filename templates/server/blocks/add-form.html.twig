@@ -109,9 +109,10 @@
     <div class="card-body form-group-upload-body card-disabled">
       {{ form_row(form.bannerFile) }}
       {{ form_row(form.bannerCropData) }}
-      {% if isEditing %}
+      {% if isEditing and server.bannerMedia|default %}
         <p class="form-help" style="padding-top: 8px;">
           Leave blank to keep your existing banner.
+          <img src="{{ server.bannerMedia|webPath }}" class="server-banner-media" alt="Banner" />
         </p>
       {% endif %}
     </div>
