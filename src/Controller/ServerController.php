@@ -166,7 +166,7 @@ class ServerController extends Controller
                     $discordID     = $user['id'];
                     $username      = $user['username'];
                     $avatarHash    = $user['avatar'];
-                    $discriminator = (int)$user['discriminator'];
+                    $discriminator = $user['discriminator'];
                 } catch (Exception $e) {
                     $form
                         ->get('username')
@@ -221,7 +221,8 @@ class ServerController extends Controller
             }
         }
 
-        $teamMembers = $this->em->getRepository(ServerTeamMember::class)->findByServer($server);
+        $teamMembers = $this->em->getRepository(ServerTeamMember::class)
+            ->findByServer($server);
 
         return $this->render('server/team.html.twig', [
             'server'      => $server,
