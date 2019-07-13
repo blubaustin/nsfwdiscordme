@@ -401,7 +401,7 @@ class ServerController extends Controller
 
         $foundCats = [];
         foreach($server->getCategories() as $category) {
-            if (in_array($category->getId(), $foundCats)) {
+            if ($category->getId() && in_array($category->getId(), $foundCats)) {
                 $form
                     ->get('category2')
                     ->addError(new FormError('Categories must be unique.'));
@@ -412,7 +412,7 @@ class ServerController extends Controller
 
         $foundTags = [];
         foreach($server->getTags() as $tag) {
-            if (in_array($tag->getId(), $foundTags)) {
+            if ($tag->getId() && in_array($tag->getId(), $foundTags)) {
                 $form
                     ->get('tags')
                     ->addError(new FormError('Tags must be unique.'));
