@@ -187,7 +187,7 @@ class ServerController extends Controller
                 $teamMemberRepo = $this->em->getRepository(ServerTeamMember::class);
                 if ($username === $user->getDiscordUsername() && $discriminator == $user->getDiscordDiscriminator()) {
                     $this->addFlash('danger', 'You cannot add yourself.');
-                } else if ($teamMemberRepo->findByDiscordUsernameAndDiscriminator($username, $discriminator)) {
+                } else if ($teamMemberRepo->findByServerAndDiscordUsernameAndDiscriminator($server, $username, $discriminator)) {
                     $this->addFlash('danger', 'User is already a member of the team.');
                 } else {
                     $teamMember = (new ServerTeamMember())
@@ -199,10 +199,10 @@ class ServerController extends Controller
                     if ($discordID) {
                         $teamMember->setDiscordID($discordID);
                     }
-                    $user = $this->em->getRepository(User::class)
+                    $teamUser = $this->em->getRepository(User::class)
                         ->findByDiscordUsernameAndDiscriminator($username, $discriminator);
-                    if ($user) {
-                        $teamMember->setUser($user);
+                    if ($teamUser) {
+                        $teamMember->setUser($teamUser);
                     }
 
                     $this->em->persist($teamMember);

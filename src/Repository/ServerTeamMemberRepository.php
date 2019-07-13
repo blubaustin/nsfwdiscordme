@@ -98,4 +98,20 @@ class ServerTeamMemberRepository extends ServiceEntityRepository
             'discordDiscriminator' => $discordDiscriminator
         ]);
     }
+
+    /**
+     * @param Server $server
+     * @param string $discordUsername
+     * @param int    $discordDiscriminator
+     *
+     * @return object|ServerTeamMember
+     */
+    public function findByServerAndDiscordUsernameAndDiscriminator(Server $server, $discordUsername, $discordDiscriminator)
+    {
+        return $this->findOneBy([
+            'server'               => $server,
+            'discordUsername'      => $discordUsername,
+            'discordDiscriminator' => $discordDiscriminator
+        ]);
+    }
 }
