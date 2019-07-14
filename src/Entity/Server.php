@@ -268,7 +268,7 @@ class Server implements LoggableEntityInterface
      */
     public function __toString(): string
     {
-        return $this->discordID ?? '';
+        return (string)($this->discordID ?? '');
     }
 
     /**
