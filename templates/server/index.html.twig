@@ -35,7 +35,7 @@
               {% if hasServerAccess(server, 'manager') %}
                 <a
                   href="{{ path('upgrade_index', { slug: server.slug }) }}"
-                  class="btn btn-lg btn-info"
+                  class="btn btn-sm btn-info"
                   title="Upgrade Server"
                   data-toggle="tooltip"
                 >
@@ -45,7 +45,7 @@
               {% if hasServerAccess(server, 'manager') %}
                 <a
                   href="{{ path('server_settings', { slug: server.slug }) }}"
-                  class="btn btn-lg btn-info"
+                  class="btn btn-sm btn-info"
                   title="Server Settings"
                   data-toggle="tooltip"
                 >
@@ -55,7 +55,7 @@
               {% if hasServerAccess(server, 'manager') %}
                 <a
                   href="{{ path('server_team', { slug: server.slug }) }}"
-                  class="btn btn-lg btn-info"
+                  class="btn btn-sm btn-info"
                   title="Manage Team"
                   data-toggle="tooltip"
                 >
@@ -65,7 +65,7 @@
               {% if hasServerAccess(server, 'editor') %}
                 <a
                   href="{{ path('server_stats', { slug: server.slug }) }}"
-                  class="btn btn-lg btn-info"
+                  class="btn btn-sm btn-info"
                   title="Server Stats"
                   data-toggle="tooltip"
                 >
@@ -74,7 +74,7 @@
               {% endif %}
               <button
                 id="server-join-btn"
-                class="btn btn-lg btn-success"
+                class="btn btn-sm btn-success"
                 {% if not server.active %} disabled="disabled"{% endif %}
               >
                 {{ icon('app-join') }}
