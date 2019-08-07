@@ -35,20 +35,20 @@
       </div>
     </div>
 
-    {# Gold #}
-    {% set premiumStatusGold = constant('App\\Entity\\Server::STATUS_GOLD') %}
+    {# Ruby #}
+    {% set premiumStatusRuby = constant('App\\Entity\\Server::STATUS_RUBY') %}
     <div class="col col-md-4 col-sm-12 col-12">
-      <div class="card card-upgrade card-upgrade-gold card-upgrade-top">
-        {% include "_cards/blocks/premium-banner.html.twig" with { status: 'gold' } %}
+      <div class="card card-upgrade card-upgrade-ruby card-upgrade-top">
+        {% include "_cards/blocks/premium-banner.html.twig" with { status: 'ruby' } %}
         <div class="card-header">
-          Gold
+          Ruby
         </div>
         <div class="card-upgrade-description">
-          Gold servers are standard servers, but with a few extra perks.
+          Ruby servers are standard servers, but with a few extra perks.
         </div>
         <div class="card-body">
           <ul class="card-upgrade-list">
-            <li>Gold Banner Highlight</li>
+            <li>Ruby Banner Highlight</li>
             <li>2 Bump Points instead Of 1</li>
             <li>Enables Multi-bump for All Servers</li>
             <li>Premium Rank On Support Server *</li>
@@ -56,11 +56,11 @@
           </ul>
         </div>
         <div class="card-upgrade-price">
-          ${{ (prices[premiumStatusGold]['30'] / 100)|number_format(2) }} USD / 30 Days
+          ${{ (prices[premiumStatusRuby]['30'] / 100)|number_format(2) }} USD / 30 Days
         </div>
         <div class="card-footer">
           <form method="post">
-            <input type="hidden" name="premiumStatus" value="{{ premiumStatusGold }}" />
+            <input type="hidden" name="premiumStatus" value="{{ premiumStatusRuby }}" />
             <input type="hidden" name="period" value="30" />
             <button type="submit" class="btn btn-info btn-block">
               Upgrade
@@ -70,21 +70,21 @@
       </div>
     </div>
 
-    {# Platinum #}
-    {% set premiumStatusPlatinum = constant('App\\Entity\\Server::STATUS_PLATINUM') %}
+    {# Topaz #}
+    {% set premiumStatusTopaz = constant('App\\Entity\\Server::STATUS_TOPAZ') %}
     <div class="col col-md-4 col-sm-12 col-12">
-      <div class="card card-upgrade card-upgrade-platinum card-upgrade-top">
-        {% include "_cards/blocks/premium-banner.html.twig" with { status: 'platinum' } %}
+      <div class="card card-upgrade card-upgrade-topaz card-upgrade-top">
+        {% include "_cards/blocks/premium-banner.html.twig" with { status: 'topaz' } %}
         <div class="card-header">
-          Platinum
+          Topaz
         </div>
         <div class="card-upgrade-description">
-          Platinum servers show your love, and we love you back. Plus, you get more perks!
+          Topaz servers show your love, and we love you back. Plus, you get more perks!
         </div>
         <div class="card-body">
           <ul class="card-upgrade-list">
-            <li>Platinum Banner Highlight</li>
-            <li>Platinum Servers Rotation **</li>
+            <li>Topaz Banner Highlight</li>
+            <li>Topaz Servers Rotation **</li>
             <li>3 Bump Points Instead Of 1</li>
             <li>Enables Multi-Bump For All Servers</li>
             <li>Premium Rank On Support Server *</li>
@@ -92,11 +92,11 @@
           </ul>
         </div>
         <div class="card-upgrade-price">
-          ${{ (prices[premiumStatusPlatinum]['30'] / 100)|number_format(2) }} USD / 30 Days
+          ${{ (prices[premiumStatusTopaz]['30'] / 100)|number_format(2) }} USD / 30 Days
         </div>
         <div class="card-footer">
           <form method="post">
-            <input type="hidden" name="premiumStatus" value="{{ premiumStatusPlatinum }}" />
+            <input type="hidden" name="premiumStatus" value="{{ premiumStatusTopaz }}" />
             <input type="hidden" name="period" value="30" />
             <button type="submit" class="btn btn-info btn-block">
               Upgrade
@@ -107,21 +107,21 @@
     </div>
   </div>
 
-  {# Master #}
+  {# Emerald #}
   <div class="row">
     <div class="col">
-      <div class="card card-upgrade-master card-upgrade">
-        {% include "_cards/blocks/premium-banner.html.twig" with { status: 'master' } %}
+      <div class="card card-upgrade-emerald card-upgrade">
+        {% include "_cards/blocks/premium-banner.html.twig" with { status: 'emerald' } %}
         <div class="card-header">
-          Master
+          Emerald
         </div>
         <div class="card-upgrade-description">
-          The master server is awarded once a month to the winner of an auction open
+          The emerald server is awarded once a month to the winner of an auction open
           to members that have purchased premium in the past past.
         </div>
         <div class="card-body">
           <ul class="card-upgrade-list">
-            <li>Green Banner Highlight</li>
+            <li>Emerald Banner Highlight</li>
             <li>First Slot On The Website</li>
             <li>No Bumping Required</li>
             <li>Enables Multi-Bump For All Servers</li>
@@ -146,7 +146,7 @@
           </div>
           <div class="text-center">
             ** These are the servers on the left side of the server list (interspersed on mobile). Your
-            server may not show up on ever page, but it will be randomly selected from only Platinum
+            server may not show up on ever page, but it will be randomly selected from only Topaz
             Servers to appear.
           </div>
         </div>

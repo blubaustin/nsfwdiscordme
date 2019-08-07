@@ -27,9 +27,9 @@ class FontAwesomeExtension extends AbstractExtension
         'app-random'          => 'random',
         'app-delete'          => 'trash-alt',
         'app-join'            => 'sign-in-alt',
-        'app-gold'            => 'star',
-        'app-platinum'        => 'shield-alt',
-        'app-master'          => 'crown',
+        'app-ruby'            => 'gem',
+        'app-topaz'           => 'gem',
+        'app-emerald'         => 'gem',
         'app-invoices'        => 'file-invoice-dollar'
     ];
 

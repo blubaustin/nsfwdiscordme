@@ -28,10 +28,10 @@ class HomeController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $masterServer = null;
+        $emeraldServer = null;
         if ($request->query->getInt('page', 1) === 1) {
-            $masterServer = $this->em->getRepository(Server::class)
-                ->findOneBy(['premiumStatus' => Server::STATUS_MASTER]);
+            $emeraldServer = $this->em->getRepository(Server::class)
+                ->findOneBy(['premiumStatus' => Server::STATUS_EMERALD]);
         }
 
         $query = $this->em->getRepository(Server::class)
@@ -39,16 +39,16 @@ class HomeController extends Controller
             ->where('s.isEnabled = 1')
             ->andWhere('s.isPublic = 1')
             ->andWhere('s.premiumStatus != :status')
-            ->setParameter(':status', Server::STATUS_MASTER)
+            ->setParameter(':status', Server::STATUS_EMERALD)
             ->orderBy('s.premiumStatus', 'desc')
             ->addOrderBy('s.bumpPoints', 'desc')
             ->addOrderBy('s.dateBumped', 'desc')
             ->getQuery();
 
         return $this->render('home/index.html.twig', [
-            'sort'         => 'most-bumped',
-            'masterServer' => $masterServer,
-            'servers'      => $this->paginate($query)
+            'sort'          => 'most-bumped',
+            'emeraldServer' => $emeraldServer,
+            'servers'       => $this->paginate($query)
         ]);
     }
 

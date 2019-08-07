@@ -1,12 +1,12 @@
-<div class="card card-server-master card-server-border-premium-master">
+<div class="card card-server-emerald card-server-border-premium-emerald">
   {% include "_cards/blocks/premium-banner.html.twig" %}
   <a href="{{ path('server_index', { slug: server.slug }) }}" class="card-server-link">
-    <div class="card-server-master-info">
+    <div class="card-server-emerald-info">
       {% include "_media/server-icon.html.twig" %}
-      <h2 class="card-server-master-name">
+      <h2 class="card-server-emerald-name">
         {{ server.name }}
       </h2>
-      <h3 class="card-server-master-categories">
+      <h3 class="card-server-emerald-categories">
         {% for category in server.categories %}
           <a href="{{ path('category_index', { slug: category.slug }) }}">
             {{ category.name }}
@@ -14,14 +14,14 @@
           {% if not loop.last %}|{% endif %}
         {% endfor %}
       </h3>
-      <div class="card-server-master-members-online">
+      <div class="card-server-emerald-members-online">
         {{ icon('app-online') }}
         {{ server.membersOnline|number_format }} online
         {% if is_granted('ROLE_SUPER_ADMIN') %}
           &middot; {{ server.bumpPoints }} bump points
         {% endif %}
       </div>
-      <div class="card-server-master-description">
+      <div class="card-server-emerald-description">
         {{ server.summary }}
       </div>
       <a
@@ -32,7 +32,7 @@
       </a>
     </div>
     <div class="card-server-bg-wrap">
-      <img class="card-server-master-bg" src="{{ server.bannerMedia|webPath }}" alt="Background" />
+      <img class="card-server-emerald-bg" src="{{ server.bannerMedia|webPath }}" alt="Background" />
     </div>
   </a>
 </div>

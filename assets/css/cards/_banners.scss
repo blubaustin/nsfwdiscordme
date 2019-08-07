@@ -34,23 +34,23 @@
   $color: nth($color-premium-list, $i);
 
   .card-premium-tag-#{$name} {
-    color: #F9EB7F;
+    color: #FFF;
     background: $color;
     font-size: 26px;
     text-shadow: 0 1px 1px #fff;
   }
 }
 
-.card-premium-tag-gold {
+.card-premium-tag-ruby {
   font-size: 22px;
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
-.card-premium-tag-platinum {
-  color: #000;
+.card-premium-tag-topaz {
+  color: #FFF;
 }
 
-.card-premium-tag-master {
+.card-premium-tag-emerald {
   color: #FFF;
 }
 
@@ -88,8 +88,8 @@
   }
 }
 
-.server-premium-banner-gold {
-  background: $color-premium-gold;
+.server-premium-banner-ruby {
+  background: $color-premium-ruby;
 
   &::after {
     content: "";
@@ -98,14 +98,14 @@
     left: 100%;
     width: 0;
     height: 0;
-    border: 22px solid $color-premium-gold;
+    border: 22px solid $color-premium-ruby;
     border-right: 22px solid transparent;
   }
 }
 
-.server-premium-banner-platinum {
-  color: #000;
-  background: $color-premium-platinum;
+.server-premium-banner-topaz {
+  color: #FFF;
+  background: $color-premium-topaz;
 
   &::after {
     content: "";
@@ -114,13 +114,13 @@
     left: 100%;
     width: 0;
     height: 0;
-    border: 22px solid $color-premium-platinum;
+    border: 22px solid $color-premium-topaz;
     border-right: 22px solid transparent;
   }
 }
 
-.server-premium-banner-master {
-  background: $color-premium-master;
+.server-premium-banner-emerald {
+  background: $color-premium-emerald;
 
   &::after {
     content: "";
@@ -129,7 +129,7 @@
     left: 100%;
     width: 0;
     height: 0;
-    border: 22px solid $color-premium-master;
+    border: 22px solid $color-premium-emerald;
     border-right: 22px solid transparent;
   }
 }

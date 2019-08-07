@@ -1,11 +1,11 @@
 @import "../vars";
 
-.card-server-master {
+.card-server-emerald {
   height: 265px;
   position: relative;
 
   &:hover {
-    .card-server-master-bg {
+    .card-server-emerald-bg {
       transform: scale(1.05);
     }
 
@@ -15,11 +15,11 @@
   }
 }
 
-.card-server-master-bg {
+.card-server-emerald-bg {
   @extend .card-server-bg;
 }
 
-.card-server-master-info {
+.card-server-emerald-info {
   @extend .card-server-info;
   height: 150px;
   bottom: 48px;
@@ -36,19 +36,19 @@
   }
 }
 
-.card-server-master-name {
+.card-server-emerald-name {
   @extend .card-server-name;
 }
 
-.card-server-master-categories {
+.card-server-emerald-categories {
   @extend .card-server-categories;
 }
 
-.card-server-master-members-online {
+.card-server-emerald-members-online {
   @extend .card-server-members-online;
 }
 
-.card-server-master-description {
+.card-server-emerald-description {
   @extend .card-server-description;
   opacity: 1;
 }

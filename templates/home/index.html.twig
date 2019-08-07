@@ -62,10 +62,10 @@
         </div>
       </div>
     {% endblock %}
-    {% if masterServer|default %}
+    {% if emeraldServer|default %}
       <div class="row gutter-bottom">
         <div class="col">
-          {% include "_cards/server-master.html.twig" with { server: masterServer } %}
+          {% include "_cards/server-emerald.html.twig" with { server: emeraldServer } %}
         </div>
       </div>
     {% endif %}

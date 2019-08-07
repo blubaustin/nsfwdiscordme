@@ -22,10 +22,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class UpgradeController extends Controller
 {
     const PRICES = [
-        Server::STATUS_GOLD => [
+        Server::STATUS_RUBY  => [
             '30' => 1250
         ],
-        Server::STATUS_PLATINUM => [
+        Server::STATUS_TOPAZ => [
             '30' => 4500
         ]
     ];

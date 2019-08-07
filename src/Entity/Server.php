@@ -22,32 +22,32 @@ use InvalidArgumentException;
 class Server implements LoggableEntityInterface
 {
     const STATUS_STANDARD     = 0;
-    const STATUS_GOLD         = 1;
-    const STATUS_PLATINUM     = 2;
-    const STATUS_MASTER       = 3;
+    const STATUS_RUBY         = 1;
+    const STATUS_TOPAZ        = 2;
+    const STATUS_EMERALD      = 3;
     const STATUS_STR_STANDARD = 'standard';
-    const STATUS_STR_GOLD     = 'gold';
-    const STATUS_STR_PLATINUM = 'platinum';
-    const STATUS_STR_MASTER   = 'master';
+    const STATUS_STR_RUBY     = 'ruby';
+    const STATUS_STR_TOPAZ    = 'topaz';
+    const STATUS_STR_EMERALD  = 'emerald';
     const STATUSES            = [
         self::STATUS_STANDARD,
-        self::STATUS_GOLD,
-        self::STATUS_PLATINUM,
-        self::STATUS_MASTER
+        self::STATUS_RUBY,
+        self::STATUS_TOPAZ,
+        self::STATUS_EMERALD
     ];
     const STATUSES_STR = [
         self::STATUS_STANDARD => self::STATUS_STR_STANDARD,
-        self::STATUS_GOLD     => self::STATUS_STR_GOLD,
-        self::STATUS_PLATINUM => self::STATUS_STR_PLATINUM,
-        self::STATUS_MASTER   => self::STATUS_STR_MASTER
+        self::STATUS_RUBY     => self::STATUS_STR_RUBY,
+        self::STATUS_TOPAZ    => self::STATUS_STR_TOPAZ,
+        self::STATUS_EMERALD  => self::STATUS_STR_EMERALD
     ];
 
     const BUMP_PERIOD_SECONDS = 21600; // 6 hours
     const POINTS_PER_BUMP     = [
         self::STATUS_STANDARD => 1,
-        self::STATUS_GOLD     => 2,
-        self::STATUS_PLATINUM => 3,
-        self::STATUS_MASTER   => 4
+        self::STATUS_RUBY     => 2,
+        self::STATUS_TOPAZ    => 3,
+        self::STATUS_EMERALD  => 4
     ];
 
     const INVITE_TYPE_BOT    = 'bot';
